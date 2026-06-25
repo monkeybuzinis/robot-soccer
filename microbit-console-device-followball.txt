@@ -1,0 +1,296 @@
+POSE x_mm=455.496383522844 y_mm=260.41317996861 theta_deg=162.511317585709                    
+POSE x_mm=455.496383522844 y_mm=260.41317996861 theta_deg=162.511317585709                    
+POSE x_mm=455.496383522844 y_mm=260.41317996861 theta_deg=162.511317585709                    
+POSE x_mm=455.496383522844 y_mm=260.41317996861 theta_deg=162.511317585709                    
+POSE x_mm=468.425189505838 y_mm=230.409143737612 theta_deg=-115.888682414291                  
+POSE x_mm=468.425189505838 y_mm=230.409143737612 theta_deg=-115.888682414291                  
+POSE x_mm=468.425189505838 y_mm=230.409143737612 theta_deg=-115.888682414291                  
+POSE x_mm=468.425189505838 y_mm=230.409143737612 theta_deg=-115.888682414291                  
+POSE x_mm=468.425189505838 y_mm=230.409143737612 theta_deg=-115.888682414291                  
+POSE x_mm=468.425189505838 y_mm=230.409143737612 theta_deg=-115.888682414291                  
+POSE x_mm=478.164827011162 y_mm=193.833971188902 theta_deg=145.711317585709                   
+POSE x_mm=478.164827011162 y_mm=193.833971188902 theta_deg=145.711317585709                   
+POSE x_mm=478.164827011162 y_mm=193.833971188902 theta_deg=145.711317585709                   
+POSE x_mm=478.164827011162 y_mm=193.833971188902 theta_deg=145.711317585709                   
+POSE x_mm=478.164827011162 y_mm=193.833971188902 theta_deg=145.711317585709                   
+POSE x_mm=481.869704551059 y_mm=161.373686274697 theta_deg=-132.688682414291                  
+POSE x_mm=481.869704551059 y_mm=161.373686274697 theta_deg=-132.688682414291                  
+POSE x_mm=481.869704551059 y_mm=161.373686274697 theta_deg=-132.688682414291                  
+POSE x_mm=481.869704551059 y_mm=161.373686274697 theta_deg=-132.688682414291                  
+POSE x_mm=481.869704551059 y_mm=161.373686274697 theta_deg=-132.688682414291                  
+POSE x_mm=481.869704551059 y_mm=161.373686274697 theta_deg=-132.688682414291                  
+POSE x_mm=480.622261588492 y_mm=123.544495538466 theta_deg=128.911317585709                   
+POSE x_mm=480.622261588492 y_mm=123.544495538466 theta_deg=128.911317585709                   
+POSE x_mm=480.622261588492 y_mm=123.544495538466 theta_deg=128.911317585709                   
+POSE x_mm=480.622261588492 y_mm=123.544495538466 theta_deg=128.911317585709                   
+POSE x_mm=480.622261588492 y_mm=123.544495538466 theta_deg=128.911317585709                   
+POSE x_mm=480.622261588492 y_mm=123.544495538466 theta_deg=128.911317585709                   
+POSE x_mm=474.786958615322 y_mm=91.3988044818359 theta_deg=-149.488682414291                  
+POSE x_mm=474.786958615322 y_mm=91.3988044818359 theta_deg=-149.488682414291                  
+POSE x_mm=474.786958615322 y_mm=91.3988044818359 theta_deg=-149.488682414291                  
+POSE x_mm=474.786958615322 y_mm=91.3988044818359 theta_deg=-149.488682414291                  
+POSE x_mm=474.786958615322 y_mm=91.3988044818359 theta_deg=-149.488682414291                  
+POSE x_mm=474.786958615322 y_mm=91.3988044818359 theta_deg=-149.488682414291                  
+POSE x_mm=462.65891816975 y_mm=55.5447332952388 theta_deg=112.111317585709                    
+POSE x_mm=462.65891816975 y_mm=55.5447332952388 theta_deg=112.111317585709                    
+POSE x_mm=462.65891816975 y_mm=55.5447332952388 theta_deg=112.111317585709                    
+POSE x_mm=462.65891816975 y_mm=55.5447332952388 theta_deg=112.111317585709                    
+POSE x_mm=462.65891816975 y_mm=55.5447332952388 theta_deg=112.111317585709                    
+POSE x_mm=447.781542009408 y_mm=26.4576245891354 theta_deg=-166.288682414291                  
+POSE x_mm=447.781542009408 y_mm=26.4576245891354 theta_deg=-166.288682414291                  
+POSE x_mm=447.781542009408 y_mm=26.4576245891354 theta_deg=-166.288682414291                  
+POSE x_mm=447.781542009408 y_mm=26.4576245891354 theta_deg=-166.288682414291                  
+POSE x_mm=447.781542009408 y_mm=26.4576245891354 theta_deg=-166.288682414291                  
+POSE x_mm=447.781542009408 y_mm=26.4576245891354 theta_deg=-166.288682414291                  
+POSE x_mm=425.808165801166 y_mm=-4.36078750029761 theta_deg=95.3113175857094                  
+POSE x_mm=425.808165801166 y_mm=-4.36078750029761 theta_deg=95.3113175857094                  
+POSE x_mm=425.808165801166 y_mm=-4.36078750029761 theta_deg=95.3113175857094                  
+POSE x_mm=425.808165801166 y_mm=-4.36078750029761 theta_deg=95.3113175857094                  
+POSE x_mm=425.808165801166 y_mm=-4.36078750029761 theta_deg=95.3113175857094                  
+POSE x_mm=425.808165801166 y_mm=-4.36078750029761 theta_deg=95.3113175857094                  
+POSE x_mm=403.158664233508 y_mm=-27.9064090260427 theta_deg=176.911317585709                  
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+ball x: 358                   
+ball y: 755                   
+walkSpeed: 3                  
+walkTurn: -0.675              
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+ball x: -60                   
+ball y: 849                   
+walkSpeed: 3                  
+walkTurn: -0.2375             
+POSE x_mm=404.913837513988 y_mm=-19.9601678718889 theta_deg=158.177574335279                  
+ball x: -92                   
+ball y: 833                   
+walkSpeed: 3                  
+walkTurn: 0.03125             
+ball x: -92                   
+ball y: 833                   
+walkSpeed: 3                  
+walkTurn: 0.165625            
+ball x: -92                   
+ball y: 833                   
+walkSpeed: 3                  
+walkTurn: 0.2328125           
+POSE x_mm=378.371377157322 y_mm=-35.4435856542468 theta_deg=82.3363175857094                  
+ball x: -77                   
+ball y: 340                   
+walkSpeed: 2.85               
+walkTurn: 0.44140625          
+ball x: -77                   
+ball y: 340                   
+walkSpeed: 2.85               
+walkTurn: 0.545703125         
+ball x: -68                   
+ball y: 353                   
+walkSpeed: 3                  
+walkTurn: 0.5478515625        
+ball x: -125                  
+ball y: 509                   
+walkSpeed: 3                  
+walkTurn: 0.62392578125       
+ball x: -125                  
+ball y: 509                   
+walkSpeed: 3                  
+walkTurn: 0.661962890625      
+POSE x_mm=378.371377157322 y_mm=-35.4435856542468 theta_deg=82.3363175857094                  
+ball x: -79                   
+ball y: 358                   
+walkSpeed: 3                  
+walkTurn: 0.6309814453125     
+ball x: -40                   
+ball y: 236                   
+walkSpeed: 1.29               
+walkTurn: 0.54049072265625    
+ball x: -40                   
+ball y: 236                   
+walkSpeed: 1.29               
+walkTurn: 0.49524536132813    
+POSE x_mm=378.371377157322 y_mm=-35.4435856542468 theta_deg=82.3363175857094                  
+ball x: 4                     
+ball y: 266                   
+walkSpeed: 1.74               
+walkTurn: 0.22262268066406    
+ball x: 43                    
+ball y: 309                   
+walkSpeed: 2.385              
+walkTurn: -0.088688659667969  
+ball x: 43                    
+ball y: 309                   
+walkSpeed: 2.385              
+walkTurn: -0.24434432983398   
+POSE x_mm=378.371377157322 y_mm=-35.4435856542468 theta_deg=82.3363175857094                  
+ball x: 50                    
+ball y: 310                   
+walkSpeed: 2.4                
+walkTurn: -0.34717216491699   
+ball x: 37                    
+ball y: 291                   
+walkSpeed: 2.115              
+walkTurn: -0.3485860824585    
+ball x: 37                    
+ball y: 291                   
+walkSpeed: 2.115              
+walkTurn: -0.34929304122925   
+ball x: -2                    
+ball y: 310                   
+walkSpeed: 2.4                
+walkTurn: -0.17464652061462   
+ball x: -2                    
+ball y: 310                   
+walkSpeed: 2.4                
+walkTurn: -0.087323260307312  
+POSE x_mm=350.223284333553 y_mm=-57.1775332515636 theta_deg=173.009196709397                  
+ball x: -30                   
+ball y: 300                   
+walkSpeed: 2.25               
+walkTurn: 0.081338369846344   
+ball x: -37                   
+ball y: 262                   
+walkSpeed: 1.68               
+walkTurn: 0.24066918492317    
+ball x: -37                   
+ball y: 262                   
+walkSpeed: 1.68               
+walkTurn: 0.32033459246159    
+POSE x_mm=350.223284333553 y_mm=-57.1775332515636 theta_deg=173.009196709397                  
+ball x: -37                   
+ball y: 300                   
+walkSpeed: 2.25               
+walkTurn: 0.33516729623079    
+ball x: -23                   
+ball y: 270                   
+walkSpeed: 1.8                
+walkTurn: 0.2675836481154     
+POSE x_mm=350.223284333553 y_mm=-57.1775332515636 theta_deg=173.009196709397                  
+ball x: 7                     
+ball y: 262                   
+walkSpeed: 1.68               
+walkTurn: 0.091895912028849   
+ball x: 23                    
+ball y: 264                   
+walkSpeed: 1.71               
+walkTurn: -0.079052043985575  
+POSE x_mm=350.223284333553 y_mm=-57.1775332515636 theta_deg=173.009196709397                  
+ball x: 23                    
+ball y: 264                   
+walkSpeed: 1.71               
+walkTurn: -0.16452602199279   
+ball x: 20                    
+ball y: 296                   
+walkSpeed: 2.19               
+walkTurn: -0.15726301099639   
+ball x: 20                    
+ball y: 296                   
+walkSpeed: 2.19               
+walkTurn: -0.1536315054982    
+POSE x_mm=350.223284333553 y_mm=-57.1775332515636 theta_deg=173.009196709397                  
+ball x: 13                    
+ball y: 300                   
+walkSpeed: 2.25               
+walkTurn: -0.1268157527491    
+ball x: -15                   
+ball y: 251                   
+walkSpeed: 1.515              
+walkTurn: 0.011592123625451   
+ball x: -15                   
+ball y: 251                   
+walkSpeed: 1.515              
+walkTurn: 0.080796061812725   
+ball x: -17                   
+ball y: 238                   
+walkSpeed: 1.32               
+walkTurn: 0.14039803090636    
+ball x: -29                   
+ball y: 243                   
+walkSpeed: 1.395              
+walkTurn: 0.24519901545318    
+POSE x_mm=350.223284333553 y_mm=-57.1775332515636 theta_deg=173.009196709397                  
+ball x: -29                   
+ball y: 243                   
+walkSpeed: 1.395              
+walkTurn: 0.29759950772659    
+ball x: -14                   
+ball y: 232                   
+walkSpeed: 1.23               
+walkTurn: 0.2237997538633     
+ball x: 6                     
+ball y: 242                   
+walkSpeed: 1.38               
+walkTurn: 0.086899876931648   
+POSE x_mm=350.223284333553 y_mm=-57.1775332515636 theta_deg=173.009196709397                  
+ball x: 6                     
+ball y: 242                   
+walkSpeed: 1.38               
+walkTurn: 0.018449938465824   
+ball x: 11                    
+ball y: 224                   
+walkSpeed: 1.11               
+walkTurn: -0.040775030767088  
+POSE x_mm=350.223284333553 y_mm=-57.1775332515636 theta_deg=173.009196709397                  
+ball x: 48                    
+ball y: 242                   
+walkSpeed: 1.38               
+walkTurn: -0.42269375769177   
+ball x: 58                    
+ball y: 203                   
+walkSpeed: 0.795              
+walkTurn: -0.61134687884589   
+POSE x_mm=350.223284333553 y_mm=-57.1775332515636 theta_deg=173.009196709397                  
+ball x: 73                    
+ball y: 210                   
+walkSpeed: 0.9                
+walkTurn: -0.85283671971147   
+ball x: 46                    
+ball y: 207                   
+walkSpeed: 0.855              
+walkTurn: -0.72641835985574   
+POSE x_mm=350.223284333553 y_mm=-57.1775332515636 theta_deg=173.009196709397                  
+ball x: 46                    
+ball y: 207                   
+walkSpeed: 0.855              
+walkTurn: -0.66320917992787   
+ball x: 36                    
+ball y: 275                   
+walkSpeed: 1.875              
+walkTurn: -0.50660458996393   
+ball x: 21                    
+ball y: 231                   
+walkSpeed: 1.215              
+walkTurn: -0.37830229498197   
+POSE x_mm=325.468627348576 y_mm=-79.1347118455298 theta_deg=90.1363309126521                  
+ball x: 21                    
+ball y: 231                   
+walkSpeed: 1.215              
+walkTurn: -0.31415114749098   
+ball x: 16                    
+ball y: 224                   
+walkSpeed: 1.11               
+walkTurn: -0.25707557374549   
+POSE x_mm=325.468627348576 y_mm=-79.1347118455298 theta_deg=90.1363309126521                  
+ball x: 22                    
+ball y: 211                   
+walkSpeed: 0.915              
+walkTurn: -0.28926889343637   
+ball x: 21                    
+ball y: 219                   
+walkSpeed: 1.035              
+walkTurn: -0.26963444671819   
+POSE x_mm=325.468627348576 y_mm=-79.1347118455298 theta_deg=90.1363309126521                  

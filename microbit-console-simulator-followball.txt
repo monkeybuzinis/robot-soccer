@@ -1,0 +1,91 @@
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0POSE x_mm=0 y_mm=0 theta_deg=0
+
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0POSE x_mm=0 y_mm=0 theta_deg=0
+
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0POSE x_mm=0 y_mm=0 theta_deg=0
+
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0POSE x_mm=0 y_mm=0 theta_deg=0
+
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+
+POSE x_mm=0 y_mm=0 theta_deg=0POSE x_mm=0 y_mm=0 theta_deg=0
+
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0POSE x_mm=0 y_mm=0 theta_deg=0
+
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0POSE x_mm=0 y_mm=0 theta_deg=0
+
+POSE x_mm=0 y_mm=0 theta_deg=0POSE x_mm=0 y_mm=0 theta_deg=0
+
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0POSE x_mm=0 y_mm=0 theta_deg=0
+
+POSE x_mm=0 y_mm=0 theta_deg=0POSE x_mm=0 y_mm=0 theta_deg=0
+
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0POSE x_mm=0 y_mm=0 theta_deg=0
+
+POSE x_mm=0 y_mm=0 theta_deg=0POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+
+POSE x_mm=0 y_mm=0 theta_deg=0POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+
+POSE x_mm=0 y_mm=0 theta_deg=0POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+
+POSE x_mm=0 y_mm=0 theta_deg=0POSE x_mm=0 y_mm=0 theta_deg=0
+POSE x_mm=0 y_mm=0 theta_deg=0
+
+POSE x_mm=0 y_mm=0 theta_deg=0

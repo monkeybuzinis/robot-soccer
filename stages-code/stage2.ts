@@ -172,14 +172,19 @@ radio.onReceivedString(function (receivedString: string) {
     robotPuPro.runStringCommand(receivedString)
 })
 radio.onReceivedValue(function (name: string, value: number) {
-    if (DEBUG_FLAG) serial.writeLine(`RADIO_RX name=${name} value=${value}`)
     if (name == "#puspeed") {
+        if (DEBUG_FLAG) serial.writeLine(`RADIO_RX name=${name} value=${value}`)
         if (value > REMOTE_STICK_DEADZONE) remoteWalkSpeed = value * REMOTE_FWD_SPEED
         else if (value < -REMOTE_STICK_DEADZONE) remoteWalkSpeed = -value * REMOTE_BWD_SPEED
         else remoteWalkSpeed = 0
     } else if (name == "#puturn") {
+        if (DEBUG_FLAG) serial.writeLine(`RADIO_RX name=${name} value=${value}`)
         remoteWalkTurn = (remoteWalkTurn * 4 + value) * 0.2
     } else {
+        // #puroll/#pupitch (head-bias gestures) and others are forwarded
+        // without logging -- they fire every radio frame and aren't used by
+        // this script's own logic, so logging them was flooding serial and
+        // starving the I2C ball-detection loop (see BALL_RX_ERR below).
         robotPuPro.runKeyValueCommand(name, value)
     }
 })
@@ -328,7 +333,12 @@ basic.forever(function () {
         robotPuPro.servoStep(robotPuPro.ServoJoint.HeadPitch, nextPitch, 8)
 
         if (DEBUG_FLAG) serial.writeLine(`BALL_TRACK yaw=${nextYaw} pitch=${nextPitch} stale=${isStale ? 1 : 0} missCycles=${ballMissCycles}`)
-    } else {
+    } else if (!ballValid) {
+        // Only search once the ball is actually declared lost. Without this
+        // guard, a single interleaved goal-type packet (SERVICE_SOCCER_GOAL_
+        // DETECTION is also on) would fall into this branch even while the
+        // ball is still valid, flipping BALL_TRACK/SEARCHING every other
+        // cycle and vibrating the head -- confirmed on hardware logs.
         searchBall()
     }
 
