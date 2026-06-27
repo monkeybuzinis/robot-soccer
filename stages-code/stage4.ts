@@ -649,6 +649,7 @@ let goal_valid = false
 let lastGoalSeenMs = -999999
 let freshBallThisCycle = false
 let freshGoalThisCycle = false
+let kickPlanReady = false
 
 // Safety net against the head-runaway-up bug observed on hardware (head
 // drifts up and freezes while "tracking" the ball, losing both ball and
@@ -720,9 +721,9 @@ function trackPacket(p: Buffer) {
             if (pitchPinnedUpCycles >= PITCH_PIN_UP_CYCLE_LIMIT) {
                 // Pinned looking up for too long while supposedly tracking --
                 // this is the runaway-up bug, not a real detection. Force
-                // lost; the planner loop's `if (!ball_valid) searchBall()`
-                // picks this up and recenters the head on the next cycle (see
-                // below for why searchBall() isn't called inline here).
+                // lost. Before a kick plan exists, the planner loop will
+                // search; after a kick plan exists, odometry continues the
+                // approach and fresh packets are only optional corrections.
                 pitchPinnedUpCycles = 0
                 ball_valid = false
                 if (DEBUG_FLAG) serial.writeLine("BALL_PITCH_PINNED_UP -- forcing lost")
@@ -750,7 +751,7 @@ function trackPacket(p: Buffer) {
         } else {
             // Lost beyond the decay window. Don't call searchBall() here --
             // see the planner loop below for why it's centralized there now.
-            ball_valid = false
+            if (!kickPlanReady) ball_valid = false
         }
     } else if (type == SOCCER_GOAL) {
         const x_mm = i16(p, 6)
@@ -770,7 +771,7 @@ function trackPacket(p: Buffer) {
             goal_valid = true
             freshGoalThisCycle = true
             if (DEBUG_FLAG) serial.writeLine(`GOAL_SEEN x_mm=${x_mm} y_mm=${y_mm}`)
-        } else if (nowMs - lastGoalSeenMs >= GOAL_LOST_TIMEOUT_MS) {
+        } else if (!kickPlanReady && nowMs - lastGoalSeenMs >= GOAL_LOST_TIMEOUT_MS) {
             goal_valid = false
         }
         if (DEBUG_FLAG && isValid && !isStale && !plausible) {
@@ -808,15 +809,15 @@ basic.forever(function () {
     const nowMs = input.runningTime()
     const poseNow = robotPuPro.locationArray() // [x_mm, y_mm, theta_deg]
 
-    if (ball_valid && nowMs - lastBallSeenMs >= BALL_LOST_TIMEOUT_MS) ball_valid = false
-    if (goal_valid && nowMs - lastGoalSeenMs >= GOAL_LOST_TIMEOUT_MS) goal_valid = false
+    if (!kickPlanReady && ball_valid && nowMs - lastBallSeenMs >= BALL_LOST_TIMEOUT_MS) ball_valid = false
+    if (!kickPlanReady && goal_valid && nowMs - lastGoalSeenMs >= GOAL_LOST_TIMEOUT_MS) goal_valid = false
 
     // Centralized here instead of inside trackPacket()'s SOCCER_BALL branch:
     // the camera emits one event type per I2C packet, and Stage 4 actively
-    // alternates ball/goal service windows. Search must therefore progress
-    // from the planner whenever the ball is not currently trusted, regardless
-    // of which packet type happened to arrive this cycle.
-    if (!ball_valid) searchBall()
+    // alternates ball/goal service windows. Search is only for acquisition;
+    // once ball+goal have initialized an odometry-frame plan, missing vision
+    // packets should not stop the approach.
+    if (!ball_valid && !kickPlanReady) searchBall()
 
     const haveBallMeas = freshBallThisCycle
     const haveGoalMeas = freshGoalThisCycle
@@ -844,6 +845,7 @@ basic.forever(function () {
         ballKF.update(ball_meas_O[0], ball_meas_O[1], BALL_R_FRESH)
         if (DEBUG_FLAG) serial.writeLine(`ball_O x=${ballKF.pos()[0]} y=${ballKF.pos()[1]}`)
     }
+    if (ballKF.inited && goalKF.inited) kickPlanReady = true
 
     // Re-project the filtered odom-frame estimate into {C_now} fresh every
     // cycle using the LIVE pose -- this stays correct even on cycles with no
@@ -859,16 +861,16 @@ basic.forever(function () {
     // robot at (0,0,0) by construction, so this never needs odom/pose math.
     const idxR = grid.index(0, 0)
     grid.set(idxR[0], idxR[1], 1)
-    if (ball_valid) {
+    if (ballKF.inited) {
         const idxB = grid.index(ball_now[0], ball_now[1])
         grid.set(idxB[0], idxB[1], 2)
     }
-    if (goal_valid) {
+    if (goalKF.inited) {
         const idxG = grid.index(goal_now[0], goal_now[1])
         grid.set(idxG[0], idxG[1], 3)
     }
 
-    if (ball_valid && goal_valid) {
+    if (kickPlanReady) {
         const kickPt = computeKickPoint(ball_now, goal_now)
         const idxK = grid.index(kickPt[0], kickPt[1])
         grid.set(idxK[0], idxK[1], 4)
@@ -938,10 +940,8 @@ basic.forever(function () {
             if (walkMode == 2) serial.writeLine("AT_KICK_POSE")
         }
     } else {
-        // Ball-only (goal not visible yet) or neither: don't walk. The body
-        // only ever moves once both ball+goal are valid and a real kick
-        // point can be computed -- head tracking/searching above still runs
-        // independently, so the ball stays centered while the body holds.
+        // Before both ball and goal have initialized the odometry-frame plan,
+        // hold the body still and keep acquiring/searching with the camera.
         walkSpeed = 0
         walkTurn = 0
         walkMode = 0
