@@ -451,14 +451,14 @@ let lastKfMs = -1
 const KICK_BACKOFF_MM = 50   // 0.05 m
 // Stage 3 used 320mm after an earlier calibration run, but the latest device
 // log shows that this declares AT_KICK_POSE while kickPt is still ~280mm
-// away. Use the professor/MVP scale again: the ball is about 50mm diameter,
-// so the robot should get close to the computed point behind it instead of
-// treating a broad near-ball distance as success.
-const KICK_DIST_MM = 110
+// away. Hardware testing then showed even 110mm can leave the robot paused
+// more than 10cm behind the ball, so keep the stop gate very tight and let
+// the retry logic recover if the ball slips.
+const KICK_DIST_MM = 20
 // If the head is pinned down and the kick point is already fairly close, let
 // pitch act as a backup close-range cue. It must not override a large
 // distKick by itself; that was the early-stop bug.
-const KICK_PITCH_ASSIST_DIST_MM = 150
+const KICK_PITCH_ASSIST_DIST_MM = 40
 const APPROACH_OFFSET_START_MM = 450
 const TURN_GAIN = -1.2 // flip the sign if the robot turns the wrong direction on hardware
 const ALIGN_HEADING_TOL = 0.25
