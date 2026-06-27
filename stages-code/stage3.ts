@@ -133,16 +133,38 @@ const HEAD_YAW_MIN = HEAD_YAW_CENTER - 45
 const HEAD_YAW_MAX = HEAD_YAW_CENTER + 45
 const HEAD_PITCH_MIN = HEAD_PITCH_CENTER - 45
 const HEAD_PITCH_MAX = HEAD_PITCH_CENTER + 45
-// Within this many degrees of HEAD_PITCH_MAX, the camera is pointed nearly
-// straight down -- ground-plane distance becomes unreliable there (see the
-// planner loop's nearBallByPitch check), so treat a pinned-down pitch as a
-// physical "ball is right at the robot's feet" signal.
+// REVERSED from earlier this session. The previous "increasing pitch = up"
+// conclusion was based on ambiguous evidence (head pinned at HEAD_PITCH_MAX
+// while losing sight of ball/goal -- equally explainable as pinned DOWN at
+// the floor as pinned UP at the ceiling). New hardware log (search sweeping
+// pitch=62.5-72.5, entirely BELOW HEAD_PITCH_CENTER=90) still visibly faced
+// above level -- which only makes sense if LOWER pitch is up and HIGHER
+// pitch is down. Corrected convention: HEAD_PITCH_MIN (45) = up extreme,
+// HEAD_PITCH_CENTER (90) = level, HEAD_PITCH_MAX (135) = down extreme
+// (toward the robot's own feet).
+//
+// Within this many degrees of HEAD_PITCH_MAX (down), the camera is pointed
+// at the robot's own feet -- ground-plane distance becomes unreliable there
+// (see the planner loop's nearBallByPitch check), so treat a pinned-down
+// pitch as a physical "ball is right at the robot's feet" signal.
 const NEAR_BALL_PITCH_DEG = HEAD_PITCH_MAX - 10
-const HEAD_PITCH_GROUND_BIAS = 15
-const HEAD_PITCH_SEARCH_CENTER = HEAD_PITCH_CENTER + HEAD_PITCH_GROUND_BIAS
-const HEAD_PITCH_SEARCH_SPAN = 8
+// Ball and goal are never above camera level when the robot's base is
+// parallel to the ground, so there is never a legitimate reason for this
+// robot to pitch its head above level (90/HEAD_PITCH_CENTER) at all -- not
+// while tracking, not while searching. Under the corrected convention above,
+// "above level" means LOWER than HEAD_PITCH_CENTER, so the operating range
+// is a FLOOR at level, not a ceiling. HEAD_PITCH_OPERATING_MIN replaces
+// HEAD_PITCH_MIN as the pitch clamp floor everywhere in this file (tracking,
+// dropout-decay, search, and the pin-detection threshold below), so pitch
+// can structurally never go above level in the first place.
+const HEAD_PITCH_OPERATING_MIN = HEAD_PITCH_CENTER
+// Search sweeps the full level-and-below band: from level (90) down to the
+// physical down limit (135), not a narrow slice of it.
+const HEAD_PITCH_SEARCH_MIN = HEAD_PITCH_OPERATING_MIN
+const HEAD_PITCH_SEARCH_MAX = HEAD_PITCH_MAX
+const HEAD_PITCH_SEARCH_CENTER = (HEAD_PITCH_SEARCH_MIN + HEAD_PITCH_SEARCH_MAX) / 2
 
-const SCAN_WAIT_FRAMES = 25
+const SCAN_WAIT_FRAMES = 12 // was 25 -- halved now that servoStep speed below is also faster
 const DEBUG_FLAG = true
 
 function clampL(v: number, lo: number, hi: number): number {
@@ -163,9 +185,6 @@ function rot(thetaRad: number, x: number, y: number): number[] {
     const s = Math.sin(thetaRad)
     return [c * x - s * y, s * x + c * y]
 }
-
-const HEAD_PITCH_SEARCH_MIN = clampL(HEAD_PITCH_SEARCH_CENTER - HEAD_PITCH_SEARCH_SPAN, HEAD_PITCH_MIN, HEAD_PITCH_MAX)
-const HEAD_PITCH_SEARCH_MAX = clampL(HEAD_PITCH_SEARCH_CENTER + HEAD_PITCH_SEARCH_SPAN, HEAD_PITCH_MIN, HEAD_PITCH_MAX)
 
 const SEARCH_PATTERN: { y: number, p: number }[] = [
     { y: 35, p: 0 },
@@ -188,11 +207,26 @@ function searchBall() {
         scanFrameCounter += -1
         const targetOffset = SEARCH_PATTERN[scanStepIndex]
         robotPuPro.setModeVar(robotPuPro.Mode.API)
-        const liveYaw = robotPuPro.servoTargets()[4]
-        const nextYaw = clampL(liveYaw + targetOffset.y * search_gain, HEAD_YAW_MIN, HEAD_YAW_MAX)
+        // Absolute target from HEAD_YAW_CENTER, same as pitch below -- not
+        // built on the live yaw. Building it on live yaw re-added the same
+        // offset on top of an already-shifted position every held frame
+        // (scanFrameCounter keeps this step active for SCAN_WAIT_FRAMES
+        // cycles), so it ratcheted into the clamp within 1-2 frames instead
+        // of moving to a fixed offset from center.
+        const nextYaw = clampL(HEAD_YAW_CENTER + targetOffset.y * search_gain, HEAD_YAW_MIN, HEAD_YAW_MAX)
+        // Back to addition (convention reversed again -- see HEAD_PITCH_MIN/
+        // MAX comment above): HEAD_PITCH_SEARCH_CENTER now sits in the
+        // level-to-down half (112.5, between 90 and 135), and higher pitch
+        // is DOWN, so p:+5 pushing toward center+5 means further down, and
+        // p:-5 toward center-5 means back up toward level -- the intuitive
+        // direction the pattern's signs were originally written for.
         const nextPitch = clampL(HEAD_PITCH_SEARCH_CENTER + targetOffset.p, HEAD_PITCH_SEARCH_MIN, HEAD_PITCH_SEARCH_MAX)
-        robotPuPro.servoStep(robotPuPro.ServoJoint.HeadYaw, nextYaw, 1)
-        robotPuPro.servoStep(robotPuPro.ServoJoint.HeadPitch, nextPitch, 1)
+        // Speed was 1 (the slowest setting) -- much slower than the live
+        // tracking calls (5/8) elsewhere in this file, which is why search
+        // visibly crept one degree at a time on hardware. Matched to the
+        // fresh-track speed so the sweep is actually brisk.
+        robotPuPro.servoStep(robotPuPro.ServoJoint.HeadYaw, nextYaw, 8)
+        robotPuPro.servoStep(robotPuPro.ServoJoint.HeadPitch, nextPitch, 8)
         if (DEBUG_FLAG) serial.writeLine(`SEARCHING yaw=${nextYaw} pitch=${nextPitch}`)
         return
     }
@@ -253,9 +287,28 @@ const grid = new LocalGrid()
 // Detection (camera-local, at the pose it was captured) -> odometry/world frame.
 // A real-world point's odom-frame coordinates don't change just because the
 // robot walks -- this is the frame the Kalman filter below actually runs in.
-function camToOdom(cam2D_mm: number[], poseAtDet_mm_deg: number[]): number[] {
+//
+// IMPORTANT: cam2D_mm is in the CAMERA's own frame (x_mm/y_mm relative to
+// wherever the head is currently pointed), NOT the robot body's frame. The
+// project doc's MVP shortcut of treating (x_mm, y_mm) directly as a body-
+// frame measurement is only valid "when head yaw/pitch stays near zero
+// during walking" -- but this script actively swings the head to track/
+// search (yaw 45-135 deg), so that assumption doesn't hold here. Missing
+// this correction meant every ball_now/goal_now computed while the head was
+// off-center was silently wrong, worse the further off-center it was --
+// almost certainly the source of the wild ball_now/goal_now swings seen on
+// hardware (positions jumping to 2000+mm on a ~1m field). Fixed by rotating
+// the camera-frame offset by the head's yaw deviation from center BEFORE
+// applying the body's own world rotation.
+//
+// Rotation sign is unverified on hardware (same caveat as TURN_GAIN/kTurn
+// elsewhere in this file) -- if correcting this makes positions swing MORE
+// with head deflection instead of less, flip headYawOffsetRad's sign.
+function camToOdom(cam2D_mm: number[], headYawDeg: number, poseAtDet_mm_deg: number[]): number[] {
+    const headYawOffsetRad = deg2rad(headYawDeg - HEAD_YAW_CENTER)
+    const bodyFrameXY = rot(headYawOffsetRad, cam2D_mm[0], cam2D_mm[1])
     const detThetaRad = deg2rad(poseAtDet_mm_deg[2])
-    const detXY = rot(detThetaRad, cam2D_mm[0], cam2D_mm[1])
+    const detXY = rot(detThetaRad, bodyFrameXY[0], bodyFrameXY[1])
     return [poseAtDet_mm_deg[0] + detXY[0], poseAtDet_mm_deg[1] + detXY[1]]
 }
 
@@ -378,8 +431,15 @@ let lastKfMs = -1
 // Kick point / heading helpers (from robotpu-localmap.ts / robotpu-soccer-mvp.ts)
 // ---------------------------------------------------------------------------
 const KICK_BACKOFF_MM = 50   // 0.05 m
-const KICK_DIST_MM = 110     // 0.11 m
-const APPROACH_OFFSET_START_MM = 250 // 0.25 m
+// Was 110mm, but hardware logs show the robot physically walking into and
+// pushing the ball while the software's own kickPt dist never dropped below
+// ~280-300mm -- the camera's ground-plane distance estimate reads high at
+// this range (a calibration offset, not just last-cm blind-spot noise), so
+// the old threshold could never trigger before contact. Recalibrated against
+// that observed floor, with margin so it stops just before contact instead
+// of right at it.
+const KICK_DIST_MM = 320
+const APPROACH_OFFSET_START_MM = 450 // raised with KICK_DIST_MM so the arc-in still starts well before the new stop distance
 const TURN_GAIN = -1.2 // flip the sign if the robot turns the wrong direction on hardware
 
 function computeKickPoint(ball_now: number[], goal_now: number[]): number[] {
@@ -458,7 +518,15 @@ function updateControl(current: Pose2D, target: Pose2D, offsetStartDist_mm: numb
 // ---------------------------------------------------------------------------
 robotPuPro.setChannel(166)
 robotPuPro.setServoTrim(-5, 0, -5, 0, -8, 0)
-robotPuPro.setEyeBrightness(0) // the extension blinks the eye LEDs by default in the background; not needed here
+// setEyeBrightness(0) alone doesn't actually turn the eyes off: the extension's
+// RobotPu constructor calls pcb.eyesCtl(1) once at boot (a DIGITAL pin write,
+// full brightness, bypassing the brightness scalar entirely), and the only
+// thing that would ever turn it back off is the background blink() animation
+// -- which never runs here because this script forces gst=Mode.API on every
+// cycle (blink() only fires while gst is in [0,5]). Directly overriding the
+// analog pins once at boot is the only call that actually sticks.
+robotPuPro.leftEyeBright(0)
+robotPuPro.rightEyeBright(0)
 
 const REMOTE_FWD_SPEED = 3
 const REMOTE_BWD_SPEED = -2
@@ -520,8 +588,12 @@ basic.forever(function () {
 const BALL_LOST_TIMEOUT_MS = 500
 const GOAL_LOST_TIMEOUT_MS = 3000
 
+// Head yaw AT DETECTION TIME, snapshotted alongside cam2D/pose. camToOdom()
+// needs this to correct for the camera not pointing straight ahead -- see
+// the comment on camToOdom() itself for why.
 let ball_cam2D_mm: number[] = [0, 0]
 let ball_pose_mm_deg: number[] = [0, 0, 0]
+let ball_head_yaw_deg = HEAD_YAW_CENTER
 let ball_valid = false
 let lastBallSeenMs = -999999
 let lastYawByte = 0
@@ -529,8 +601,24 @@ let lastPitchByte = 0
 
 let goal_cam2D_mm: number[] = [0, 0]
 let goal_pose_mm_deg: number[] = [0, 0, 0]
+let goal_head_yaw_deg = HEAD_YAW_CENTER
 let goal_valid = false
 let lastGoalSeenMs = -999999
+
+// Safety net against the head-runaway-up bug observed on hardware (head
+// drifts up and freezes while "tracking" the ball, losing both ball and
+// goal): pitch can no longer physically go below HEAD_PITCH_OPERATING_MIN
+// (level) now, but a genuinely tracked ball still never needs the head
+// pinned at that floor for long -- that's camera hunting noise at the
+// horizon, not a real detection. After this many consecutive fresh-
+// detection cycles pinned at the floor, force the ball lost and let
+// search() recenter the head, instead of continuing to trust/drive on it.
+// Pinned at HEAD_PITCH_MAX (down) is NOT covered here -- that's the
+// legitimate "ball right at the robot's feet" case (see nearBallByPitch
+// below).
+const PITCH_PIN_UP_MARGIN_DEG = 3
+const PITCH_PIN_UP_CYCLE_LIMIT = 15
+let pitchPinnedUpCycles = 0
 
 // Sanity bound on raw camera distance (mm from the camera, not the robot-
 // frame projection). Real ball/goal sightings on a small field never get
@@ -564,14 +652,37 @@ function trackPacket(p: Buffer) {
             lastPitchByte = i8(p[17])
 
             robotPuPro.setModeVar(robotPuPro.Mode.API)
-            const nextYaw = clampL(robotPuPro.servoTargets()[4] + lastYawByte * 0.2, HEAD_YAW_MIN, HEAD_YAW_MAX)
-            const nextPitch = clampL(robotPuPro.servoTargets()[5] + lastPitchByte * 0.2, HEAD_PITCH_MIN, HEAD_PITCH_MAX)
+            // Yaw the head was AT when this packet's image was captured
+            // (approximately, modulo latency) -- snapshotted before this
+            // cycle's nudge, for camToOdom()'s head-yaw correction.
+            const yawAtDetection = robotPuPro.servoTargets()[4]
+            const nextYaw = clampL(yawAtDetection + lastYawByte * 0.2, HEAD_YAW_MIN, HEAD_YAW_MAX)
+            const nextPitch = clampL(robotPuPro.servoTargets()[5] + lastPitchByte * 0.2, HEAD_PITCH_OPERATING_MIN, HEAD_PITCH_MAX)
             robotPuPro.servoStep(robotPuPro.ServoJoint.HeadYaw, nextYaw, 8)
             robotPuPro.servoStep(robotPuPro.ServoJoint.HeadPitch, nextPitch, 8)
+
+            if (nextPitch <= HEAD_PITCH_OPERATING_MIN + PITCH_PIN_UP_MARGIN_DEG) {
+                pitchPinnedUpCycles += 1
+            } else {
+                pitchPinnedUpCycles = 0
+            }
+
+            if (pitchPinnedUpCycles >= PITCH_PIN_UP_CYCLE_LIMIT) {
+                // Pinned looking up for too long while supposedly tracking --
+                // this is the runaway-up bug, not a real detection. Force
+                // lost; the planner loop's `if (!ball_valid) searchBall()`
+                // picks this up and recenters the head on the next cycle (see
+                // below for why searchBall() isn't called inline here).
+                pitchPinnedUpCycles = 0
+                ball_valid = false
+                if (DEBUG_FLAG) serial.writeLine("BALL_PITCH_PINNED_UP -- forcing lost")
+                return
+            }
 
             const pose = robotPuPro.locationArray()
             ball_cam2D_mm = [x_mm, y_mm]
             ball_pose_mm_deg = [pose[0], pose[1], pose[2]]
+            ball_head_yaw_deg = yawAtDetection
             ball_valid = true
 
             if (DEBUG_FLAG) serial.writeLine(`BALL_TRACK yaw=${nextYaw} pitch=${nextPitch}`)
@@ -582,12 +693,13 @@ function trackPacket(p: Buffer) {
             lastYawByte *= 0.7
             lastPitchByte *= 0.7
             const nextYaw = clampL(robotPuPro.servoTargets()[4] + lastYawByte * 0.2, HEAD_YAW_MIN, HEAD_YAW_MAX)
-            const nextPitch = clampL(robotPuPro.servoTargets()[5] + lastPitchByte * 0.2, HEAD_PITCH_MIN, HEAD_PITCH_MAX)
+            const nextPitch = clampL(robotPuPro.servoTargets()[5] + lastPitchByte * 0.2, HEAD_PITCH_OPERATING_MIN, HEAD_PITCH_MAX)
             robotPuPro.servoStep(robotPuPro.ServoJoint.HeadYaw, nextYaw, 5)
             robotPuPro.servoStep(robotPuPro.ServoJoint.HeadPitch, nextPitch, 5)
         } else {
+            // Lost beyond the decay window. Don't call searchBall() here --
+            // see the planner loop below for why it's centralized there now.
             ball_valid = false
-            searchBall()
         }
     } else if (type == SOCCER_GOAL) {
         const x_mm = i16(p, 6)
@@ -599,6 +711,11 @@ function trackPacket(p: Buffer) {
             const pose = robotPuPro.locationArray()
             goal_cam2D_mm = [x_mm, y_mm]
             goal_pose_mm_deg = [pose[0], pose[1], pose[2]]
+            // The goal branch never moves the head itself, but cam2D_mm is
+            // still relative to wherever the head currently is, driven by
+            // ball tracking/search -- snapshot the current yaw, same as the
+            // ball branch does.
+            goal_head_yaw_deg = robotPuPro.servoTargets()[4]
             goal_valid = true
             if (DEBUG_FLAG) serial.writeLine(`GOAL_SEEN x_mm=${x_mm} y_mm=${y_mm}`)
         } else if (nowMs - lastGoalSeenMs >= GOAL_LOST_TIMEOUT_MS) {
@@ -633,6 +750,17 @@ basic.forever(function () {
     if (ball_valid && nowMs - lastBallSeenMs >= BALL_LOST_TIMEOUT_MS) ball_valid = false
     if (goal_valid && nowMs - lastGoalSeenMs >= GOAL_LOST_TIMEOUT_MS) goal_valid = false
 
+    // Centralized here instead of inside trackPacket()'s SOCCER_BALL branch:
+    // both ball and goal detection services are enabled and the camera
+    // interleaves packet types, so on any cycle where the I2C read happens
+    // to return a SOCCER_GOAL packet, trackPacket() never touches ball
+    // state at all -- a searchBall() call nested inside the SOCCER_BALL
+    // branch simply doesn't run that cycle, even though the ball may already
+    // be lost. Calling it unconditionally here, once per planner cycle
+    // whenever ball_valid is false, makes search progress independent of
+    // which packet type happened to arrive.
+    if (!ball_valid) searchBall()
+
     const haveBallMeas = ball_valid
     const haveGoalMeas = goal_valid
 
@@ -650,11 +778,11 @@ basic.forever(function () {
     goalKF.predict(dt_s, GOAL_Q_POS, GOAL_Q_VEL)
     ballKF.predict(dt_s, BALL_Q_POS, BALL_Q_VEL)
     if (haveGoalMeas) {
-        const goal_meas_O = camToOdom(goal_cam2D_mm, goal_pose_mm_deg)
+        const goal_meas_O = camToOdom(goal_cam2D_mm, goal_head_yaw_deg, goal_pose_mm_deg)
         goalKF.update(goal_meas_O[0], goal_meas_O[1], GOAL_R_FRESH)
     }
     if (haveBallMeas) {
-        const ball_meas_O = camToOdom(ball_cam2D_mm, ball_pose_mm_deg)
+        const ball_meas_O = camToOdom(ball_cam2D_mm, ball_head_yaw_deg, ball_pose_mm_deg)
         ballKF.update(ball_meas_O[0], ball_meas_O[1], BALL_R_FRESH)
     }
 
@@ -689,15 +817,16 @@ basic.forever(function () {
         const distKick = norm2L(kickPt[0], kickPt[1])
         const thetaKick = desiredHeadingTo(goal_now[0] - kickPt[0], goal_now[1] - kickPt[1])
 
-        // Ground-plane distance from a single downward-pitched camera is only
-        // reliable far from the robot -- near the camera's blind spot (head
-        // pitched almost straight down) small pitch errors blow up into large
-        // distance errors, so the geometric distKick estimate can stay stuck
-        // well above KICK_DIST_MM even as the ball is right at the robot's
-        // feet (confirmed on hardware: robot walked into/past the ball
-        // without ever satisfying distKick <= KICK_DIST_MM). Use head pitch
-        // itself as a physical "ball is right here" cue once it's pinned
-        // near its downward limit, instead of trusting distance alone.
+        // Ground-plane distance from a single pitched camera is only reliable
+        // far from the robot -- near the camera's blind spot (head pitched
+        // down toward the robot's own feet) small pitch errors blow up into
+        // large distance errors, so the geometric distKick estimate can stay
+        // stuck well above KICK_DIST_MM even as the ball is right there
+        // (confirmed on hardware: robot walked into/past the ball without
+        // ever satisfying distKick <= KICK_DIST_MM). Use head pitch itself as
+        // a physical "ball is right here" cue once it's pinned near its
+        // downward limit (HEAD_PITCH_MAX -- corrected convention: low pitch
+        // is up, high pitch is down), instead of trusting distance alone.
         const headPitchNow = robotPuPro.servoTargets()[5]
         const nearBallByPitch = ball_valid && headPitchNow >= NEAR_BALL_PITCH_DEG
 

@@ -75,7 +75,7 @@ const HEAD_YAW_MAX = HEAD_YAW_CENTER + 45
 const HEAD_PITCH_MIN = HEAD_PITCH_CENTER - 45
 const HEAD_PITCH_MAX = HEAD_PITCH_CENTER + 45
 
-const SCAN_WAIT_FRAMES = 25
+const SCAN_WAIT_FRAMES = 12 // was 25 -- halved now that servoStep speed below is also faster
 const DEBUG_FLAG = true
 
 function clampL(v: number, lo: number, hi: number): number {
@@ -95,12 +95,15 @@ function clampL(v: number, lo: number, hi: number): number {
 // Yaw keeps the old cumulative/gain-scaled behavior since a wide left-right
 // sweep across the field is what we actually want there.
 //
-// HEAD_PITCH_GROUND_BIAS's sign is unverified on real hardware -- if the head
-// tilts UP instead of down during search, flip this to a negative value.
-// ---------------------------------------------------------------------------
-const HEAD_PITCH_GROUND_BIAS = 15
+// Confirmed on hardware (stage3.ts testing): increasing pitch means looking
+// UP, not down -- the +15 below was an unverified guess that turned out
+// backwards, biasing the search toward the ceiling instead of the ground.
+// Negative now so HEAD_PITCH_SEARCH_CENTER sits below 90 (down). Span widened
+// too -- ball/goal are never above camera level, so the search should cover
+// the down-to-level band, not hover in a narrow +-8 deg window near 90.
+const HEAD_PITCH_GROUND_BIAS = -35
 const HEAD_PITCH_SEARCH_CENTER = HEAD_PITCH_CENTER + HEAD_PITCH_GROUND_BIAS
-const HEAD_PITCH_SEARCH_SPAN = 8
+const HEAD_PITCH_SEARCH_SPAN = 25
 const HEAD_PITCH_SEARCH_MIN = clampL(HEAD_PITCH_SEARCH_CENTER - HEAD_PITCH_SEARCH_SPAN, HEAD_PITCH_MIN, HEAD_PITCH_MAX)
 const HEAD_PITCH_SEARCH_MAX = clampL(HEAD_PITCH_SEARCH_CENTER + HEAD_PITCH_SEARCH_SPAN, HEAD_PITCH_MIN, HEAD_PITCH_MAX)
 
@@ -128,8 +131,11 @@ function searchBall() {
         const liveYaw = robotPuPro.servoTargets()[4]
         const nextYaw = clampL(liveYaw + targetOffset.y * search_gain, HEAD_YAW_MIN, HEAD_YAW_MAX)
         const nextPitch = clampL(HEAD_PITCH_SEARCH_CENTER + targetOffset.p, HEAD_PITCH_SEARCH_MIN, HEAD_PITCH_SEARCH_MAX)
-        robotPuPro.servoStep(robotPuPro.ServoJoint.HeadYaw, nextYaw, 1)
-        robotPuPro.servoStep(robotPuPro.ServoJoint.HeadPitch, nextPitch, 1)
+        // Speed was 1 (slowest) -- much slower than the BALL_TRACK calls
+        // below (8), which is why search visibly crept one degree at a time
+        // on hardware. Matched to the fresh-track speed for a brisk sweep.
+        robotPuPro.servoStep(robotPuPro.ServoJoint.HeadYaw, nextYaw, 8)
+        robotPuPro.servoStep(robotPuPro.ServoJoint.HeadPitch, nextPitch, 8)
         if (DEBUG_FLAG) serial.writeLine(`SEARCHING yaw=${nextYaw} pitch=${nextPitch}`)
         return
     }
