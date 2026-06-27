@@ -705,7 +705,7 @@ function trackPacket(p: Buffer) {
             const nextYaw = clampL(yawAtDetection + lastYawByte * 0.2, HEAD_YAW_MIN, HEAD_YAW_MAX)
             const nextPitch = clampL(robotPuPro.servoTargets()[5] + lastPitchByte * 0.2, HEAD_PITCH_OPERATING_MIN, HEAD_PITCH_MAX)
 
-            if (!kickActive) {
+            if (!kickActive && !kickPlanReady) {
                 robotPuPro.servoStep(robotPuPro.ServoJoint.HeadYaw, nextYaw, 8)
                 robotPuPro.servoStep(robotPuPro.ServoJoint.HeadPitch, nextPitch, 8)
 
@@ -789,6 +789,7 @@ let walkTurn = 0
 let walkMode = 0
 let kickActive = false
 let kickStartMs = 0
+let kickStarted = false
 let scored = false
 
 function isScoredByVision(ball_now: number[], goal_now: number[]): boolean {
@@ -819,8 +820,11 @@ basic.forever(function () {
     // packets should not stop the approach.
     if (!ball_valid && !kickPlanReady) searchBall()
 
-    const haveBallMeas = freshBallThisCycle
-    const haveGoalMeas = freshGoalThisCycle
+    // Stage 4 treats the ball/goal as fixed once both have initialized the
+    // odometry-frame plan. Later packets are diagnostics; they should not
+    // move the target while the robot is already walking to it.
+    const haveBallMeas = freshBallThisCycle && !kickPlanReady
+    const haveGoalMeas = freshGoalThisCycle && !kickPlanReady
 
     // Filter in the ODOM/world frame, not the robot's current frame: a
     // stationary ball has ~0 velocity in odom, but would falsely appear to
@@ -886,7 +890,7 @@ basic.forever(function () {
         const closeByDistance = distKick <= KICK_DIST_MM
         const closeByPitchAssist = ball_valid && headPitchNow >= NEAR_BALL_PITCH_DEG && distKick <= KICK_PITCH_ASSIST_DIST_MM
         const atKickPoint = closeByDistance || closeByPitchAssist
-        const scoredNow = scored || isScoredByVision(ball_now, goal_now)
+        const scoredNow = scored || (kickStarted && isScoredByVision(ball_now, goal_now))
         if (kickActive && nowMs - kickStartMs >= KICK_ACTION_MS) kickActive = false
         visionPreferGoal = atKickPoint || kickActive
 
@@ -925,6 +929,7 @@ basic.forever(function () {
             } else {
                 if (!kickActive) {
                     kickActive = true
+                    kickStarted = true
                     kickStartMs = nowMs
                 }
                 walkSpeed = 0
