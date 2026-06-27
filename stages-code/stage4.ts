@@ -448,17 +448,17 @@ let lastKfMs = -1
 // ---------------------------------------------------------------------------
 // Kick point / heading helpers (from robotpu-localmap.ts / robotpu-soccer-mvp.ts)
 // ---------------------------------------------------------------------------
-const KICK_BACKOFF_MM = 50   // 0.05 m
+const KICK_BACKOFF_MM = 20   // 0.02 m, matched to the current ~2cm ball
 // Stage 3 used 320mm after an earlier calibration run, but the latest device
 // log shows that this declares AT_KICK_POSE while kickPt is still ~280mm
 // away. Hardware testing then showed even 110mm can leave the robot paused
 // more than 10cm behind the ball, so keep the stop gate very tight and let
 // the retry logic recover if the ball slips.
-const KICK_DIST_MM = 20
+const KICK_DIST_MM = 10
 // If the head is pinned down and the kick point is already fairly close, let
 // pitch act as a backup close-range cue. It must not override a large
 // distKick by itself; that was the early-stop bug.
-const KICK_PITCH_ASSIST_DIST_MM = 40
+const KICK_PITCH_ASSIST_DIST_MM = 15
 const APPROACH_OFFSET_START_MM = 450
 const TURN_GAIN = -1.2 // flip the sign if the robot turns the wrong direction on hardware
 const ALIGN_HEADING_TOL = 0.25
@@ -625,7 +625,10 @@ basic.forever(function () {
 // window means several hundred ms of walking on a stale/extrapolated position
 // after the camera has actually lost the ball -- this is the "walked past the
 // ball without seeing it" behavior observed on hardware.
-const BALL_LOST_TIMEOUT_MS = 500
+// Must be longer than the ball/goal vision service rotation. With a 140ms
+// slot and periodic goal-only windows, 500ms can falsely mark the ball lost
+// after only a couple of walking steps even when the ball is still present.
+const BALL_LOST_TIMEOUT_MS = 1200
 const GOAL_LOST_TIMEOUT_MS = 3000
 
 // Head yaw AT DETECTION TIME, snapshotted alongside cam2D/pose. camToOdom()
@@ -700,11 +703,16 @@ function trackPacket(p: Buffer) {
             const yawAtDetection = robotPuPro.servoTargets()[4]
             const nextYaw = clampL(yawAtDetection + lastYawByte * 0.2, HEAD_YAW_MIN, HEAD_YAW_MAX)
             const nextPitch = clampL(robotPuPro.servoTargets()[5] + lastPitchByte * 0.2, HEAD_PITCH_OPERATING_MIN, HEAD_PITCH_MAX)
-            robotPuPro.servoStep(robotPuPro.ServoJoint.HeadYaw, nextYaw, 8)
-            robotPuPro.servoStep(robotPuPro.ServoJoint.HeadPitch, nextPitch, 8)
 
-            if (nextPitch <= HEAD_PITCH_OPERATING_MIN + PITCH_PIN_UP_MARGIN_DEG) {
-                pitchPinnedUpCycles += 1
+            if (!kickActive) {
+                robotPuPro.servoStep(robotPuPro.ServoJoint.HeadYaw, nextYaw, 8)
+                robotPuPro.servoStep(robotPuPro.ServoJoint.HeadPitch, nextPitch, 8)
+
+                if (nextPitch <= HEAD_PITCH_OPERATING_MIN + PITCH_PIN_UP_MARGIN_DEG) {
+                    pitchPinnedUpCycles += 1
+                } else {
+                    pitchPinnedUpCycles = 0
+                }
             } else {
                 pitchPinnedUpCycles = 0
             }
