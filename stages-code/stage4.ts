@@ -644,6 +644,8 @@ let goal_pose_mm_deg: number[] = [0, 0, 0]
 let goal_head_yaw_deg = HEAD_YAW_CENTER
 let goal_valid = false
 let lastGoalSeenMs = -999999
+let freshBallThisCycle = false
+let freshGoalThisCycle = false
 
 // Safety net against the head-runaway-up bug observed on hardware (head
 // drifts up and freezes while "tracking" the ball, losing both ball and
@@ -724,6 +726,7 @@ function trackPacket(p: Buffer) {
             ball_pose_mm_deg = [pose[0], pose[1], pose[2]]
             ball_head_yaw_deg = yawAtDetection
             ball_valid = true
+            freshBallThisCycle = true
 
             if (DEBUG_FLAG) serial.writeLine(`BALL_TRACK yaw=${nextYaw} pitch=${nextPitch}`)
         } else if (nowMs - lastBallSeenMs < BALL_LOST_TIMEOUT_MS) {
@@ -757,6 +760,7 @@ function trackPacket(p: Buffer) {
             // ball branch does.
             goal_head_yaw_deg = robotPuPro.servoTargets()[4]
             goal_valid = true
+            freshGoalThisCycle = true
             if (DEBUG_FLAG) serial.writeLine(`GOAL_SEEN x_mm=${x_mm} y_mm=${y_mm}`)
         } else if (nowMs - lastGoalSeenMs >= GOAL_LOST_TIMEOUT_MS) {
             goal_valid = false
@@ -783,6 +787,9 @@ function isScoredByVision(ball_now: number[], goal_now: number[]): boolean {
 }
 
 basic.forever(function () {
+    freshBallThisCycle = false
+    freshGoalThisCycle = false
+
     const packet = pins.i2cReadBuffer(ESP32_ADDR, SIZE, false)
     if (packet.length == SIZE) {
         trackPacket(packet)
@@ -797,18 +804,14 @@ basic.forever(function () {
     if (goal_valid && nowMs - lastGoalSeenMs >= GOAL_LOST_TIMEOUT_MS) goal_valid = false
 
     // Centralized here instead of inside trackPacket()'s SOCCER_BALL branch:
-    // both ball and goal detection services are enabled and the camera
-    // interleaves packet types, so on any cycle where the I2C read happens
-    // to return a SOCCER_GOAL packet, trackPacket() never touches ball
-    // state at all -- a searchBall() call nested inside the SOCCER_BALL
-    // branch simply doesn't run that cycle, even though the ball may already
-    // be lost. Calling it unconditionally here, once per planner cycle
-    // whenever ball_valid is false, makes search progress independent of
-    // which packet type happened to arrive.
+    // the camera emits one event type per I2C packet, and Stage 4 actively
+    // alternates ball/goal service windows. Search must therefore progress
+    // from the planner whenever the ball is not currently trusted, regardless
+    // of which packet type happened to arrive this cycle.
     if (!ball_valid) searchBall()
 
-    const haveBallMeas = ball_valid
-    const haveGoalMeas = goal_valid
+    const haveBallMeas = freshBallThisCycle
+    const haveGoalMeas = freshGoalThisCycle
 
     // Filter in the ODOM/world frame, not the robot's current frame: a
     // stationary ball has ~0 velocity in odom, but would falsely appear to
@@ -826,10 +829,12 @@ basic.forever(function () {
     if (haveGoalMeas) {
         const goal_meas_O = camToOdom(goal_cam2D_mm, goal_head_yaw_deg, goal_pose_mm_deg)
         goalKF.update(goal_meas_O[0], goal_meas_O[1], GOAL_R_FRESH)
+        if (DEBUG_FLAG) serial.writeLine(`goal_O x=${goalKF.pos()[0]} y=${goalKF.pos()[1]}`)
     }
     if (haveBallMeas) {
         const ball_meas_O = camToOdom(ball_cam2D_mm, ball_head_yaw_deg, ball_pose_mm_deg)
         ballKF.update(ball_meas_O[0], ball_meas_O[1], BALL_R_FRESH)
+        if (DEBUG_FLAG) serial.writeLine(`ball_O x=${ballKF.pos()[0]} y=${ballKF.pos()[1]}`)
     }
 
     // Re-project the filtered odom-frame estimate into {C_now} fresh every
