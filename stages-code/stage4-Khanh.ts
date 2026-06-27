@@ -1,20 +1,24 @@
 /**
- * Stage 3 test (per stages-code/plan.txt): Approach the Ball & Take Up the
- * Kick Position.
+ * Stage 4 test (per stages-code/plan.md): Perform the Kick.
  *
- * Objective: with ball + goal both visible, compute a "kick point" (a spot
- * just behind the ball, on the line from the goal through the ball), steer
- * the robot there in a smooth arc, square up to face the goal, and STOP --
- * holding position once aligned. No kicking yet; that is Stage 4.
+ * Objective: identical to Stage 3 up through reaching and aligning at the
+ * kick pose -- but instead of holding position once aligned (walkMode==2),
+ * strike the ball: call robotPuPro.kick() repeatedly until the motion
+ * completes, then drop the current ball lock so the planner re-detects and
+ * re-approaches for another attempt (covers a missed kick). This is the only
+ * behavioral change from stage3.ts; everything else (camera tracking,
+ * latency compensation, Kalman filtering, arc steering, search, the stall
+ * safety stop, the arrived-cycle debounce) is carried over unmodified.
  *
  * SELF-CONTAINED: paste this single file into MakeCode's main.ts, with the
  * robotPuPro extension attached (needed for locationArray()/servoStep()/
- * walk()/radio control, same as Stage 2).
+ * walk()/kick()/radio control, same as Stage 3).
  *
  * Built from professor-code/robotpu-soccer-mvp.ts + robotpu-localmap.ts +
  * robotpu-kalman-filter.ts + robotpu-viewpoint.ts, but those files have real
  * bugs/mismatches against the actual installed pxt-robotpu extension and
- * against each other. Fixes applied here (confirmed, not stylistic):
+ * against each other. Fixes applied here (confirmed, not stylistic, carried
+ * over from stage3.ts):
  *
  *   1. Namespace/casing: robotPu -> robotPuPro, ServoTargets() ->
  *      servoTargets() (same fix already applied to robotpu-followball.ts).
@@ -72,10 +76,13 @@
  *      filtered estimate into {C_now} fresh every cycle with the LIVE pose
  *      (odomToNow()) -- correct even on cycles with no new detection.
  *
- * What this file deliberately does NOT do (out of scope for Stage 3):
- *   - No kicking. walkMode==2 ("at kick point, aligned to goal") just holds
- *     position (walk(0,0)) instead of calling robotPuPro.kick() -- Stage 4
- *     adds exactly that one call.
+ * What this file deliberately does NOT do (out of scope for Stage 4):
+ *   - No ball dynamics after the kick. The Kalman filter's small process
+ *     noise (BALL_Q_POS/BALL_Q_VEL below) is tuned for a rolling/stationary
+ *     ball before contact, not a struck one -- there's no point modeling
+ *     post-kick motion here because the ball lock is dropped immediately
+ *     once the kick finishes (see kickJustFinished below), forcing a fresh
+ *     re-acquire/re-approach rather than continuing to track a moving ball.
  *   - No obstacle avoidance / A* (Stage 5). The LocalGrid below is only used
  *     for debug visualization of ball/goal/kick-point cells, matching
  *     robotpu-localmap.ts's original intent, not for path planning yet.
@@ -85,11 +92,15 @@
  *      `ball_now`/`goal_now`/`kickPt` lines updating as you move either one.
  *   2. The robot should walk in a smooth curving approach toward the kick
  *      point (not a straight line + turn-in-place), then rotate to face the
- *      goal, then stop and hold -- log line `AT_KICK_POSE` should print once
- *      and stay steady (not flicker) as long as ball+goal stay visible.
- *   3. Manual override: pushing the remote's walk stick past the deadzone
+ *      goal -- log line `AT_KICK_POSE` should print, then the robot performs
+ *      the kick motion, then `KICK_DONE` prints once and the robot drops
+ *      back into searching/approaching for another attempt.
+ *   3. Confirm the kick triggers only once per approach -- no repeated
+ *      kicking while still aligned in walkMode 2 (kickActive/kickJustFinished
+ *      below exist specifically to prevent that).
+ *   4. Manual override: pushing the remote's walk stick past the deadzone
  *      takes over from the autonomous controller immediately (same as Stage
- *      2), for safety/recovery while testing.
+ *      2/3), for safety/recovery while testing.
  */
 
 // ---------------------------------------------------------------------------
@@ -417,8 +428,10 @@ const GOAL_Q_POS = 1.0     // 1e-6 m^2 x1e6
 const GOAL_Q_VEL = 100.0   // 1e-4 m^2/s^2 x1e6
 const GOAL_R_FRESH = 800.0 // 8e-4 m^2 x1e6
 
-// Ball: small process noise (it's only rolling/stationary before the kick --
-// Stage 4 is where post-kick dynamics would matter).
+// Ball: small process noise -- tuned for a rolling/stationary ball before
+// contact. Post-kick ball dynamics are NOT modeled: the ball lock is dropped
+// immediately once the kick finishes (see kickJustFinished below), so this
+// filter never needs to track a ball that's actually moving from a strike.
 const BALL_Q_POS = 5.0     // 5e-6 m^2 x1e6
 const BALL_Q_VEL = 500.0   // 5e-4 m^2/s^2 x1e6
 const BALL_R_FRESH = 1500.0 // 1.5e-3 m^2 x1e6
@@ -430,16 +443,54 @@ let lastKfMs = -1
 // ---------------------------------------------------------------------------
 // Kick point / heading helpers (from robotpu-localmap.ts / robotpu-soccer-mvp.ts)
 // ---------------------------------------------------------------------------
-const KICK_BACKOFF_MM = 50   // 0.05 m
-// Was 110mm, but hardware logs show the robot physically walking into and
-// pushing the ball while the software's own kickPt dist never dropped below
-// ~280-300mm -- the camera's ground-plane distance estimate reads high at
-// this range (a calibration offset, not just last-cm blind-spot noise), so
-// the old threshold could never trigger before contact. Recalibrated against
-// that observed floor, with margin so it stops just before contact instead
-// of right at it.
-const KICK_DIST_MM = 320
+// Bug #7 (microbit-console "2.txt"/"3.txt" pair, both 100% walkMode 0 start
+// to finish -- AT_KICK_POSE never fires once in either log): in "2.txt" the
+// robot is confirmed by the user to make real physical contact (it dribbles
+// the ball into the goal with the ball between its legs) while distKick is
+// STILL logging 100-160mm the entire time (e.g. dist=121.30, 126.95, 132.37,
+// 144.64, 149.27...) -- it never gets anywhere near the old 60mm threshold.
+// That's a calibration floor, not noise: there's a persistent ~100-150mm gap
+// between computed distKick and true contact (odometry/camera-projection
+// lag accumulating at close range), so a 60mm "arrived" threshold is simply
+// unreachable in practice -- the robot always face-plants into the ball
+// while still in approach mode instead of ever reaching the kick branch.
+// Raised KICK_DIST_MM to match the observed real-contact band so "arrived"
+// actually triggers. Backoff also dropped to 1cm per explicit request: the
+// kick stance point should sit just behind the ball, with the ball always
+// between that stance point and the goal (computeKickPoint() already builds
+// it that way -- only the magnitude needed to shrink).
+//
+// Bug #8 (microbit-console-2026-06-27T21-09-40-430Z.txt, taken WITH
+// KICK_DIST_MM=150): still not enough margin -- the close approach in that
+// log reads dist=204.55 -> dist=181.83 (one 20ms planner cycle, never
+// dropping below 150) and the very next reading jumps back UP to 205.68 and
+// keeps climbing from there, while the user confirms the robot touched/
+// pushed the ball through this exact stretch. Diagnosis at the time: a
+// quadruped gait can't stop mid-stride, and ballKF lags a ball that's
+// already being pushed, so distKick under-reports true closeness right
+// where it matters most -- tried fixing this by raising KICK_DIST_MM to 250
+// for more stopping margin.
+//
+// Reverted (explicit correction from the user): 250mm is the wrong
+// direction entirely. The robot's kick has almost no reach -- it can only
+// actually connect with the ball from ~1cm away. A 250mm "arrived" radius
+// means the robot stops APPROACHING and starts the kick sequence while still
+// ~25cm short of the ball, which just whiffs at thin air; it doesn't matter
+// how much approach margin that leaves, the kick itself can't cover that gap.
+// KICK_DIST_MM has to stay tight, matching the real kick range -- but that
+// reopens bug #7/#8's problem: distKick's own ~100-200mm floor/lag means a
+// tight threshold may rarely fire from distance alone, which is exactly why
+// contactDetected (see CONTACT_* below, in the planner loop) exists now --
+// it's a second, independent "arrived" signal based on actual physical
+// resistance (commanded motion, ~zero real displacement) instead of trusting
+// the laggy geometric estimate at sub-cm precision.
+const KICK_BACKOFF_MM = 10   // 1cm behind the ball, ball stays between kick point and goal
+const KICK_DIST_MM = 10      // tight on purpose -- matches the kick's real ~1cm reach, not approach stopping margin
 const APPROACH_OFFSET_START_MM = 450 // raised with KICK_DIST_MM so the arc-in still starts well before the new stop distance
+// Range (beyond stopDist_mm) over which updateControl()'s lead/lateral offset
+// tapers back to 0 -- see the finalApproachTaper comment in updateControl()
+// for the hardware-confirmed bug this fixes (bug #6).
+const FINAL_STRAIGHT_RANGE_MM = 150
 const TURN_GAIN = -1.2 // flip the sign if the robot turns the wrong direction on hardware
 
 function computeKickPoint(ball_now: number[], goal_now: number[]): number[] {
@@ -499,7 +550,21 @@ function updateControl(current: Pose2D, target: Pose2D, offsetStartDist_mm: numb
     const cross = tx * vy - ty * vx
     const side = -signNonZero(cross)
 
-    const offsetGain = clampL(1.0 - dist / offsetStartDist_mm, 0.0, 1.0)
+    // Bug #6 (confirmed on hardware, microbit-console-2026-06-27T20-24-58-288Z.txt):
+    // offsetGain rises toward 1 as dist shrinks toward 0 (it's "how far along
+    // the approach are we", not "how far from the target"), so lead/lateral
+    // were LARGEST exactly when closest to the kick point -- the lookahead
+    // point used for heading could be up to 100mm to the side and 180mm past
+    // a target that might only be ~150mm away. That log shows the robot's
+    // heading swing ~90 degrees in a single step right as distKick bottomed
+    // out near 150mm, then distKick climbed every cycle afterward and never
+    // recovered -- the robot turned away and missed the ball instead of
+    // walking the last bit straight in. Fixed with a second, independent
+    // taper that collapses lead/lateral to 0 as dist approaches stopDist_mm,
+    // so the final approach is a direct line at the target regardless of
+    // what offsetGain (the long-range curve-in shaping) says.
+    const finalApproachTaper = clampL((dist - stopDist_mm) / FINAL_STRAIGHT_RANGE_MM, 0.0, 1.0)
+    const offsetGain = clampL(1.0 - dist / offsetStartDist_mm, 0.0, 1.0) * finalApproachTaper
     const lead = leadMin_mm + (leadMax_mm - leadMin_mm) * offsetGain
     const lateral = (lateralOffsetMax_mm * offsetGain) * side
 
@@ -563,7 +628,7 @@ input.onLogoEvent(TouchButtonEvent.Pressed, function () {
     basic.pause(500)
 })
 
-basic.showString("3")
+basic.showString("4")
 pins.i2cWriteNumber(MUX_ADDR, 0x0F, NumberFormat.Int8LE, false)
 basic.pause(2000)
 
@@ -688,7 +753,14 @@ function trackPacket(p: Buffer) {
             ball_head_yaw_deg = yawAtDetection
             ball_valid = true
 
-            if (DEBUG_FLAG) serial.writeLine(`BALL_TRACK yaw=${nextYaw} pitch=${nextPitch}`)
+            // Raw detection coordinates -- previously only the resulting head
+            // yaw/pitch were logged here (unlike the goal branch's GOAL_SEEN/
+            // GOAL_REJECTED below), so a false-positive "ball" lock from the
+            // camera's color threshold (vs. a real ball) was impossible to
+            // distinguish from the log alone. Logging x_mm/y_mm gives the next
+            // hardware capture something concrete to check the false lock
+            // against (e.g. a suspiciously constant or implausible value).
+            if (DEBUG_FLAG) serial.writeLine(`BALL_TRACK x_mm=${x_mm} y_mm=${y_mm} yaw=${nextYaw} pitch=${nextPitch}`)
         } else if (nowMs - lastBallSeenMs < BALL_LOST_TIMEOUT_MS) {
             // Brief dropout: decay follow-through (same as robotpu-followball.ts)
             // instead of immediately searching -- avoids head-snapping on a
@@ -703,6 +775,9 @@ function trackPacket(p: Buffer) {
             // Lost beyond the decay window. Don't call searchBall() here --
             // see the planner loop below for why it's centralized there now.
             ball_valid = false
+        }
+        if (DEBUG_FLAG && isValid && !isStale && !plausible) {
+            serial.writeLine(`BALL_REJECTED x_mm=${x_mm} y_mm=${y_mm} (implausible -- likely ceiling/wall noise)`)
         }
     } else if (type == SOCCER_GOAL) {
         const x_mm = i16(p, 6)
@@ -732,31 +807,58 @@ function trackPacket(p: Buffer) {
 
 // ---------------------------------------------------------------------------
 // Planner: map detections into {C_now}, filter, compute the kick point, and
-// drive there. walkMode 2 ("aligned, at kick point") just holds in this
-// stage -- Stage 4 is the one-line addition of robotPuPro.kick() there.
+// drive there. walkMode 2 ("aligned, at kick point") triggers the actual
+// kick in the actuator loop below; this loop's only Stage-4-specific job is
+// consuming kickJustFinished (set by the actuator loop once a kick attempt
+// completes) to drop the ball lock and force a fresh re-approach.
 // ---------------------------------------------------------------------------
 let walkSpeed = 0
 let walkTurn = 0
 let walkMode = 0
 
+// Cross-loop signal: the actuator loop sets this once a robotPuPro.kick()
+// attempt has actually completed (see kickActive there). The planner loop
+// consumes it below and drops the ball lock -- per stages-code/plan.md's
+// Stage 4 description, "the loop falls back to re-detecting the ball/goal
+// so it can re-approach for another attempt if the first kick missed."
+let kickActive = false
+let kickJustFinished = false
+
 // Safety stop for a physically stuck robot (e.g. pushed against the goal/
-// an obstacle -- Stage 3 has no contact/obstacle sensor at all, by design,
-// so nothing else here would ever notice on its own). Compares actual
-// odometry displacement against commanded walk speed: if we're commanding
-// real forward motion during approach but position isn't actually
-// advancing, force-stop and drop the current ball lock so the planner
-// re-searches instead of grinding against whatever it hit indefinitely.
-// This also covers the case where the ball lock itself is a false positive
-// (camera fixated on something that isn't really there, confirmed on
-// hardware -- BALL_TRACK kept reporting a smoothly-tracked ball with no
-// real ball in the scene) -- regardless of *why* the target is bad,
-// "commanding motion with ~zero real displacement" is itself the unsafe
-// condition worth stopping on.
+// an obstacle -- this file still has no contact/obstacle sensor at all, by
+// design, so nothing else here would ever notice on its own). Compares
+// actual odometry displacement against commanded walk speed: if we're
+// commanding real forward motion during approach but position isn't
+// actually advancing, force-stop and drop the current ball lock so the
+// planner re-searches instead of grinding against whatever it hit
+// indefinitely. This also covers the case where the ball lock itself is a
+// false positive (camera fixated on something that isn't really there,
+// confirmed on hardware -- BALL_TRACK kept reporting a smoothly-tracked
+// ball with no real ball in the scene) -- regardless of *why* the target
+// is bad, "commanding motion with ~zero real displacement" is itself the
+// unsafe condition worth stopping on.
 const STALL_SPEED_THRESHOLD = 0.5
 const STALL_DIST_EPS_MM = 5
 const STALL_CYCLE_LIMIT = 50 // ~1s at this loop's 20ms cadence
 let stallCycles = 0
 let stallCheckPose_mm = [0, 0]
+
+// Bug #9 (companion to the KICK_DIST_MM revert above): the kick's real reach
+// is ~1cm, so KICK_DIST_MM has to stay tight -- but distKick's own ~100-200mm
+// floor/lag (bug #7/#8) means a tight threshold may rarely or never satisfy
+// `distKick <= KICK_DIST_MM` even once the robot is genuinely touching the
+// ball. Don't trust the geometric estimate alone at this precision: reuse the
+// same physical signal as the STALL check above (commanded forward motion,
+// ~zero real displacement -- i.e. something is physically resisting the
+// robot's legs), but on a much shorter fuse and gated to only count once
+// already plausibly close, so it reads as "I just hit the ball" rather than
+// "I'm stuck/lost" (that's still STALL_CYCLE_LIMIT's job, for the cases this
+// gate excludes -- e.g. genuinely walking into a wall from across the field).
+const CONTACT_GATE_DIST_MM = 400
+const CONTACT_DIST_EPS_MM = 5
+const CONTACT_CYCLE_LIMIT = 6 // ~120ms -- short enough to catch contact almost immediately, unlike STALL_CYCLE_LIMIT's ~1s
+let contactCycles = 0
+let contactCheckPose_mm = [0, 0]
 
 // Debounce for the "arrived at kick point" transition (mode 0 -> 1/2).
 // Hardware logs show ball_now/goal_now both flipping sign in a single cycle
@@ -773,12 +875,62 @@ let stallCheckPose_mm = [0, 0]
 const ARRIVED_CYCLE_LIMIT = 5
 let arrivedCycles = 0
 
+// Debounce for nearBallByPitch specifically (bug #3): the head saturates at
+// HEAD_PITCH_MAX as soon as the ball gets low enough in frame, which happens
+// well before the robot is actually close enough to kick -- a single pinned
+// reading isn't a trustworthy "ball is at my feet" signal by itself. Require
+// it to hold for many consecutive cycles (the head has nowhere else to look,
+// not just a momentary saturation) before it's allowed to short-circuit the
+// approach the way a single reading used to.
+const NEAR_BALL_PITCH_CYCLE_LIMIT = 25 // ~0.5s at this loop's 20ms cadence
+let pitchNearCycles = 0
+
+// Bug #5 (confirmed on hardware, microbit-console-2026-06-27T19-40-59-450Z.txt):
+// nearBallByPitch's whole premise -- "pitch pinned near the floor limit means
+// the ball is at the robot's feet" -- doesn't hold on this hardware. That log
+// shows pitch sustained above NEAR_BALL_PITCH_DEG (125) for 30+ consecutive
+// cycles (130-133 deg) while distKick sat at 500-550mm the whole time, so
+// pitchConfirmed alone (the `|| pitchConfirmed` below) declared "arrived" and
+// flipped walkMode to 1/2 hundreds of mm short of the ball -- the robot
+// backed up/turned away (walkMode 1) or tried to kick (walkMode 2) without
+// ever actually reaching it, matching the user's "turned left, missed the
+// ball" report. Gate the pitch override behind a generous-but-real distance
+// bound instead of letting it fire unconditionally: it can only shortcut the
+// distance check once the robot is already plausibly close (where the
+// camera's ground-plane math is known to be unreliable -- the original
+// reason this existed), not from across the whole field.
+const NEAR_BALL_PITCH_DIST_GATE_MM = 200
+
+// Bug #6 recovery (requested after microbit-console-2026-06-27T20-24-58-288Z.txt
+// showed the robot overshoot the kick point, turn away, and just keep walking
+// forward into a wall instead of stopping or correcting): once distKick grows
+// for many consecutive cycles while still approaching (walkMode 0), that's a
+// miss, not normal jitter -- the fix to updateControl()'s lead/lateral taper
+// above should make misses much rarer, but this is the requested fallback for
+// whenever one still happens. walkMode 3 backs the robot away from the missed
+// kick point while re-orienting to face it, then hands back to the normal
+// walkMode 0 approach for another attempt, instead of plowing forward blind.
+const MISS_DIST_EPS_MM = 20 // must grow by at least this much in one cycle to count as "moving away", not measurement noise
+const MISS_CYCLE_LIMIT = 15 // ~0.3s of sustained moving-away before declaring a miss
+let missCycles = 0
+let prevDistKick = -1
+
+const BACKUP_CYCLE_LIMIT = 50 // ~1s of backing away before retrying the approach
+const BACKUP_SPEED = -1.5
+let backupCycles = 0
+
 basic.forever(function () {
     const packet = pins.i2cReadBuffer(ESP32_ADDR, SIZE, false)
     if (packet.length == SIZE) {
         trackPacket(packet)
     } else if (DEBUG_FLAG) {
         serial.writeLine(`I2C_ERR len=${packet.length}`)
+    }
+
+    if (kickJustFinished) {
+        kickJustFinished = false
+        ball_valid = false
+        if (DEBUG_FLAG) serial.writeLine("KICK_DONE -- dropping ball lock to re-approach")
     }
 
     const nowMs = input.runningTime()
@@ -858,19 +1010,56 @@ basic.forever(function () {
         // far from the robot -- near the camera's blind spot (head pitched
         // down toward the robot's own feet) small pitch errors blow up into
         // large distance errors, so the geometric distKick estimate can stay
-        // stuck well above KICK_DIST_MM even as the ball is right there
-        // (confirmed on hardware: robot walked into/past the ball without
-        // ever satisfying distKick <= KICK_DIST_MM). Use head pitch itself as
-        // a physical "ball is right here" cue once it's pinned near its
-        // downward limit (HEAD_PITCH_MAX -- corrected convention: low pitch
-        // is up, high pitch is down), instead of trusting distance alone.
+        // stuck well above KICK_DIST_MM even as the ball is right there. Use
+        // head pitch itself as a physical "ball is right here" cue once it's
+        // pinned near its downward limit (HEAD_PITCH_MAX -- corrected
+        // convention: low pitch is up, high pitch is down), instead of
+        // trusting distance alone -- BUT (bug #3, confirmed on hardware) a
+        // single pinned reading fires as soon as the ball gets low enough in
+        // frame, well before the robot is actually close, so require it to
+        // hold for many consecutive cycles before it counts (pitchNearCycles).
         const headPitchNow = robotPuPro.servoTargets()[5]
         const nearBallByPitch = ball_valid && headPitchNow >= NEAR_BALL_PITCH_DEG
+        pitchNearCycles = nearBallByPitch ? pitchNearCycles + 1 : 0
+        const pitchConfirmed = pitchNearCycles >= NEAR_BALL_PITCH_CYCLE_LIMIT
 
-        const arrived = distKick <= KICK_DIST_MM || nearBallByPitch
+        // Bug #9 (see CONTACT_* above): a third, independent "arrived" signal
+        // based on physical resistance -- commanded forward motion with ~zero
+        // real displacement, gated to only count once already plausibly
+        // close. distKick alone can't resolve the ~1cm precision the kick
+        // actually needs (its floor/lag is ~100-200mm, confirmed on hardware
+        // -- see bug #7/#8), so a tight KICK_DIST_MM needs this as a backstop.
+        const contactGated = walkMode == 0 && distKick <= CONTACT_GATE_DIST_MM
+        if (contactGated) {
+            const movedSinceLastCycle = norm2L(poseNow[0] - contactCheckPose_mm[0], poseNow[1] - contactCheckPose_mm[1])
+            contactCycles = movedSinceLastCycle < CONTACT_DIST_EPS_MM ? contactCycles + 1 : 0
+        } else {
+            contactCycles = 0
+        }
+        contactCheckPose_mm = [poseNow[0], poseNow[1]]
+        const contactDetected = contactCycles >= CONTACT_CYCLE_LIMIT
+
+        const arrived = distKick <= KICK_DIST_MM || (pitchConfirmed && distKick <= NEAR_BALL_PITCH_DIST_GATE_MM) || contactDetected
         arrivedCycles = arrived ? arrivedCycles + 1 : 0
 
-        if (arrivedCycles < ARRIVED_CYCLE_LIMIT) {
+        if (walkMode == 3) {
+            // Missed last attempt -- keep backing away from the (re-detected,
+            // possibly shifted) kick point while turning to face it, rather
+            // than walking straight back in immediately (that's the approach
+            // that just missed). Once backed off far enough, hand back to the
+            // normal walkMode 0 approach below for a fresh attempt.
+            backupCycles += 1
+            const headingToKick = desiredHeadingTo(kickPt[0], kickPt[1])
+            walkTurn = clampL(TURN_GAIN * headingToKick, -0.8, 0.8)
+            walkSpeed = BACKUP_SPEED
+            if (backupCycles >= BACKUP_CYCLE_LIMIT) {
+                backupCycles = 0
+                missCycles = 0
+                prevDistKick = -1
+                arrivedCycles = 0
+                walkMode = 0
+            }
+        } else if (arrivedCycles < ARRIVED_CYCLE_LIMIT) {
             const ctrl = updateControl(
                 { x: 0, y: 0, theta: 0 },
                 { x: kickPt[0], y: kickPt[1], theta: thetaKick },
@@ -880,6 +1069,38 @@ basic.forever(function () {
             walkSpeed = ctrl[0]
             walkTurn = ctrl[1]
             walkMode = 0
+
+            // Bug #6: a real miss shows up as distKick growing for many
+            // consecutive cycles while still in approach mode -- not the
+            // occasional single-cycle jitter already tolerated elsewhere in
+            // this file. prevDistKick resets to -1 (skipping the check for
+            // one cycle) whenever this path wasn't run last cycle, so a mode
+            // switch or a fresh ball/goal lock can't be mistaken for a miss.
+            //
+            // Bug #10 (microbit-console-2026-06-27T21-09-40-430Z.txt): distKick
+            // climbed for a long stretch overall but wasn't strictly
+            // monotonic every single 20ms cycle -- occasional non-growing
+            // cycles (sign flips/jitter as ball or goal crossed the robot's
+            // heading) kept wiping missCycles straight back to 0 before it
+            // ever reached MISS_CYCLE_LIMIT, so walkMode never reached 3
+            // despite a clear, sustained miss in that log. Only clear the
+            // streak outright on a cycle that's genuinely closing in (a real
+            // miss never looks like that, even briefly); a flat/noisy cycle
+            // decays it by one instead of zeroing it, so the streak survives
+            // occasional jitter without masking real recovery.
+            if (prevDistKick >= 0 && distKick > prevDistKick + MISS_DIST_EPS_MM) {
+                missCycles += 1
+            } else if (prevDistKick >= 0 && distKick < prevDistKick - MISS_DIST_EPS_MM) {
+                missCycles = 0
+            } else {
+                missCycles = Math.max(0, missCycles - 1)
+            }
+            if (missCycles >= MISS_CYCLE_LIMIT) {
+                missCycles = 0
+                backupCycles = 0
+                walkMode = 3
+                if (DEBUG_FLAG) serial.writeLine("KICK_POINT_MISSED -- backing up to retry")
+            }
         } else {
             const headingGoal = desiredHeadingTo(goal_now[0], goal_now[1])
             walkTurn = clampL(TURN_GAIN * headingGoal, -0.8, 0.8)
@@ -891,6 +1112,7 @@ basic.forever(function () {
                 walkMode = 2
             }
         }
+        prevDistKick = distKick
 
         if (DEBUG_FLAG) {
             serial.writeLine(`pose x=${poseNow[0]} y=${poseNow[1]} theta=${poseNow[2]}`)
@@ -908,11 +1130,17 @@ basic.forever(function () {
         walkTurn = 0
         walkMode = 0
         arrivedCycles = 0
+        pitchNearCycles = 0
+        missCycles = 0
+        backupCycles = 0
+        prevDistKick = -1
+        contactCycles = 0
     }
 
     // Stall check: only meaningful while actively driving forward in
-    // approach mode (walkMode 0) -- walkMode 1/2 either back up briefly or
-    // hold still on purpose, neither of which should trip this.
+    // approach mode (walkMode 0) -- walkMode 1/2/3 either back up
+    // (deliberately, for alignment or a missed-kick retry), hold, or kick on
+    // purpose, none of which should trip this.
     if (walkMode == 0 && Math.abs(walkSpeed) > STALL_SPEED_THRESHOLD) {
         const movedDist = norm2L(poseNow[0] - stallCheckPose_mm[0], poseNow[1] - stallCheckPose_mm[1])
         stallCycles = movedDist < STALL_DIST_EPS_MM ? stallCycles + 1 : 0
@@ -934,20 +1162,49 @@ basic.forever(function () {
 
 // ---------------------------------------------------------------------------
 // Actuator loop. Remote stick (if pushed) always overrides the autonomous
-// controller, same safety/recovery behavior as Stage 2.
+// controller, same safety/recovery behavior as Stage 2/3.
 // ---------------------------------------------------------------------------
 basic.forever(function () {
+    // Bug #4 (confirmed on hardware, microbit-console-2026-06-27T-stage4-2.txt):
+    // the planner recomputes walkMode from scratch every single cycle purely
+    // off headingGoal's instantaneous value (no hysteresis), and headingGoal
+    // jitters across the 0.25 threshold from ordinary sensor/Kalman noise --
+    // so walkMode flickered 2->1->2->1 every 2-3 cycles (~40-60ms) in that
+    // log, NEVER once holding walkMode==2 long enough for robotPuPro.kick()'s
+    // multi-step boxingStates motion to reach a strike position. Confirmed by
+    // the total absence of "KICK_DONE" anywhere in that log despite 9 separate
+    // AT_KICK_POSE attempts -- the kick was started and abandoned every time,
+    // explaining the user's "kick is small" report (the leg barely begins
+    // moving before walkMode==1 takes back over and calls walk() instead).
+    // Fixed by making a started kick stick here in the actuator loop: once
+    // kickActive is true, keep calling kick() every cycle regardless of what
+    // the planner's walkMode does next, until kick() itself reports done.
     if (remoteWalkSpeed != 0) {
         robotPuPro.walk(remoteWalkSpeed, remoteWalkTurn)
+    } else if (walkMode == 2 || kickActive) {
+        // robotPuPro.kick() must be called repeatedly to complete the motion
+        // (per pxt-robotpu/main.ts's own doc comment: "Returns 0 when the
+        // kick is complete. Call repeatedly in a loop until it returns 0.").
+        // A 0 return only counts as "finished" if a prior cycle's call was
+        // already mid-kick (otherwise every cycle's first call would look
+        // like an instant completion).
+        const kickMd = robotPuPro.kick()
+        if (kickMd != 0) {
+            kickActive = true
+        } else if (kickActive) {
+            kickActive = false
+            kickJustFinished = true
+        }
     } else if (walkMode == 0) {
         robotPuPro.walk(walkSpeed, walkTurn)
-    } else if (walkMode == 1) {
-        robotPuPro.walk(-walkSpeed, walkTurn) // back up and turn to align with the goal
+    } else if (walkMode == 3) {
+        // Missed-kick-point recovery: the planner already set walkSpeed to a
+        // signed BACKUP_SPEED (negative) for this state, unlike walkMode 1
+        // below -- pass it straight through instead of negating it again.
+        robotPuPro.walk(walkSpeed, walkTurn)
     } else {
-        // walkMode == 2: aligned at the kick point. Stage 4 replaces this
-        // line with a repeated robotPuPro.kick() call -- nothing else here
-        // needs to change.
-        robotPuPro.walk(0, 0)
+        // walkMode == 1, and no kick in progress: back up and turn to align with the goal
+        robotPuPro.walk(-walkSpeed, walkTurn)
     }
     basic.pause(20)
 })
