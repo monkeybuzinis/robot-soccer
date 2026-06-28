@@ -1,4 +1,4 @@
-/**
+/**10:25
  * Stage 4 test (per stages-code/plan.md): Perform the Kick.
  *
  * Objective: identical to Stage 3 up through reaching and aligning at the
@@ -1067,13 +1067,23 @@ const PLAUSIBLE_KICKPT_DIST_MM = 3000 // generous vs. the ~1-2m real field, but 
 // kick point while re-orienting to face it, then hands back to the normal
 // walkMode 0 approach for another attempt, instead of plowing forward blind.
 const MISS_DIST_EPS_MM = 20 // must grow by at least this much in one cycle to count as "moving away", not measurement noise
-const MISS_CYCLE_LIMIT = 15 // ~0.3s of sustained moving-away before declaring a miss
+const MISS_CYCLE_LIMIT = 25 // raised from 15 -- more buffer for transient kickPt jitter from theta glitches
 let missCycles = 0
 let prevDistKick = -1
 
 const BACKUP_CYCLE_LIMIT = 50 // ~1s of backing away before retrying the approach
 const BACKUP_SPEED = -1.5
 let backupCycles = 0
+
+// Theta stability: locationArray()'s theta jumps 90°+ instantaneously between cycles
+// (bug #19, unfixed at extension level -- confirmed in microbit-console-claude-laste.txt
+// where pose theta alternates 35.4/-54.6/-46.9/43.1 while robot barely moves, making
+// odomToNow() rotate ball_now/goal_now ~90° each cycle so kickPt oscillates between two
+// directions and the robot spins in place with only ~155mm total odometry advance over
+// the entire run). 60° threshold: well above any real per-cycle rotation for a walking
+// quadruped, safely below the observed 90° glitch jumps.
+const THETA_MAX_JUMP_DEG = 60
+let poseThetaSmoothed = 0
 
 basic.forever(function () {
     const packet = pins.i2cReadBuffer(ESP32_ADDR, SIZE, false)
@@ -1110,30 +1120,6 @@ basic.forever(function () {
     if (ball_valid && !kickActive && nowMs - lastBallSeenMs >= BALL_LOST_TIMEOUT_MS) ball_valid = false
     if (goal_valid && nowMs - lastGoalSeenMs >= GOAL_LOST_TIMEOUT_MS) goal_valid = false
 
-    // Centralized here instead of inside trackPacket()'s branches: both ball
-    // and goal detection services are enabled and the camera interleaves
-    // packet types, so a search call nested inside one branch simply
-    // doesn't run on a cycle where the other packet type happens to arrive.
-    // Calling it unconditionally here makes search progress independent of
-    // which packet type happened to arrive.
-    //
-    // Bug #17 (see searchGoal() above): ball-finding still takes priority
-    // when both are missing (matches the previous behavior, and nothing
-    // useful can be computed without the ball ever being seen at least
-    // once) -- but once the ball is valid and the goal specifically is the
-    // one missing, actively sweep level for the goal instead of leaving the
-    // head wherever ball-tracking put it (often pointed down, where the
-    // goal physically can't be seen -- this was silently true the entire
-    // time before, explaining the long GOAL_REJECTED streaks alongside
-    // perfectly normal BALL_TRACK in the user's logs).
-    if (!kickActive) {
-        if (!ball_valid) {
-            searchBall()
-        } else if (!goal_valid) {
-            searchGoal()
-        }
-    }
-
     const haveBallMeas = ball_valid
     const haveGoalMeas = goal_valid
 
@@ -1150,23 +1136,125 @@ basic.forever(function () {
 
     goalKF.predict(dt_s, GOAL_Q_POS, GOAL_Q_VEL)
     ballKF.predict(dt_s, BALL_Q_POS, BALL_Q_VEL)
-    if (haveGoalMeas) {
-        const goal_meas_O = camToOdom(goal_cam2D_mm, goal_head_yaw_deg, goal_pose_mm_deg)
-        goalKF.update(goal_meas_O[0], goal_meas_O[1], GOAL_R_FRESH)
+
+    // Theta stability (see THETA_MAX_JUMP_DEG above): accept poseNow's theta only
+    // when it changes by less than the threshold; otherwise keep poseThetaSmoothed
+    // at its last accepted value. Use stablePoseNow for odomToNow so ball_now/goal_now
+    // don't flip direction when poseNow's theta glitches.
+    const rawThetaDeg = poseNow[2]
+    const thetaJumpDeg = Math.abs(wrapPi(deg2rad(rawThetaDeg - poseThetaSmoothed)) * 180 / Math.PI)
+    if (thetaJumpDeg < THETA_MAX_JUMP_DEG) {
+        poseThetaSmoothed = rawThetaDeg
+    } else if (DEBUG_FLAG) {
+        serial.writeLine(`THETA_GLITCH raw=${rawThetaDeg} smoothed=${poseThetaSmoothed} jump=${thetaJumpDeg}`)
     }
+    const stablePoseNow = [poseNow[0], poseNow[1], poseThetaSmoothed]
+
+    // Gate Kalman updates on detection-time theta being close to poseThetaSmoothed:
+    // a detection captured during a theta glitch projects the measurement into the
+    // wrong odom direction, poisoning the filter state.
+    // Track whether each KF was actually updated this cycle -- the velocity decay below
+    // must fire on ANY cycle where the KF was not updated, including cycles where
+    // haveMeas=true but the theta check rejected the measurement. Without this, velocity
+    // built from frozen/corrupted readings propagates forever through theta-rejected
+    // stretches (haveMeas=true blocks the !haveMeas decay condition even though the KF
+    // is not receiving any update), causing ball_now/goal_now to drift hundreds of mm.
+    let goalKfUpdated = false
+    if (haveGoalMeas) {
+        const goalThetaJump = Math.abs(wrapPi(deg2rad(goal_pose_mm_deg[2] - poseThetaSmoothed)) * 180 / Math.PI)
+        if (goalThetaJump < THETA_MAX_JUMP_DEG) {
+            const goal_meas_O = camToOdom(goal_cam2D_mm, goal_head_yaw_deg, goal_pose_mm_deg)
+            goalKF.update(goal_meas_O[0], goal_meas_O[1], GOAL_R_FRESH)
+            goalKfUpdated = true
+        } else if (DEBUG_FLAG) {
+            serial.writeLine(`GOAL_MEAS_THETA_REJECTED jump=${goalThetaJump}`)
+        }
+    }
+    let ballKfUpdated = false
     if (haveBallMeas) {
-        const ball_meas_O = camToOdom(ball_cam2D_mm, ball_head_yaw_deg, ball_pose_mm_deg)
-        ballKF.update(ball_meas_O[0], ball_meas_O[1], BALL_R_FRESH)
+        const ballThetaJump = Math.abs(wrapPi(deg2rad(ball_pose_mm_deg[2] - poseThetaSmoothed)) * 180 / Math.PI)
+        if (ballThetaJump < THETA_MAX_JUMP_DEG) {
+            const ball_meas_O = camToOdom(ball_cam2D_mm, ball_head_yaw_deg, ball_pose_mm_deg)
+            ballKF.update(ball_meas_O[0], ball_meas_O[1], BALL_R_FRESH)
+            ballKfUpdated = true
+        } else if (DEBUG_FLAG) {
+            serial.writeLine(`BALL_MEAS_THETA_REJECTED jump=${ballThetaJump}`)
+        }
     }
 
-    // Re-project the filtered odom-frame estimate into {C_now} fresh every
-    // cycle using the LIVE pose -- this stays correct even on cycles with no
-    // new detection, since it's the robot's own motion (not a new sample)
-    // driving the change.
+    // Decay Kalman velocity toward zero on every cycle where the KF was not actually
+    // updated. This covers: (a) no measurement at all, (b) measurement present but
+    // theta-rejected -- both leave the KF coasting on stale velocity. The ball is
+    // nearly stationary pre-kick and the goal is static, so any nonzero KF velocity
+    // is from pose jumps or frozen/corrupted readings and should decay quickly.
+    if (ballKF.inited && !ballKfUpdated) {
+        ballKF.kx.x1 *= 0.8
+        ballKF.ky.x1 *= 0.8
+    }
+    if (goalKF.inited && !goalKfUpdated) {
+        goalKF.kx.x1 *= 0.9
+        goalKF.ky.x1 *= 0.9
+    }
+
+    // Re-project the filtered odom-frame estimate into {C_now} using the STABLE pose
+    // so ball_now/goal_now stay in the correct direction even when poseNow's theta
+    // glitches between cycles. Position components (x, y) are kept raw since the
+    // position accumulation itself is not the source of the bug.
     let ball_now = [0, 0]
     let goal_now = [0, 0]
-    if (ballKF.inited) ball_now = odomToNow(ballKF.pos(), poseNow)
-    if (goalKF.inited) goal_now = odomToNow(goalKF.pos(), poseNow)
+    if (ballKF.inited) ball_now = odomToNow(ballKF.pos(), stablePoseNow)
+    if (goalKF.inited) goal_now = odomToNow(goalKF.pos(), stablePoseNow)
+
+    // Centralized here instead of inside trackPacket()'s branches: both ball
+    // and goal detection services are enabled and the camera interleaves
+    // packet types, so a search call nested inside one branch simply
+    // doesn't run on a cycle where the other packet type happens to arrive.
+    // Calling it unconditionally here makes search progress independent of
+    // which packet type happened to arrive.
+    //
+    // Bug #17 (see searchGoal() above): ball-finding still takes priority
+    // when both are missing (matches the previous behavior, and nothing
+    // useful can be computed without the ball ever being seen at least
+    // once) -- but once the ball is valid and the goal specifically is the
+    // one missing, actively sweep level for the goal instead of leaving the
+    // head wherever ball-tracking put it (often pointed down, where the
+    // goal physically can't be seen -- this was silently true the entire
+    // time before, explaining the long GOAL_REJECTED streaks alongside
+    // perfectly normal BALL_TRACK in the user's logs).
+    //
+    // Bug #20 (microbit-console-2026-06-28T02-56-17-515Z.txt and
+    // -02-53-03-938Z.txt): at point-blank range (~50-70mm, well inside
+    // NEAR_BALL_PITCH_DIST_GATE_MM) the ball drops into the head camera's
+    // physical blind spot -- it's directly under/in front of the lens, not
+    // actually lost. The user correctly diagnosed this from hardware: "the
+    // ball was already out of the camera's range." Calling searchBall()
+    // here used to fire anyway the instant ball_valid went false, no matter
+    // how close the last known ball position was. That swept the head off
+    // the floor and away from center, which (a) can never re-find a ball
+    // that's structurally outside the FOV at this range -- so it sweeps
+    // forever -- and (b) also swings the camera off the goal, which then
+    // times out too (GOAL_LOST_TIMEOUT_MS) purely as collateral damage from
+    // searching for an unfindable ball. Once goal_valid drops, bug #16's
+    // walk gate (goal_valid && ballKF.inited) fails and the whole robot
+    // stops dead -- "paused ... and kept searching" with no way out, since
+    // nothing will ever bring the ball back into frame from here.
+    //
+    // Fix: once we already have a ball lock (ballKF.inited) and the last
+    // known estimate puts it inside the close-range gate, treat a fresh
+    // ball_valid=false as the expected blind spot, not a real loss -- skip
+    // searchBall() and leave the head exactly where tracking last put it
+    // (pointed down at the floor, where contact is about to happen) instead
+    // of sweeping it away. The goal is still searched for if it's the one
+    // that's actually missing, since losing the goal isn't a blind-spot
+    // artifact and the robot needs it to keep computing kickPt at all.
+    const ballNearBlindSpot = ballKF.inited && norm2L(ball_now[0], ball_now[1]) <= NEAR_BALL_PITCH_DIST_GATE_MM
+    if (!kickActive) {
+        if (!ball_valid && !ballNearBlindSpot) {
+            searchBall()
+        } else if (!goal_valid) {
+            searchGoal()
+        }
+    }
 
     grid.clear()
     // Robot is always the grid's center cell -- {C_now} is defined with the

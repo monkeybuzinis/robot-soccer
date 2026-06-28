@@ -1,213 +1,150 @@
-# stages-code/ — Bug Log
+# RobotPU Soccer — Final Project
 
-This directory holds the staged MVP test files (per `plan.txt`) used to bring up
-the soccer robot incrementally: Stage 1 (I2C/utils) → Stage 2 (odometry +
-search) → Stage 3 (approach + hold at kick point) → Stage 4 (kick) → Stage 5
-(A*/pure-pursuit/Behavior Tree).
+Single integrated MakeCode TypeScript program: **[robotpu-soccer-final.ts](robotpu-soccer-final.ts)**.
 
-Each stage file is built from `professor-code/`'s reference files, ported to
-match the API actually exported by the installed `pxt-robotpu` extension, then
-iteratively fixed against real hardware logs. This file records every bug
-found and how it was fixed, in the order discovered, so the reasoning isn't
-lost once the code itself moves on.
+This file replaces the separate snippets (`robotpu-soccer-mvp.ts`, `robotpu-kalman-filter.ts`,
+`robotpu-localmap.ts`, `robotpu-search-soccer.js`, `robotpu-i2c-cam.ts`, `robotpu-A-star.ts`,
+`robotpu-viewpoint.ts`) with one self-contained pipeline. **Use only this one `.ts` file in the
+MakeCode project** — the others declare the same global names and will collide with it.
 
-## Global fixes — needed on every professor-code/ file
+Behavior implemented end-to-end: identify ball & goal → **wait until both are confirmed** →
+navigate to a kick position behind the ball → orient toward the goal → contact/push the ball →
+score, repeating every cycle so missed attempts are retried automatically (see
+[robotpu_soccer.pdf](robotpu_soccer.pdf), Chapters 2–7).
 
-`professor-code/` targets an older/renamed build of the extension. Every file
-ported from it needs these same fixes before it compiles or runs correctly:
+For isolated detection testing (no walking/kicking at all), see
+**[robotpu-detect-ball-goal.ts](robotpu-detect-ball-goal.ts)** — a standalone Step-1 file that
+just prints every I2C packet and head-tracks the ball, so camera/I2C problems can be diagnosed
+without the rest of the pipeline in the way.
 
-1. **Namespace**: `robotPu` → `robotPuPro`. The installed extension exports
-   `robotPuPro`; `robotPu` doesn't exist.
-2. **Casing**: `robotPu.ServoTargets()` → `robotPuPro.servoTargets()`
-   (lowercase `s`).
-3. **Head servo range**: professor-code clamps head yaw/pitch targets to
-   `[-45, 45]` as an offset from 0. The real `robotPuPro.servoStep()` takes an
-   **absolute** `[0, 179]` target with `90` = neutral — a `[-45, 45]` target
-   would clamp the head hard against one physical limit.
-4. **Array API**: MakeCode's array type has no `.splice()` — use
-   `.removeAt()` instead (only matters once Stage 5's A* file is ported).
+## Strategy: detect both, then plan — never chase blind
 
-## Stage 2 (`stage2.ts`) — Odometry & Active Search
+The robot does **not** walk toward the ball just because the ball alone is visible. Approaching
+the ball without knowing where the goal is can leave the robot on the wrong side of it to ever
+kick it goal-ward. `btRoot()`'s fallback order is:
+1. `btCelebrate()` — ball already judged to be in the goal (`condScored()`); overrides every other branch once latched, stops all movement.
+2. `btScore()` — needs **both** `ball_valid` and `goal_valid`; only this branch ever plans a path and kicks.
+3. `btHoldForGoal()` — ball seen, goal not yet: body holds still (`actionHoldForGoal()`), head keeps tracking the ball.
+4. `actionSearchBallBT()` — nothing seen: head sweeps to reacquire.
 
-| # | Bug | Symptom | Fix |
-|---|-----|---------|-----|
-| 1 | `gst`/Mode race | `robotPuPro.locationArray()` stayed frozen at `(0,0,0)` even while manually driving the robot with the remote. | Other loops call `servoStep()`/`setModeVar()` every 20ms, which forces `gst = Mode.API` on (effectively) every tick. The extension's internal `stateMachine()` has no dispatch entry for API mode, so a remote-set `gst = 5` (joystick) never survives long enough for `joystick()`'s `walk()` call to run. Fixed by calling `robotPuPro.walk()` directly from script code (the same call path `joystick()` uses internally) — this runs under whatever mode is currently forced, so it always executes and updates odometry. |
-| 2 | Lost-timer bug | A ball that's physically gone but still being reported as a stale last-known position never timed out, so the head never started searching. | professor-code's `trackBall()`-equivalent logic refreshed the "last seen" timer on any packet with `count > 0`, including `STALE` ones. Fixed: only a fresh, non-stale packet resets the miss counter; stale/missing/wrong-type packets all count as a miss, and after `BALL_STALE_CYCLE_LIMIT` consecutive misses the ball is declared lost regardless of how many more stale repeats keep arriving. |
-| 3 | Head-vibration bug | `BALL_TRACK`/`SEARCHING` flipped every other cycle, vibrating the head, even while the ball was still valid. | The search branch fired any time the current I2C read returned a non-ball packet type (e.g. a goal packet interleaved on the bus), not just when the ball was actually timed out. Fixed by gating the search call on `!ballValid` explicitly, so a single interleaved goal-type packet can no longer flip the state. |
-| 4 | Search pitch biased toward the ceiling, guessed direction wrong | Active head-scan search pointed up at the ceiling/walls instead of down at the floor. | `HEAD_PITCH_GROUND_BIAS` was an unverified `+15` guess; changed to `-35` (search center below 90) based on a hardware conclusion reached during `stage3.ts` testing at the time. **That conclusion was later reversed** (see `stage3.ts` bug #16) and `stage2.ts` was never revisited — treat this fix as unconfirmed/possibly backwards again; see "Still open" below. |
-| 5 | Search crept one degree at a time | Search sweep was visibly very slow on hardware. | `servoStep()` speed in `searchBall()`'s search calls was `1` (slowest), far below the live-tracking calls elsewhere (`8`). Matched to `8`. |
+`walkSpeed`/`walkTurn` are only ever set to nonzero values inside branch 2.
 
-## Stage 3 (`stage3.ts`) — Approach the Ball & Take Up the Kick Position
+## How each grading-rubric item is implemented
 
-Built from `professor-code/robotpu-soccer-mvp.ts` + `robotpu-localmap.ts` +
-`robotpu-kalman-filter.ts` + `robotpu-viewpoint.ts`. These files have real
-bugs/mismatches against the actual installed extension and against each
-other, found and fixed in this order:
+| Rubric item | Where in `robotpu-soccer-final.ts` |
+|---|---|
+| Detect/follow ball & goal | `trackBall()` (line 619) — parses the ESP32 I2C packet, drives head yaw/pitch to keep the ball centered, stores raw detections. |
+| Navigate to kick position | `computeKickPoint()` (552), `actionApproachKickPoint()` (789), `btNavigateToKick()` (913) |
+| Contact ball with goal orientation | `actionAlignToGoal()` (809), `condAlignedToGoal()` (766) — rotates in place until heading to the goal is within `ALIGN_HEADING_TOL` (~14°) before kicking. |
+| Push ball toward goal | `actionKick()` (825) → sets `walkMode = 2`, executed in the actuator loop (1084) via `robotPuPro.kick()`. The Behavior Tree re-ticks every cycle, so if the ball isn't yet scored it re-approaches and kicks again. |
+| Score detection | `condScored()` (775) + `btCelebrate()` (922) — see "Score detection" section below; this is a position heuristic, not a real sensor event. |
+| Obstacle avoidance (alpha) | `condPathClear()` (748) + `actionReplan()` (875) treat the ball/goal cells as occupied and re-route via `astarGrid()` (232) when the direct line is blocked. **Limitation:** no sonar packet format was available in the source files, so only ball/goal cells are marked as obstacles — see "Known limitations" below. |
 
-| # | Bug | Symptom | Fix |
-|---|-----|---------|-----|
-| 1 | Degrees vs radians | professor-code's `camToNow()` fed `theta` straight from `locationArray()[2]` into `Math.cos`/`Math.sin`, which expect radians — but `locationArray()` returns `theta_deg` in **degrees** (confirmed on hardware: e.g. `theta_deg=106.51`). | Convert to radians (`deg2rad()`) before every trig call. |
-| 2 | Unit mismatch | professor-code divides camera `x_mm`/`y_mm` by 1000 to get meters, then mixes that with `locationArray()`'s raw-millimeter pose in the same add/subtract — a 1000x scale bug. | This file works in millimeters end-to-end (matching `locationArray()`'s native unit); Kalman Q/R constants are professor-code's meter-tuned values × 1e6 (variance scales with the square of the unit). |
-| 3 | Lost-timer bug (same class as Stage 2 #2) | A ball/goal reported as stale-last-known never timed out. | Lost timer and the stored `cam2D`/pose used for the frame transform only reset on fresh (non-stale) detections. |
-| 4 | Head-vibration bug (same class as Stage 2 #3) | Both ball and goal detection run continuously here, so this mattered more than in Stage 2. | Search is only triggered from inside the ball branch once the ball is actually timed out, never just because the current I2C read happened to return a goal-type packet. |
-| 5 | Eye LED always on (first attempt) | "The LED light keeps being on, we don't need it" — not caused by this file's own code. | Root-caused to `pxt-robotpu`'s `RobotPu.pcb` class, which defaults `eyeIsOn = true` and runs a background blink animation. First fix: `robotPuPro.setEyeBrightness(0)` at boot — **superseded by bug #11 below**, which found this call alone doesn't actually work. |
-| 6 | Ceiling/wall noise read as goal | While the head was pitched up, the camera misread ceiling lights/walls as the goal (e.g. `x_mm=1701 y_mm=4580`, far outside any real field). | Added `MAX_DETECT_DIST_MM = 2500` plausibility filter on raw camera distance for both ball and goal; implausible detections are rejected and logged (`GOAL_REJECTED ... implausible -- likely ceiling/wall noise`). |
-| 7 | Walked on ball-only detection | Robot chased the ball alone with "no defined path" before the goal was even visible. | Body now only ever moves once **both** ball and goal are valid and a real kick point can be computed; head tracking/searching still runs independently of this gate. |
-| 8 | Head-tracking lost the ball while walking | Robot looked up and lost sight of the ball mid-approach. | The original tracking gain/sign/structure here still lost the ball on hardware. Replaced wholesale with the gain/sign/decay-on-dropout logic from `robotpu-followball.ts` (confirmed working on hardware): gain `0.2` (not `0.08`), no stale-distance scaling, decay-based follow-through on brief dropout, and search only triggered by a real lost-timeout (decoupled from packet type, so it can't be re-triggered by an interleaved goal packet). |
-| 9 | Kalman filter frame bug | Robot walked toward the ball/goal but kept oscillating, and `walkMode` never left `0` — it never reached/held the kick pose even with both ball and goal continuously valid. | professor-code's Kalman filters smoothed positions **after** transforming them into the robot's *current* frame (`{C_now}`), which shifts every cycle as the robot walks. That conflates the robot's own motion with the tracked object's velocity — a perfectly stationary ball looks like it has nonzero velocity every time the robot itself moves, since the relative coordinates shift even though the ball didn't. Fixed by filtering in the fixed **odometry/world frame** (`camToOdom()`), where a stationary object genuinely has ~0 velocity, then re-projecting the filtered estimate into `{C_now}` fresh every cycle with the live pose (`odomToNow()`) — correct even on cycles with no new detection. |
-| 10 | Ground-plane distance unreliable near the robot | After fix #9, the robot approached correctly but then walked into/past the ball instead of stopping — `distKick` stayed stuck well above `KICK_DIST_MM` even as head pitch pinned near its downward limit, i.e. the ball was right at the robot's feet. | A single downward-pitched camera's ground-plane distance projection is only reliable far from the robot; near the camera's blind spot, small pitch errors blow up into large distance errors. Added a second, physical stop trigger: once head pitch is pinned within `NEAR_BALL_PITCH_DEG` (10°) of its downward limit while tracking the ball, the planner treats that as "ball is right here" and exits approach mode regardless of what the (unreliable, at that range) computed distance says. |
-| 11 | Eye LED still on after bug #5's fix | LED stayed lit even with `setEyeBrightness(0)` called at boot. | `setEyeBrightness(0)` only sets a brightness *scalar* — the extension's `RobotPu` constructor calls `pcb.eyesCtl(1)` once at boot, a **digital** pin write at full brightness that bypasses the scalar entirely. The only thing that would normally turn it back off is the background `blink()` animation, which never runs here because this script forces `gst = Mode.API` every cycle (`blink()` only fires while `gst` is in `[0,5]`). Fixed by overriding the analog pins directly at boot: `robotPuPro.leftEyeBright(0)` / `robotPuPro.rightEyeBright(0)`. |
-| 12 | `KICK_DIST_MM` too small | Robot's computed `distKick` never converged below ~280-300mm even when the ball was visibly at the robot's feet/in contact, so it kept "approaching" indefinitely. | Recalibrated `KICK_DIST_MM` from `110` to `320` based on the hardware-observed convergence floor; `APPROACH_OFFSET_START_MM` raised from its old value to `450` to match (so the arc-in still starts well before the new, larger stop distance). |
-| 13 | Yaw search accumulation/saturation | Search yaw ratcheted to its clamp within 1-2 held frames instead of holding a fixed offset from center. | `searchBall()` built its yaw target cumulatively on the *live* yaw (`liveYaw + offset`) every frame the step was held (`scanFrameCounter` keeps a step active for `SCAN_WAIT_FRAMES` cycles), re-adding the same offset on top of an already-shifted position each cycle. Fixed by making the target absolute: `HEAD_YAW_CENTER + offset.y * search_gain`, matching how pitch was already computed. |
-| 14 | Search blocked by interleaved goal packets | Search made no progress on some cycles for no apparent reason. | `searchBall()` was only ever called from inside `trackPacket()`'s `SOCCER_BALL`-type branch. Both ball and goal detection run continuously and the camera interleaves packet types, so on any I2C cycle that happened to return a `SOCCER_GOAL` packet, `trackPacket()` never touched ball state at all — search simply didn't run that cycle, regardless of `ball_valid`. Fixed by removing the inline calls and centralizing into the main planner loop as `if (!ball_valid) searchBall()`, called once per cycle independent of which packet type arrived. |
-| 15 | Pitch direction convention was backwards | Robot's head visibly searched/tracked **above** level even while computed pitch values were, under the then-assumed convention, supposed to be at or below level. | The earlier "confirmed on hardware: increasing pitch = up" conclusion (used for bug #10 and the original `HEAD_PITCH_OPERATING_MAX` ceiling) was based on ambiguous evidence — a head pinned at one extreme while losing the ball is equally explainable either direction. A fresh hardware log settled it: search pitch confined to 62.5–72.5° (entirely *below* the assumed-level value of 90) still visibly faced above level — only consistent with **lower** pitch being up. Reversed globally: `HEAD_PITCH_MIN` (45) = up extreme, `HEAD_PITCH_CENTER` (90) = level, `HEAD_PITCH_MAX` (135) = down extreme (toward the robot's own feet). The old operating *ceiling* became an operating *floor* (`HEAD_PITCH_OPERATING_MIN = HEAD_PITCH_CENTER`) so pitch can structurally never go above level; `NEAR_BALL_PITCH_DEG`, the search range, and the pin-detection threshold (`PITCH_PIN_UP_MARGIN_DEG`/`PITCH_PIN_UP_CYCLE_LIMIT`) were all flipped to match. |
-| 16 | `camToOdom()` never corrected for head yaw | Large, erratic swings in `ball_now`/`goal_now`/`kickPt` (positions computed at 2000+mm on what's supposed to be a ~1m field), worse the more the head was deflected from center. | `camToOdom()` only ever rotated the camera-frame measurement by the robot **body's** heading (`locationArray()[2]`) — it never applied the head's own yaw deflection. The camera's `(x_mm, y_mm)` is reported in the camera's own frame, which differs from the body's forward direction by the head's current yaw; per `robotpu_soccer.pdf` (Ch.3 §1.1/§2.1), treating it directly as body-frame is only valid "when head yaw/pitch stays near zero during walking" — violated here by design, since this script actively swings the head ±45° to track/search. Fixed by snapshotting the head yaw at the moment of each detection (`ball_head_yaw_deg`/`goal_head_yaw_deg`) and rotating the camera-frame offset by `headYawDeg - HEAD_YAW_CENTER` before applying the body's own rotation. **Rotation sign is unverified on hardware** — if positions swing *more* with head deflection after this fix instead of less, flip the sign. |
-| 17 | Approach steering turned the wrong way | Robot veered left during approach instead of walking toward the ball, and lost tracking because of it (head couldn't keep up with the body's own unwarranted rotation). | `updateControl()`'s turn gain (`kTurn = -2.0`) had a comment flagging it as unverified ("if robot turns the wrong direction, flip...") since launch — never confirmed on hardware until now. Confirmed backwards; flipped to `kTurn = 2.0`. Only affects `walkMode 0` (approach) — the separate `TURN_GAIN` constant used by `walkMode 1` (post-arrival align-to-goal) is untouched and still unverified. |
-| 18 | Robot walked into the goal and kept pushing, never stopping | With no real ball anywhere in the scene, the device log still showed `BALL_TRACK yaw=...` climbing smoothly and continuously (45 → 91° over many cycles) — genuine head-tracking behavior, meaning the camera was confidently, falsely locking onto something else as "the ball" (`VALID`, non-`STALE`, plausible-distance packets — not fake/hardcoded data in this file; re-confirmed the same way as the earlier goal-alone investigation). `walkMode 0` then drove the robot toward a kick point computed from that phantom ball, and since Stage 3 has zero obstacle/contact sensing by design, nothing noticed when it physically hit the goal — it just kept commanding forward walk indefinitely. | Root cause (the camera's false-positive ball detection) is on the ESP32 side and out of this file's reach. Added a stall safety stop instead: track odometry displacement per cycle while `walkMode == 0` and commanded `walkSpeed` is non-trivial; if position hasn't advanced more than `STALL_DIST_EPS_MM` for `STALL_CYCLE_LIMIT` (~1s) consecutive cycles, force `walkSpeed`/`walkTurn` to 0 and drop `ball_valid` so the planner re-searches instead of continuing to push. Doesn't fix *why* a bad target appeared, but stops the robot from grinding against an obstacle regardless of the reason — the underlying camera false-positive is still open, see below. |
-| 19 | Robot walked only a few steps then stopped well short of the ball, then long search pauses before walking 2 more steps and stopping again | **Confirmed** by the new `pose x=... y=... theta=...` debug line (hardware log `microbit-console-2026-06-27T05-12-22-106Z.txt`). `poseNow` from `robotPuPro.locationArray()` doesn't drift smoothly while walking — it holds the *exact same* value (e.g. `x=0 y=0 theta=0`) for 15-30+ consecutive planner cycles (0.3-0.6s) while `walkMode==0` and the robot is actively trying to close real distance, then snaps to a new value that isn't a continuation of a trajectory (e.g. `theta=35.4 -> 18.4 -> 35.4 -> -54.6`, a ~90° swing between two samples, while `x`/`y` only ever moved a few mm total). This is worse than the originally-suspected single-frame glitch: every `ball_now`/`goal_now`/`kickPt` computed during a frozen stretch assumes the robot hasn't moved when it's mid-stride, and `camToOdom()` snapshots this same stale pose to fix each detection's position in the ODOM frame — so the Kalman filters' own belief about where the ball/goal actually are gets built from a wrong understanding of where the robot was standing, not just a one-cycle steering error. This explains "still far from ball" better than a single bad frame would. | Root cause now believed to be `robotPuPro.locationArray()` itself not refreshing every cycle while walking (possibly a fixed internal refresh interval, or needing some other call/trigger to integrate continuously) — this lives in the `pxt-robotpu` extension/hardware, not in `stage3.ts`. The `arrivedCycles` debounce and the stall detector (bug #18) both still help as damage control regardless of cause, but neither fixes the underlying stale-pose problem. Needs investigation at the extension level next. The separate "long pause before re-searching" symptom is most likely just the existing `SEARCH_PATTERN`'s full-sweep time (~2.4s at `SCAN_WAIT_FRAMES=12`, 10 steps, 20ms/cycle) — not investigated further this round, see "Still open" below. |
+## Mapping
 
-## Still open / worth tuning
+- `LocalGrid` (class, line 178): a 10×10, 0.05 m/cell occupancy grid **anchored at the robot**
+  (robot is always cell-relative `(0,0)`, current frame). `index()`/`center()` convert between
+  metric local-frame coordinates and grid cells.
+- The main loop (line 1009) clears the grid every cycle and marks the ball cell (`2`), goal cell
+  (`3`), and computed kick cell (`4`) for debugging and for `condPathClear()` to query.
+- A separate disposable `LocalGrid` is built inside `actionReplan()` (875) with the ball/goal
+  cells marked as obstacles (`1`), which is what `astarGrid()` actually plans against.
 
-- `NEAR_BALL_PITCH_DEG = HEAD_PITCH_MAX - 10` (125°, under the corrected
-  pitch convention from bug #15) is a first guess — may need tuning based on
-  how close the robot actually is when pitch first pins at that value on
-  hardware.
-- **Camera reports a confident, smoothly-tracked "ball" with no real ball in
-  the scene.** First reported as the goal-alone-detection issue right after
-  bug #15's pitch fix landed; re-confirmed more directly afterwards with the
-  ball fully removed (`BALL_TRACK yaw=` climbing continuously 45→91° over
-  many cycles — real head-tracking, not noise). Checked both times that this
-  isn't fake/hardcoded data in this file (`ball_cam2D_mm`/`ball_valid` are
-  only ever set from genuine, `VALID`/non-`STALE`/plausible-distance I2C
-  packets in `trackPacket()`), so the false positive itself is on the
-  ESP32's ball-color detector — out of this file's reach to fix directly.
-  Bug #18's stall safety stop limits the *damage* (stops the robot from
-  pushing into an obstacle because of it) but doesn't address the detector
-  mistaking something else for the ball in the first place. **Update (Stage
-  4 bug #12):** a sharper variant of this same class of problem showed up as
-  the literal SAME `x_mm`/`y_mm` repeating across 30-100+ consecutive
-  `VALID`/non-`STALE` packets — i.e. the ESP32/I2C side re-serving a cached
-  result rather than producing a fresh one each poll, not just "confidently
-  wrong." `stage4-Khanh.ts`'s `frozenBallCycles` check limits the damage from
-  this specific signature the same way bug #18's stall stop does for the
-  pushed-into-an-obstacle case, but the underlying staleness is still an
-  ESP32/firmware-side question, not something fixable from this file.
-- **`locationArray()` appears to stall for 15-30+ cycles at a time while
-  walking, then jump (bug #19, confirmed) — needs extension/hardware-level
-  investigation.** Not fixable from inside `stage3.ts`; the open question is
-  whether `robotPuPro.locationArray()` has a refresh-rate limit, needs a
-  different call pattern to integrate odometry continuously while walking,
-  or there's some other explanation. Until resolved, every position estimate
-  this file computes (ball, goal, kick point) is only as fresh as the last
-  pose update, which can lag the robot's actual walking progress by over half
-  a second.
-- **Search re-acquisition feels slow after losing the ball.** Likely just
-  `SEARCH_PATTERN`'s full-sweep time (10 steps × `SCAN_WAIT_FRAMES=12` cycles
-  × 20ms/cycle ≈ 2.4s for one full sweep, longer if it takes more than one
-  sweep to land back on the ball) rather than a bug — not measured directly
-  against hardware-observed pause length yet. Worth trying a smaller
-  `SCAN_WAIT_FRAMES` or biasing the first search step toward the last known
-  bearing before assuming this needs a structural fix.
-- `stage2.ts`'s `HEAD_PITCH_GROUND_BIAS` (bug #4) and its surrounding
-  comments are based on the pitch-direction conclusion that bug #15 later
-  reversed for `stage3.ts`. `stage2.ts` was never revisited after that
-  reversal (work this session stayed scoped to `stage3.ts` per direct
-  instruction) — its pitch search direction should be re-verified on
-  hardware before `stage2.ts` is used again.
-- The `LocalGrid` class in `stage3.ts` is debug-visualization only (marks
-  robot/ball/goal/kick-point cells) — it is **not** used for path planning.
-  Grid-based pathfinding is Stage 5's job (A* + pure pursuit), not pulled
-  forward into Stage 3.
-- `updateControl()`'s tuning constants (`vMax`, `turnMax`, lead/lateral
-  offsets, `TURN_GAIN`) are carried over from `robotpu-viewpoint.ts` and may
-  need adjustment for this robot's actual turning radius and walk speed.
+## Localization (per-detection, not global)
 
-## Stage 4 (`stage4.ts`) — Perform the Kick
+There is no global localization — robot pose lives only in the **odometry frame** produced by
+`robotPuPro.locationArray()` (read in `getPoseO()`, line 521), used purely to relate two points in
+time, not to fix an absolute position. This matches Chapter 3's design choice: not enough fixed
+landmarks for SLAM-style global localization, so everything is planned in a frame anchored to
+"now."
 
-Identical to `stage3.ts` up through reaching/aligning at the kick pose. The
-only behavioral change, per `plan.md`'s Stage 4 description: instead of
-`walkMode == 2` holding position, the actuator loop calls `robotPuPro.kick()`
-repeatedly until the motion completes, then drops the ball lock so the
-planner re-detects and re-approaches (covers a missed kick).
+- **Latency compensation**: `camToNow()` (541) takes a detection captured at time `t_cam`
+  (`ball_cam2D`/`goal_cam2D`, stored together with the odometry pose at receipt time in
+  `trackBall()`), and re-expresses it in the *current* local frame using the odometry delta
+  between `t_cam` and `now`.
+- **Smoothing**: `Kalman1DConstVel`/`Kalman2DConstVel` (lines 311, 376) run a constant-velocity
+  Kalman filter per axis on the latency-compensated ball/goal positions (`ballKF`, `goalKF`,
+  predict+update in the main loop, 1009). The goal uses tiny process noise (it's stationary); the
+  ball switches to larger process noise for `BALL_POSTKICK_MS` after a kick so the filter can
+  track the ball rolling away instead of lagging behind it.
 
-| # | Bug | Symptom | Fix |
-|---|-----|---------|-----|
-| 1 | Calling `kick()` every cycle in `walkMode 2` would replay the kick motion indefinitely | `walkMode` stays `2` every cycle as long as ball+goal stay valid and aligned — without guarding against it, the actuator loop would call `robotPuPro.kick()` forever once aligned, not just once per approach. | Added `kickActive` (set once `kick()` returns nonzero, i.e. mid-motion) and `kickJustFinished` (set the cycle `kick()` returns `0` *after* having been active) in the actuator loop. The planner loop consumes `kickJustFinished` each cycle and force-drops `ball_valid`, so the planner falls back to searching/re-approaching instead of the actuator loop calling `kick()` again while still aligned. Confirmed working on hardware — `microbit-console-2026-06-27T00-54-33-146Z.txt` shows clean `AT_KICK_POSE` → kick → `KICK_DONE -- dropping ball lock to re-approach` → re-search cycles repeating, with no replayed/repeated kicks. |
-| 2 | `KICK_DIST_MM` too large for kicking (inherited from Stage 3's bug #12, which tuned it against where the *approach* should stop, not where the foot can reach the ball) | First hardware kick test: robot reached the kick pose but kicked >10cm behind the ball, with a weak/glancing result. Log shows every `AT_KICK_POSE` firing with `distKick` in the 240-290mm band (e.g. `dist=281.97` at the exact transition), not anywhere near `KICK_BACKOFF_MM`'s intended 50mm. `headPitch` was only ~118.7° at that same moment — below `NEAR_BALL_PITCH_DEG` (125) — so the *distance* condition alone was triggering "arrived," not the pitch-based proximity cue; once `walkMode` leaves 0, neither `walkMode 1` (backs up while aligning) nor `walkMode 2` (holds/kicks) closes any further distance, so the robot kicked from wherever it happened to be the cycle `distKick` first dipped under 320. | Lowered `KICK_DIST_MM` from `320` to `150` in `stage4.ts` only (left `stage3.ts` untouched, since 320 was correct for that file's different goal of just stopping without kicking). `KICK_BACKOFF_MM` itself was already correct (50mm/5cm) and was *not* the cause despite that being the user's first guess. |
-| 3 | `nearBallByPitch` fires on a single saturated reading, short-circuiting the approach before `distKick` ever reaches `KICK_DIST_MM` | Second hardware kick test (after bug #2's fix, `KICK_DIST_MM=150`): user reports the kick still connects too far from the ball, wants it within ~1cm. Log shows `distKick` *was* decreasing smoothly in `walkMode 0` the whole time (e.g. 175.46 → 168.22 → 164.36 → 164.52mm, no floor in sight, unlike bug #12's fear) — but every `AT_KICK_POSE` still clustered at `distKick`=175-205mm, all above the 150 threshold. Root cause: the transition at `dist=166.23` fired with `headPitch=135` (`HEAD_PITCH_MAX`, the head's hard mechanical down-limit) — `nearBallByPitch` saturates as soon as the ball gets low enough in frame for the head to hit its physical tilt limit, which happens well before the robot is actually close, and a single such reading was enough to count as "arrived." | Lowered `KICK_DIST_MM` further, `150` → `60` (distance is shown to behave well in this range, not floored). Added `pitchNearCycles`/`NEAR_BALL_PITCH_CYCLE_LIMIT` (25 cycles, ~0.5s) so `nearBallByPitch` must hold for a sustained run, not one frame, before it can short-circuit the approach — a momentary mechanical-limit pin no longer counts. |
-| 4 | Kick repeatedly abandoned mid-motion by `walkMode` flicker | `microbit-console-2026-06-27T-stage4-2.txt`: `walkMode` flickered `2→1→2→1` every 2-3 cycles (~40-60ms). The planner recomputes `walkMode` from scratch every cycle purely off `headingGoal`'s instantaneous value with no hysteresis, and `headingGoal` jitters across the 0.25 threshold from ordinary sensor/Kalman noise — so `robotPuPro.kick()`'s multi-step motion never got to hold `walkMode==2` long enough to reach a strike position. Confirmed by zero `KICK_DONE` lines despite 9 separate `AT_KICK_POSE` attempts in that log; matches the user's "kick is small" report (the leg barely starts moving before `walkMode==1` takes back over and calls `walk()` instead). | Made a started kick stick in the actuator loop regardless of what the planner does next cycle: once `kickActive` is set (`kick()` returned nonzero at least once), keep calling `kick()` every cycle until it itself reports done, independent of `walkMode`. |
-| 5 | `nearBallByPitch` (bug #3's override) fired far from the ball, with no distance bound at all | `microbit-console-2026-06-27T19-40-59-450Z.txt`: pitch sustained above `NEAR_BALL_PITCH_DEG` (125°) for 30+ consecutive cycles (130-133°) while `distKick` sat at 500-550mm the whole time — `pitchConfirmed` alone declared "arrived" hundreds of mm short of the ball, matching the user's "turned left, missed the ball" report. | Gated the pitch override behind a real distance bound, `NEAR_BALL_PITCH_DIST_GATE_MM = 200`, so it can only shortcut the approach once already plausibly close, not from anywhere on the field. |
-| 6 | `updateControl()`'s lead/lateral lookahead offset grew **toward** the target instead of collapsing near it | `microbit-console-2026-06-27T20-24-58-288Z.txt`: `offsetGain` (and the lead/lateral it drives) rose toward its maximum as `dist` shrank toward `0` — backwards from what a clean final approach needs — so the lookahead point used for heading could be up to 100mm to the side and 180mm past a target only ~150mm away. Robot's heading swung ~90° in a single step right as `distKick` bottomed out near 150mm, then `distKick` climbed every cycle afterward and never recovered: turned away, missed the ball, kept walking forward into a wall instead of stopping or correcting. | Added a second, independent `finalApproachTaper` (`FINAL_STRAIGHT_RANGE_MM = 150`) that collapses lead/lateral to 0 as `dist` approaches the stop distance, so the final approach is always a direct line at the target regardless of the long-range curve-in shaping. Also added `walkMode 3` (explicit user request): once `distKick` grows for `MISS_CYCLE_LIMIT` consecutive cycles while still approaching, back the robot away from the missed kick point while re-orienting to face it, then hand back to the normal `walkMode 0` approach for a fresh attempt instead of plowing forward blind. |
-| 7 | `KICK_DIST_MM` (60mm) sat below `distKick`'s own measurement floor — "arrived" never fired at all | Two new logs (`2.txt`/`3.txt`): both 100% `walkMode 0` start to finish, `AT_KICK_POSE` never printed once in either. In `2.txt` the user confirms the robot made real physical contact (dribbled the ball into the goal, ball between its legs) while `distKick` logged 100-160mm the *entire* approach — never anywhere near the 60mm threshold. That's a calibration floor, not noise: odometry/camera-projection lag accumulating at close range puts a persistent ~100-150mm gap between computed `distKick` and true contact. | Raised `KICK_DIST_MM` to `150` to match the observed real-contact band. Also lowered `KICK_BACKOFF_MM` from `50` to `10` per explicit request — the kick stance point should sit just 1cm behind the ball, ball always between that point and the goal (`computeKickPoint()`'s direction logic was already correct; only the magnitude needed to shrink). |
-| 8 | 150mm still wasn't enough stopping margin | `microbit-console-2026-06-27T21-09-40-430Z.txt` (taken with `KICK_DIST_MM=150`): close approach reads `dist=204.55 → dist=181.83` (one 20ms cycle, never dropping below 150), then the very next reading jumps back **up** to 205.68 and keeps climbing — user confirms the robot touched/pushed the ball through this exact stretch. Two compounding causes: (1) a quadruped gait can't stop mid-stride — a committed step finishes its swing even after `walk(0,0)` is called; (2) `ballKF`'s process noise (`BALL_Q_POS`/`BALL_Q_VEL`) is tuned for a stationary/rolling ball pre-contact, so the filtered `ball_now` lags behind a ball that's already being pushed — `kickPt` kept reporting "still ~200mm away" mid-push, i.e. the robot "didn't recognize it was already at the kick position." | First attempt: raised `KICK_DIST_MM` to `250` for more stopping margin — **superseded by bug #9 below, this was the wrong direction.** |
-| 9 | Bug #8's fix (`KICK_DIST_MM=250`) solved the wrong problem | Explicit user correction: the robot's kick has almost no reach — it can only connect with the ball from ~1cm away. A 250mm "arrived" radius means the robot stops approaching and starts the kick sequence while still ~25cm short of the ball; no amount of approach-stopping margin fixes that, since the kick itself can't cover that gap — it just whiffs at thin air. | Reverted `KICK_DIST_MM` to a tight value matching the kick's real reach (`30`, later tightened further by the user to `10`). Since this reopens bug #7/#8's problem (`distKick`'s own ~100-200mm floor/lag may never satisfy a tight threshold even at true contact), added `contactDetected`: a second, independent "arrived" signal based on physical resistance — commanded forward motion with ~zero real displacement over a short ~120ms window (`CONTACT_CYCLE_LIMIT = 6`) — gated to only count once already plausibly close (`CONTACT_GATE_DIST_MM = 400`) so it reads as "just hit the ball" rather than "stuck/lost" (still `STALL_DETECTED`'s job, on its own ~1s fuse, for the cases this gate excludes, e.g. genuinely walking into a wall from across the field). |
-| 10 | Bug #6's miss-recovery (`walkMode 3`) never fired despite a real, sustained miss | Same log as bug #8: `distKick` climbed for a long stretch overall but wasn't strictly monotonic every single 20ms cycle — occasional non-growing cycles (jitter/sign-flips as ball or goal crossed the robot's heading) kept resetting `missCycles` straight to `0` before it ever reached `MISS_CYCLE_LIMIT`, so `walkMode` never reached `3` despite a clearly sustained miss in that log. | Only clear `missCycles` outright on a cycle that's genuinely closing in (a real miss never looks like that, even briefly); a flat/noisy cycle now decays the counter by one instead of zeroing it, so the streak survives occasional jitter without masking real recovery. |
-| 11 | `arrivedCycles` (a debounce meant only for raw `distKick`) was also gating `pitchArrived`/`contactDetected`, killing both | `microbit-console-2026-06-27T22-14-49-072Z.txt`: `walkMode` never left `0` despite `distKick` visibly dipping to `143mm` — well inside both `NEAR_BALL_PITCH_DIST_GATE_MM` (200) and `CONTACT_GATE_DIST_MM` (400). Root cause traced precisely: `poseNow` was frozen for ~16 straight cycles (Stage 3 bug #19, still unresolved at the extension level) while `distKick` swung `696→535→314→161→143→218→306→368→417→...` purely from fresh ball detections. `contactCycles` correctly counted 6 consecutive sub-400mm readings and `contactDetected` fired right at `dist=368` — but the *very next* cycle (`dist=417`) crossed back above every gate, which zeroed `arrivedCycles` before it ever reached `ARRIVED_CYCLE_LIMIT` (5). `contactDetected`/`pitchArrived` already carry their *own* internal sustained-confirmation debounce (`contactCycles>=6`, `pitchNearCycles>=25`); requiring them to ALSO survive a separate 5-cycle `arrivedCycles` streak on top was redundant — and fatal right at the target, exactly where `distKick` is naturally volatile (the whole reason these two alternate signals exist instead of trusting distance alone). | Decoupled the debounce: `arrivedCycles` now only counts cycles where `distKick <= KICK_DIST_MM` (the one path actually vulnerable to a single glitched pose sample, per this debounce's original motivation). `pitchArrived` and `contactDetected` now count as arrived the instant they fire, with no extra streak required. |
-| 12 | `BALL_TRACK` reporting the literal same `x_mm`/`y_mm` for 30-100+ consecutive "fresh" packets — a stale I2C/ESP32 detection masquerading as live, dragging the robot off to one side regardless of true starting alignment | `microbit-console-2026-06-27T22-25-40-464Z.txt`: user reports the robot still walks off to one side even starting squarely on the kick line. Log shows `BALL_TRACK` reporting the exact same raw `x_mm`/`y_mm` (e.g. `x_mm=-90 y_mm=485`, later `x_mm=-132 y_mm=493`) across dozens to 100+ *consecutive* `VALID`/non-`STALE` packets, while head yaw sweeps its *entire* physical range (46° to 135°) during that same stretch. A real camera feed always has some frame-to-frame jitter on a genuinely tracked target — an exact-repeat streak this long means the ESP32/I2C side is re-serving a cached result without producing a fresh one, while still flagging it `VALID`/non-`STALE`. Worse: `lastYawByte` (the head-tracking nudge) is read from this same stale packet and re-applied every cycle, so a frozen nonzero nudge keeps dragging the head — and the steering target derived from it — toward one side even though nothing in the scene moved, independent of how the robot was actually positioned at the start. | Added `frozenBallCycles`/`FROZEN_BALL_CYCLE_LIMIT` (15): track how many consecutive fresh ball packets report the exact same raw `(x_mm, y_mm)`; past that many, treat it as a non-advancing/stale detection and force the ball lost (before any head nudge or `ball_valid=true` happens) so `searchBall()` recenters the head instead of continuing to drive off a frozen reading. **First hardware confirmation, with `KICK_DIST_MM=10`:** `microbit-console-2026-06-28T00-08-39-870Z.txt` shows two complete, clean kick cycles (`AT_KICK_POSE` → `mode=2` → `KICK_DONE`), confirming bug #9/#11's fix works on real hardware. `BALL_FROZEN` itself also fired correctly partway through that log, on a stretch where `x_mm`/`y_mm` stayed literally frozen while head yaw clamped at its limit and pitch climbed by a constant, unchanging increment every cycle — a real tracking signal wouldn't do that. See bug #13 below for what happened next. |
-| 13 | After `BALL_FROZEN` forced the ball lost, every re-acquisition attempt for the rest of the run kept reporting the exact same stuck value, through `searchBall()`'s entire sweep | Same log as bug #12's confirmation: once `BALL_FROZEN` fired, `searchBall()` swept the head through its **entire** physical range (yaw 45° to 135°, every `SEARCH_PATTERN` step) for the rest of the log, and every single packet still reported the identical `x_mm=-60 y_mm=355` — never once different, regardless of where the camera was actually pointed. A cached-but-eventually-refreshing detector would produce a different (or no) reading once the head points somewhere a real ball isn't visible; identical output independent of camera orientation means the ESP32's own detection pipeline is stuck, not just slow to refresh. `ball_valid`/`searchBall()` can't reach far enough to fix that — neither one touches the ESP32 again once a reading already came back `VALID`/non-`STALE`. The robot never recovered for the remainder of that run. | Reused `frozenBallCycles` (it already keeps climbing for as long as the same stuck value keeps coming back) on a much longer fuse, `BALL_FROZEN_RESET_CYCLE_LIMIT` (150 cycles, ~3s — well past one full search sweep): periodically (via modulo, not a one-shot flag, so it keeps retrying if one toggle doesn't work) toggle `SERVICE_SOCCER_BALL_DETECTION` off then on, the same call already used once at boot, to try forcing the ESP32 to reinitialize its detection pipeline. **Untested on hardware** — the underlying ESP32-side hang is still out of this file's reach to actually diagnose; this is a recovery attempt, not a fix for why it got stuck. |
-| 14 | `kickPt` kept drifting hundreds of mm during/right after the kick itself, even though the robot had walked the correct path and reached the kick point correctly | `microbit-console-2026-06-28T00-27-55-542Z.txt`: user confirms the robot walked the right path this time. `AT_KICK_POSE` fires at `dist=345.7` — but `dist` then climbs steadily through every subsequent cycle (381 → 406 → 427 → 522 → 599 → 649 → 683 → 754) all the way to `KICK_DONE`, while the body isn't walking anywhere during this stretch (`kickActive` already overrides `walkMode` in the actuator loop, so `walk()` isn't being called). Root cause: once this close, the ball is in the head-mounted camera's blind spot — it physically can't see it at point-blank range — so every `BALL_TRACK` packet read during the kick is a bad close-range reading, not a real update, and `trackPacket()` kept feeding each one into `ballKF` anyway, dragging `ball_now`/`kickPt` further off with each cycle for no benefit (there's nothing to walk toward mid-kick). | `trackPacket()`'s `SOCCER_BALL` branch returns immediately whenever `kickActive` is true (no Kalman update, no head nudge, no staleness countdown), and the planner's staleness timeout / `searchBall()` call are gated the same way — confirmed still in place and working as the kick-window-specific piece of bug #16 below. |
-| 15 | Continuous re-detection throughout the approach kept causing failures of one kind or another across three separate hardware runs, even after bug #14's narrower kick-only freeze | `microbit-console-2026-06-28T00-27-55-542Z.txt` and `-00-36-11-662Z.txt`: the robot searched, re-acquired, walked a few steps, and lost the ball again repeatedly — explicit user report: "the robot still searched after 2-3 steps and lost the detection of the ball, and couldn't walk further." | **Tried, then reverted (tested on hardware, made things worse).** Took the first valid ball+goal detection pair only, locked `kickPt` in the fixed ODOM frame, and drove there on odometry alone, ignoring all further ball/goal packets. `microbit-console-2026-06-28T01-00-55-670Z.txt` shows `dist` frozen bit-for-bit identical for ~30 consecutive 20ms cycles at a stretch, then jumping in discrete lumps — Stage 3 bug #19's pose freeze-then-jump, now fully exposed with zero vision correction for the entire approach (previously, continuous detection at least partially papered over it). Worse, freezing the head entirely after lock meant nothing ever corrected it again during the approach — user reported the head visibly drifted up while walking, something continuous tracking used to counteract every cycle. Reverted in favor of the much narrower bug #16 below. |
-| 16 | The real, narrower problem behind bug #15's reports: as the robot gets close, the ball enters the head camera's blind spot more and more often, `ball_valid` goes false (after `BALL_LOST_TIMEOUT_MS`), and the old gate (`ball_valid && goal_valid`) stopped the body outright even though the ball hadn't actually moved | Same logs as bug #15, re-diagnosed after the full-lock revert: `ball_now`/`ballKF.pos()` were already being computed unconditionally every cycle via Kalman **predict** regardless of `ball_valid` (see the comment above `ball_now`) — a stationary ball has ~0 velocity in this filter, so the predicted position barely moves even through a long blind-spot stretch with no fresh measurement. The body just wasn't allowed to use it. | Changed the walk-enabling gate from `ball_valid && goal_valid` to `goal_valid && ballKF.inited` — the goal isn't subject to this blind-spot problem, but the ball only needs to have been seen *once* this approach to keep walking on its (near-stationary, Kalman-predicted) estimate through later dropouts. `ball_valid` still gates fresh Kalman *updates* and `nearBallByPitch` (relaxed to drop its own redundant `ball_valid` requirement, for the same reason — see its comment) — only the body's walk permission changed. `kickJustFinished` now also resets `ballKF.inited = false` (not just `ball_valid`), since the walk gate no longer depends on `ball_valid` alone to stop the body from coasting on the stale pre-kick position right after a kick. Two new logs since (`-01-32-08-449Z.txt`, `-01-29-20-096Z.txt`) didn't contradict this fix directly but surfaced two other issues (bugs #17/#18 below) — **still not conclusively confirmed working on its own.** |
-| 17 | Long stretches show `BALL_TRACK` reporting perfectly normal fresh readings while `GOAL_REJECTED` fires every single cycle at the same time | `microbit-console-2026-06-28T01-32-08-449Z.txt` and `-01-29-20-096Z.txt`: dozens of consecutive cycles with clean `BALL_TRACK x_mm=... yaw=135 pitch=...` (head pointed down, tracking fine) paired one-for-one with `GOAL_REJECTED ... ceiling/wall noise` every cycle. `searchBall()`'s sweep only ever covers the level-to-down pitch band (`HEAD_PITCH_SEARCH_MIN..MAX` = 90..135, see that comment) and nothing else in this file ever actively points the head toward the goal — the goal branch in `trackPacket()` never moves the head at all. So once the goal is lost, the head stays wherever ball-tracking left it (often pitched down at the ball), and the goal can only ever be reacquired by accident. | **Explicit user request, implemented as designed:** split into `searchBall()` (unchanged, below-level pitch) and a new `searchGoal()` that sweeps the same yaw pattern at a fixed level pitch (`HEAD_PITCH_CENTER`). The planner now calls `searchBall()` whenever the ball is missing (same priority as before), and `searchGoal()` only once the ball is valid but the goal specifically is missing — actively hunting for the goal at the pitch it's actually visible at, instead of leaving the head pointed down. **Untested on hardware.** |
-| 18 | `kickPt` was logged growing into the tens of thousands of mm (`dist=60000+`) and the robot never recovered for the rest of that run, just oscillating between backing up (`walkMode 3`) and re-approaching (`walkMode 0`) a target many dozens of meters away on a ~1-2m field | `microbit-console-2026-06-28T01-29-20-096Z.txt`: `poseNow` itself reads an unchanging, clearly-wrong value (e.g. `theta=11.33`) for dozens of consecutive cycles — Stage 3 bug #19's pose freeze, still unresolved at the extension level — which corrupts `odomToNow()`'s re-projection of **both** `ball_now` and `goal_now` (`goal_now` exploded the same way even off fresh `GOAL_SEEN` updates in the same stretch, so this isn't specific to bug #16's ball-coasting — any frozen/wrong pose corrupts both equally). Nothing in this file can fix `locationArray()` itself. | Added `PLAUSIBLE_KICKPT_DIST_MM` (3000mm, generous vs. the real ~1-2m field): if `distKick` ever exceeds it, treat the current lock as built on a corrupted pose sample and force a full reset (`ball_valid`/`goal_valid`/`ballKF.inited`/`goalKF.inited` all cleared, walk stopped) rather than continuing to chase a target that can never realistically be reached. Logged as `KICKPT_IMPLAUSIBLE`. This is a bound on the *symptom*, not a fix for bug #19 itself. **Confirmed firing correctly on hardware** — see bug #19 below. |
-| 19 | Bug #13's single-service toggle wasn't enough to recover from a genuinely hung capture pipeline | `microbit-console-2026-06-28T02-06-49-667Z.txt`: bugs #16/#17/#18 all confirmed working in this run — `SEARCHING_GOAL` correctly hunts at level pitch and lands fresh `GOAL_SEEN`s once the ball is valid but the goal is missing, the body keeps walking/computing `kickPt` through blind-spot dropouts as long as `ballKF.inited` stays true, and `KICKPT_IMPLAUSIBLE` fired twice (`dist=3006.8`, `dist=3098.3`) and cleanly reset state both times. But after the second reset, every `BALL_TRACK` for the rest of the (very long) log reported the exact same frozen `x_mm=162 y_mm=1375` — `BALL_DETECTION_RESET` fired once (toggling `SERVICE_SOCCER_BALL_DETECTION`) but the identical reading kept coming back afterward, so the robot stayed in `SEARCHING_BALL`/`SEARCHING_GOAL` and never walked again for the rest of the run. Matches the user's report: "robot keep searching for ball and couldn't move forward when new ball position is not detected." | Toggling only the ball-detection feature flag clearly wasn't restarting whatever had actually hung. Escalated the same recovery block to also bounce `SERVICE_IMAGE_CAPTURE` (the underlying capture pipeline itself, not just the sub-feature reading its output) before re-enabling ball detection. **Untested on hardware.** If a hung capture pipeline still doesn't recover after this, the hang is deeper than any service toggle can fix and needs ESP32/firmware-level investigation directly. |
+## Navigation
 
-### Still open / worth tuning (Stage 4 specific)
+- **Kick-point geometry**: `computeKickPoint()` (552) places the target `KICK_BACKOFF_M` behind
+  the ball, on the goal→ball line, so walking into that point and pushing forward sends the ball
+  toward the goal rather than sideways.
+- **Path planning**: `astarGrid()` (232) is a 4-connected A* over the `LocalGrid`, replanned
+  every cycle from the robot's current cell `(0,0)` to the kick-point cell. Only the first
+  waypoint of the returned path is ever executed (`actionReplan()`, 875), consistent with
+  "re-plan every cycle" rather than committing to a stale long path.
+- **Direct-vs-replan choice**: `btNavigateToKick()` (913) is a Behavior-Tree Fallback: it first
+  tries walking straight at the kick point (`condPathClear` + `actionApproachKickPoint`); only if
+  that line is blocked does it fall back to the A* replan.
 
-- Bug #19 from Stage 3 (the `locationArray()` pose freeze-then-jump) is
-  carried over unmodified into `stage4.ts` and still needs the same
-  extension-level investigation — kicking doesn't change that diagnosis.
-- Whether one missed kick should retry immediately (current behavior, via
-  `kickJustFinished` dropping the ball lock) or whether some attempts/cooldown
-  limit is needed has not been tested on hardware yet.
-- `contactDetected` (bug #9) got its first real hardware confirmation in the
-  bug #11 log — `contactCycles` correctly counted to `CONTACT_CYCLE_LIMIT`
-  and fired right where the geometry said the robot was close. The bug
-  living there was the redundant `arrivedCycles` gate on top (now fixed,
-  bug #11), not `contactDetected` itself. `KICK_DIST_MM` is `10`, tight on
-  purpose to match the kick's real ~1cm reach — `distKick`'s own ~100-200mm
-  floor/lag (bug #7/#8) means a tight threshold may rarely or never satisfy
-  `distKick <= KICK_DIST_MM` even at true contact, so `contactDetected`/
-  `pitchArrived` remain the expected *primary* arrival triggers, not rare
-  backstops. Watch the next log for whether `CONTACT_CYCLE_LIMIT` (~120ms)
-  and `CONTACT_GATE_DIST_MM` (400mm) need tuning — too short/tight risks
-  false triggers from a single noisy cycle, too long/loose reopens bug #8's
-  overshoot-into-the-ball problem.
-- **Bug #11 and bug #9's `contactDetected` are now hardware-confirmed.**
-  `microbit-console-2026-06-28T00-08-39-870Z.txt` shows two complete kick
-  cycles (`AT_KICK_POSE` → `mode=2` → `KICK_DONE`) with `KICK_DIST_MM=10` —
-  `walkMode` left `0` correctly without needing a sustained `arrivedCycles`
-  streak. No further action needed unless a future log shows it regress.
-- **Bug #12's `BALL_FROZEN` is also hardware-confirmed** — it correctly
-  caught a frozen `x_mm`/`y_mm` stretch in the same log (head yaw clamped at
-  its limit, pitch climbing by a constant increment every cycle — the
-  unambiguous fingerprint of a stale packet, not real tracking) and forced
-  the ball lost as designed.
-- **Bug #13's recovery toggle fired but didn't recover the ESP32 — escalated
-  to bug #19 above.** `microbit-console-2026-06-28T02-06-49-667Z.txt` shows
-  `BALL_DETECTION_RESET` firing once after a frozen reading, but the exact
-  same stuck `x_mm`/`y_mm` kept coming back afterward for the rest of the
-  (long) log — toggling just `SERVICE_SOCCER_BALL_DETECTION` wasn't enough.
-  Now also bounces `SERVICE_IMAGE_CAPTURE` in the same recovery block.
-  **Untested on hardware** — watch the next log for whether a fresh ball
-  reading actually follows a `BALL_DETECTION_RESET` now. If the capture
-  pipeline stays stuck even through this, the hang needs investigation on
-  the ESP32/firmware side directly — out of this file's reach either way.
-- **Bug #16's relaxed walk-gate is now confirmed working on hardware.**
-  `microbit-console-2026-06-28T02-06-49-667Z.txt` shows the body continuing
-  to compute/walk on `kickPt` through stretches with `SEARCHING_BALL` active
-  and no fresh `BALL_TRACK`, as long as `ballKF.inited` stayed true and the
-  goal was valid — exactly the blind-spot-coasting behavior this fix was
-  for.
-- **Bug #17's level-pitch goal search is now confirmed working on
-  hardware.** Same log: `SEARCHING_GOAL yaw=... pitch=90` lines appear once
-  the ball is valid but the goal is missing, and repeatedly lead to a fresh
-  `GOAL_SEEN` shortly after.
-- If a one-sided drift ever shows up again with no `BALL_FROZEN`/
-  `BALL_DETECTION_RESET` lines anywhere nearby (i.e. genuinely fresh
-  detections, not stale ones), the still-unverified suspects from before
-  remain on the table: Stage 3 bug #17 only confirmed `updateControl()`'s
-  internal `kTurn` sign for `walkMode 0`, not the separate `TURN_GAIN`
-  constant (post-arrival align-to-goal, and `walkMode 3`'s back-up turn);
-  and Stage 3 bug #16's `camToOdom()` head-yaw rotation sign is also still
-  flagged unverified in its own comment.
+## Control
+
+- **Pose-to-pose controller**: `updateControl()` (571) is a heading-aware "virtual target"
+  controller — it aims slightly ahead of and to the side of the literal target so the robot's gait
+  naturally arcs into the desired final heading instead of stopping to turn in place, then
+  produces `[walkSpeed, walkTurn]` for `robotPuPro.walk()`.
+- **Alignment**: once at the kick point, `actionAlignToGoal()` (809) switches `walkMode = 1`
+  (back-up-and-turn) and rotates until the heading error to the goal is below
+  `ALIGN_HEADING_TOL`, instead of using `updateControl()` (avoids drifting into the ball while
+  turning).
+- **Actuation**: the actuator loop (1084) is a thin `basic.forever` that maps `walkMode` to
+  `robotPuPro.walk(walkSpeed, walkTurn)` / `robotPuPro.walk(-walkSpeed, walkTurn)` /
+  `robotPuPro.kick()`, and stamps `lastKickMs` so the Kalman ball filter knows to expect faster
+  motion right after a kick.
+- **Decision layer**: `btSequence()`/`btFallback()` (717, 725) implement the two Behavior-Tree
+  composites from Chapter 7. `btRoot()` (947) is ticked once per planning cycle and is the *only*
+  place that decides between celebrating, scoring, holding for the goal, or head-scanning search —
+  there is no other if/else planner left in the file (see "Strategy" above for the fallback order).
+
+## Score detection
+
+There's no "ball entered the goal" event in the I2C packet format, so scoring is inferred from
+position: `condScored()` (line 775) compares the filtered ball/goal positions and latches `scored
+= true` once their distance drops below `SCORE_DIST_M` (0.12m — tuned a bit under the goal's
+~0.297m mouth width so the ball merely passing nearby doesn't false-positive). Once latched it
+never resets in this demo. `btCelebrate()` (922) is checked **first** in `btRoot()`'s fallback
+chain, so once scored it overrides scoring/holding/searching and the robot just stops — there's
+nothing left to do. `actionCelebrate()` (836) announces `robotPuPro.talk("Goal!")` exactly once
+(guarded by `celebrated`, separate from the `scored` latch) so it doesn't repeat every 20ms tick.
+
+**Caveat**: this is a position heuristic, not a verified "ball crossed the goal line" check — a
+ball that rolls close to the goal without actually going in could trigger a false score. Tighten
+`SCORE_DIST_M` if you see that in testing.
+
+## Known limitations (carried over from the PDF, Chapter 6 §7)
+
+- No sonar packet format was provided in the source files, so true obstacle avoidance isn't
+  wired up; the only "obstacle" the A* planner currently knows about is the ball/goal cells
+  themselves (intentionally simplistic, matches the PDF's stated alpha limitation).
+- `robotPuPro.locationArray()` actually returns `[x_mm, y_mm, theta_deg]` (millimeters +
+  degrees, per the real [pxt-robotpu](https://github.com/robotgyms/pxt-robotpu) source, not
+  meters/radians as the original snippet files assumed). `getPoseO()` (line 533) converts both
+  before anything else in the pipeline touches the pose. The *sign* of `theta_deg` (which way is
+  "turning left") is still field-tunable via `TURN_GAIN`/`kTurn` — verify on the actual robot
+  (PDF Chapter 6 §8 testing checklist) and flip those signs if the robot turns the wrong way.
+- "Score" is a position heuristic, not a real sensor event — see the "Score detection" section
+  above for the caveat about false positives from a near-miss ball.
+- Head yaw/pitch (`currentYaw`/`currentPitch`) are **absolute servo angles in degrees**, clamped
+  to `HEAD_YAW_MIN/MAX` and `HEAD_PITCH_MIN/MAX` (90° ± 45°, since `pxt-robotpu`'s
+  `PCB.servoStep()` clamps to an absolute `[0,179]` range with 90° = looking straight ahead —
+  confirmed against the real extension source). An earlier version of this file clamped them to
+  `[-45, 45]` as if 0° were neutral, which pinned the head near one physical extreme regardless
+  of what the tracking math computed (symptom: head stuck looking the same direction no matter
+  what). If the head still drifts to one side/extreme, double check `HEAD_YAW_CENTER`/
+  `HEAD_PITCH_CENTER` against your robot's actual mechanical neutral.
+- Ball detection failing while goal detection works is **not a microbit-code issue** — it means
+  the ESP32-S3's ball color/size thresholds aren't tuned for your ball/lighting. Connect to the
+  camera's Wi-Fi AP (`RobotPU-*****`, password `robot1234`), open `https://192.168.4.1`, and
+  adjust the soccer ball RGB color and diameter detection parameters there until the bounding box
+  shows up around the real ball (PDF Chapter 1 §2.1).
+
+## Tuning knobs
+
+All in the constants block at the top of `robotpu-soccer-final.ts`: grid resolution (`GRID_N`,
+`GRID_RES_M`), kick geometry (`KICK_BACKOFF_M`, `KICK_DIST_M`, `ALIGN_HEADING_TOL`), turn gain
+(`TURN_GAIN`, flip sign if the robot turns the wrong way), and the Kalman noise terms
+(`GOAL_Q_*`, `BALL_Q_*_PRE/POST`, `*_R_FRESH/STALE`) — see PDF Chapter 5 §9 for tuning intuition.
