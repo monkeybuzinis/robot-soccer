@@ -273,9 +273,11 @@ function searchGoal() {
         const targetOffset = SEARCH_PATTERN[scanStepIndex]
         robotPuPro.setModeVar(robotPuPro.Mode.API)
         const nextYaw = clampL(HEAD_YAW_CENTER + targetOffset.y * search_gain, HEAD_YAW_MIN, HEAD_YAW_MAX)
-        // Goal is farther and taller than the ball, so scan near level and
-        // slightly downward instead of pinning the head at the floor.
-        const nextPitch = clampL(HEAD_PITCH_CENTER + targetOffset.p, HEAD_PITCH_CENTER, HEAD_PITCH_CENTER + 25)
+        // Goal acquisition should not stare at the horizon/sky. In the new
+        // triangle setup the 90-95 range visibly points too high, so bias the
+        // goal sweep into the same level-to-down band that can see the ball
+        // and paper goal on the table.
+        const nextPitch = clampL(HEAD_PITCH_SEARCH_CENTER + targetOffset.p, HEAD_PITCH_CENTER + 10, HEAD_PITCH_MAX)
         robotPuPro.servoStep(robotPuPro.ServoJoint.HeadYaw, nextYaw, 8)
         robotPuPro.servoStep(robotPuPro.ServoJoint.HeadPitch, nextPitch, 8)
         if (DEBUG_FLAG) serial.writeLine(`SEARCH_GOAL yaw=${nextYaw} pitch=${nextPitch}`)
@@ -502,11 +504,6 @@ const SCORE_DIST_MM = 120
 // vision. If the ball slipped away or was missed, the planner falls back to
 // re-approach/re-align instead of kicking forever.
 const KICK_ACTION_MS = 1200
-// Hardware convention: positive speed is physical forward. The earlier
-// "walking away" symptom was caused by approach steering/geometry, not by
-// the gait API's forward sign.
-const BODY_WALK_SIGN = 1
-
 function computeKickPoint(ball_now: number[], goal_now: number[]): number[] {
     const dx = ball_now[0] - goal_now[0]
     const dy = ball_now[1] - goal_now[1]
@@ -539,7 +536,7 @@ function signNonZero(x: number): number {
 function updateControl(current: Pose2D, target: Pose2D, offsetStartDist_mm: number, stopDist_mm: number): number[] {
     const vMax = 2.5
     const turnMax = 0.8
-    const kTurn = 2.0 // hardware turn sign: positive eHeading should turn toward +x target
+    const kTurn = -2.0 // professor-code sign; positive speed stays forward
 
     const leadMin_mm = 50
     const leadMax_mm = 180
@@ -1020,9 +1017,9 @@ basic.forever(function () {
     if (remoteWalkSpeed != 0) {
         robotPuPro.walk(remoteWalkSpeed, remoteWalkTurn)
     } else if (walkMode == 0) {
-        robotPuPro.walk(BODY_WALK_SIGN * walkSpeed, walkTurn)
+        robotPuPro.walk(walkSpeed, walkTurn)
     } else if (walkMode == 1) {
-        robotPuPro.walk(-BODY_WALK_SIGN * walkSpeed, walkTurn) // back up and turn to align with the goal
+        robotPuPro.walk(-walkSpeed, walkTurn) // back up and turn to align with the goal
     } else {
         // walkMode == 2: aligned at the kick point. The extension's kick
         // action must be called repeatedly while the motion completes.
