@@ -273,10 +273,9 @@ function searchGoal() {
         const targetOffset = SEARCH_PATTERN[scanStepIndex]
         robotPuPro.setModeVar(robotPuPro.Mode.API)
         const nextYaw = clampL(HEAD_YAW_CENTER + targetOffset.y * search_gain, HEAD_YAW_MIN, HEAD_YAW_MAX)
-        // Goal acquisition should not stare at the horizon/sky. In the new
-        // triangle setup the 90-95 range visibly points too high, so bias the
-        // goal sweep into the same level-to-down band that can see the ball
-        // and paper goal on the table.
+        // Goal is vertical and farther away than the ball, so goal acquisition
+        // should scan near/slightly above the horizon. Do not reuse the
+        // ball-nearby table-facing pitch assumption here.
         const nextPitch = clampL(HEAD_PITCH_SEARCH_CENTER + targetOffset.p, HEAD_PITCH_CENTER + 10, HEAD_PITCH_MAX)
         robotPuPro.servoStep(robotPuPro.ServoJoint.HeadYaw, nextYaw, 8)
         robotPuPro.servoStep(robotPuPro.ServoJoint.HeadPitch, nextPitch, 8)
@@ -536,7 +535,7 @@ function signNonZero(x: number): number {
 function updateControl(current: Pose2D, target: Pose2D, offsetStartDist_mm: number, stopDist_mm: number): number[] {
     const vMax = 2.5
     const turnMax = 0.8
-    const kTurn = -2.0 // professor-code sign; positive speed stays forward
+    const kTurn = -2.0 // professor-code sign; keep fixed while validating perception
 
     const leadMin_mm = 50
     const leadMax_mm = 180
@@ -924,7 +923,10 @@ basic.forever(function () {
     }
 
     if (kickPlanReady) {
-        const kickPt = computeKickPoint(ball_now, goal_now)
+        const ball_O = ballKF.pos()
+        const goal_O = goalKF.pos()
+        const kickPt_O = computeKickPoint(ball_O, goal_O)
+        const kickPt = odomToNow(kickPt_O, poseNow)
         const idxK = grid.index(kickPt[0], kickPt[1])
         grid.set(idxK[0], idxK[1], 4)
 
@@ -939,7 +941,7 @@ basic.forever(function () {
         const closeByDistance = distKick <= KICK_DIST_MM
         const closeByPitchAssist = ball_valid && headPitchNow >= NEAR_BALL_PITCH_DEG && distKick <= KICK_PITCH_ASSIST_DIST_MM
         const atKickPoint = closeByDistance || closeByPitchAssist
-        const scoredNow = scored || (kickStarted && isScoredByVision(ball_now, goal_now))
+        const scoredNow = scored || (kickStarted && isScoredByVision(ball_O, goal_O))
         if (kickActive && nowMs - kickStartMs >= KICK_ACTION_MS) kickActive = false
         visionAcquireGoal = false
         visionPreferGoal = atKickPoint || kickActive
@@ -989,9 +991,12 @@ basic.forever(function () {
         }
 
         if (DEBUG_FLAG) {
+            serial.writeLine(`ball_Omap x=${ball_O[0]} y=${ball_O[1]}`)
+            serial.writeLine(`goal_Omap x=${goal_O[0]} y=${goal_O[1]}`)
+            serial.writeLine(`kickPt_Omap x=${kickPt_O[0]} y=${kickPt_O[1]}`)
             serial.writeLine(`ball_now x=${ball_now[0]} y=${ball_now[1]}`)
             serial.writeLine(`goal_now x=${goal_now[0]} y=${goal_now[1]}`)
-            serial.writeLine(`kickPt x=${kickPt[0]} y=${kickPt[1]} dist=${distKick} mode=${walkMode}`)
+            serial.writeLine(`kickPt_now x=${kickPt[0]} y=${kickPt[1]} dist=${distKick} mode=${walkMode}`)
             if (scored) serial.writeLine("SCORED")
             if (walkMode == 2) serial.writeLine("AT_KICK_POSE")
         }

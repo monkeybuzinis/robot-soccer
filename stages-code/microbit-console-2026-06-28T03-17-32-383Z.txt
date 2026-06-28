@@ -1,0 +1,2081 @@
+BALL_TRACK yaw=82.6 pitch=90  
+ball_O x=94.5145380235743 y=478.502875751223                  
+GOAL_REJECTED x_mm=941 y_mm=5733 (implausible -- likely ceiling/wall noise)                   
+SEARCH_GOAL yaw=110 pitch=112.5                               
+BALL_TRACK yaw=91.2 pitch=90  
+SEARCH_GOAL yaw=110 pitch=112.5                               
+ball_O x=23.6051615061932 y=487.050344828584                  
+BALL_TRACK yaw=99.8 pitch=98  
+SEARCH_GOAL yaw=110 pitch=112.5                               
+ball_O x=-36.6165231404141 y=485.711357460418                 
+BALL_TRACK yaw=108.4 pitch=106
+SEARCH_GOAL yaw=110 pitch=112.5                               
+ball_O x=-110.665472232559 y=475.555107761118                 
+BALL_TRACK yaw=110.6 pitch=112.5                              
+SEARCH_GOAL yaw=110 pitch=112.5                               
+ball_O x=-151.375819637456 y=467.901281934405                 
+BALL_TRACK yaw=110.6 pitch=112.5                              
+SEARCH_GOAL yaw=110 pitch=112.5                               
+ball_O x=-168.410919354291 y=464.415283501577                 
+BALL_TRACK yaw=110.6 pitch=112.5                              
+SEARCH_GOAL yaw=110 pitch=112.5                               
+ball_O x=-174.38040891365 y=462.951586924459                  
+BALL_TRACK yaw=110.6 pitch=114.3                              
+SEARCH_GOAL yaw=110 pitch=112.5                               
+ball_O x=-178.133060875832 y=472.787071611035                 
+BALL_TRACK yaw=110.6 pitch=114.3                              
+SEARCH_GOAL yaw=110 pitch=112.5                               
+ball_O x=-180.557760837507 y=479.099988791408                 
+SEARCH_GOAL yaw=110 pitch=112.5                               
+GOAL_REJECTED x_mm=941 y_mm=5733 (implausible -- likely ceiling/wall noise)                   
+SEARCH_GOAL yaw=110 pitch=112.5                               
+GOAL_REJECTED x_mm=941 y_mm=5733 (implausible -- likely ceiling/wall noise)                   
+SEARCH_GOAL yaw=110 pitch=112.5                               
+SEARCH_GOAL yaw=90 pitch=112.5
+SEARCH_GOAL yaw=90 pitch=112.5
+SEARCH_GOAL yaw=90 pitch=112.5
+SEARCH_GOAL yaw=90 pitch=112.5
+BALL_TRACK yaw=90.6 pitch=113.1                               
+SEARCH_GOAL yaw=90 pitch=112.5
+ball_O x=-53.9094107033996 y=471.151372366422                 
+BALL_TRACK yaw=90.6 pitch=113.1                               
+SEARCH_GOAL yaw=90 pitch=112.5
+ball_O x=-11.6945168179848 y=469.279410211107                 
+BALL_TRACK yaw=90.6 pitch=113.1                               
+SEARCH_GOAL yaw=90 pitch=112.5
+ball_O x=8.455390114121 y=468.328141530246                    
+BALL_TRACK yaw=91 pitch=113.1 
+SEARCH_GOAL yaw=90 pitch=112.5
+ball_O x=28.7825521140462 y=483.73272610762                   
+BALL_TRACK yaw=91.2 pitch=113.3                               
+SEARCH_GOAL yaw=90 pitch=112.5
+ball_O x=41.4217385801423 y=462.893046511686                  
+VISION_GOAL_SAMPLE            
+SEARCH_GOAL yaw=90 pitch=112.5
+GOAL_REJECTED x_mm=941 y_mm=5733 (implausible -- likely ceiling/wall noise)                   
+SEARCH_GOAL yaw=90 pitch=112.5
+GOAL_REJECTED x_mm=941 y_mm=5733 (implausible -- likely ceiling/wall noise)                   
+SEARCH_GOAL yaw=90 pitch=112.5
+GOAL_REJECTED x_mm=941 y_mm=5733 (implausible -- likely ceiling/wall noise)                   
+SEARCH_GOAL yaw=70 pitch=112.5
+SEARCH_GOAL yaw=70 pitch=112.5
+SEARCH_GOAL yaw=70 pitch=112.5
+SEARCH_GOAL yaw=70 pitch=112.5
+BALL_TRACK yaw=71.2 pitch=113.3                               
+SEARCH_GOAL yaw=70 pitch=112.5
+ball_O x=163.041559967153 y=399.103877690932                  
+BALL_TRACK yaw=71.2 pitch=113.3                               
+SEARCH_GOAL yaw=70 pitch=112.5
+ball_O x=179.955747703367 y=381.387354150352                  
+BALL_TRACK yaw=71.2 pitch=113.3                               
+SEARCH_GOAL yaw=70 pitch=112.5
+ball_O x=190.46611269377 y=371.42699301268                    
+BALL_TRACK yaw=71.2 pitch=113.3                               
+SEARCH_GOAL yaw=70 pitch=112.5
+ball_O x=198.371401546161 y=364.438678867228                  
+BALL_TRACK yaw=71.2 pitch=113.3                               
+SEARCH_GOAL yaw=70 pitch=112.5
+ball_O x=204.106005452069 y=359.382600982194                  
+VISION_GOAL_SAMPLE            
+BALL_TRACK yaw=71.2 pitch=113.3                               
+SEARCH_GOAL yaw=70 pitch=112.5
+ball_O x=208.039963569263 y=355.754644222133                  
+GOAL_REJECTED x_mm=941 y_mm=5733 (implausible -- likely ceiling/wall noise)                   
+SEARCH_GOAL yaw=70 pitch=112.5
+GOAL_REJECTED x_mm=941 y_mm=5733 (implausible -- likely ceiling/wall noise)                   
+SEARCH_GOAL yaw=70 pitch=112.5
+GOAL_REJECTED x_mm=941 y_mm=5733 (implausible -- likely ceiling/wall noise)                   
+BALL_TRACK yaw=71.2 pitch=113.3                               
+SEARCH_GOAL yaw=55 pitch=112.5
+ball_O x=223.640592467368 y=344.846529655871                  
+BALL_TRACK yaw=64.4 pitch=113.3                               
+SEARCH_GOAL yaw=55 pitch=112.5
+ball_O x=229.692901926048 y=340.533474672205                  
+BALL_TRACK yaw=57.6 pitch=113.3                               
+SEARCH_GOAL yaw=55 pitch=112.5
+ball_O x=245.428532375426 y=328.945477466304                  
+SEARCH_GOAL yaw=55 pitch=112.5
+SEARCH_GOAL yaw=55 pitch=112.5
+SEARCH_GOAL yaw=55 pitch=112.5
+SEARCH_GOAL yaw=55 pitch=112.5
+BALL_TRACK yaw=56.2 pitch=113.3                               
+SEARCH_GOAL yaw=55 pitch=112.5
+ball_O x=277.945839649204 y=305.494203882887                  
+BALL_TRACK yaw=56.2 pitch=113.3                               
+SEARCH_GOAL yaw=55 pitch=112.5
+ball_O x=280.734988170519 y=302.470413789084                  
+BALL_TRACK yaw=56.2 pitch=113.3                               
+SEARCH_GOAL yaw=55 pitch=112.5
+ball_O x=282.850934052926 y=300.335847298485                  
+SEARCH_GOAL yaw=55 pitch=112.5
+SEARCH_GOAL yaw=55 pitch=112.5
+SEARCH_GOAL yaw=70 pitch=117.5
+BALL_TRACK yaw=64.2 pitch=118.3                               
+SEARCH_GOAL yaw=70 pitch=117.5
+ball_O x=273.078713773524 y=307.764127872154                  
+BALL_TRACK yaw=71.2 pitch=118.3                               
+SEARCH_GOAL yaw=70 pitch=117.5
+ball_O x=242.02092786353 y=327.90348386189                    
+BALL_TRACK yaw=71.2 pitch=118.3                               
+SEARCH_GOAL yaw=70 pitch=117.5
+ball_O x=222.852608929615 y=340.328684212332                  
+BALL_TRACK yaw=71.2 pitch=118.3                               
+SEARCH_GOAL yaw=70 pitch=117.5
+ball_O x=209.346409823517 y=349.08143181133                   
+BALL_TRACK yaw=71.2 pitch=118.3                               
+SEARCH_GOAL yaw=70 pitch=117.5
+ball_O x=199.056766995223 y=355.750166704555                  
+BALL_TRACK yaw=71.2 pitch=118.3                               
+SEARCH_GOAL yaw=70 pitch=117.5
+ball_O x=190.947345414933 y=361.008764347524                  
+BALL_TRACK yaw=71.2 pitch=118.3                               
+SEARCH_GOAL yaw=70 pitch=117.5
+ball_O x=184.796916517846 y=365.003260533563                  
+BALL_TRACK yaw=71.2 pitch=118.3                               
+SEARCH_GOAL yaw=70 pitch=117.5
+ball_O x=179.928466184828 y=368.16886546544                   
+BALL_TRACK yaw=71.2 pitch=118.3                               
+SEARCH_GOAL yaw=70 pitch=117.5
+ball_O x=176.599283800351 y=370.341300461883                  
+SEARCH_GOAL yaw=70 pitch=117.5
+SEARCH_GOAL yaw=70 pitch=117.5
+SEARCH_GOAL yaw=90 pitch=117.5
+BALL_TRACK yaw=79.2 pitch=118.3                               
+SEARCH_GOAL yaw=90 pitch=117.5
+ball_O x=145.084171451102 y=385.558167181626                  
+BALL_TRACK yaw=88.4 pitch=118.3                               
+SEARCH_GOAL yaw=90 pitch=117.5
+ball_O x=112.892374752544 y=394.521768064673                  
+BALL_TRACK yaw=91.2 pitch=118.3                               
+SEARCH_GOAL yaw=90 pitch=117.5
+ball_O x=85.5425324249538 y=401.295393552982                  
+BALL_TRACK yaw=91.2 pitch=118.3                               
+SEARCH_GOAL yaw=90 pitch=117.5
+ball_O x=66.2138913563954 y=406.045646742904                  
+BALL_TRACK yaw=91.2 pitch=118.3                               
+SEARCH_GOAL yaw=90 pitch=117.5
+ball_O x=52.1320706306757 y=409.437698130713                  
+BALL_TRACK yaw=91.2 pitch=118.3                               
+SEARCH_GOAL yaw=90 pitch=117.5
+ball_O x=41.5320786918581 y=411.929747632946                  
+SEARCH_GOAL yaw=90 pitch=117.5
+SEARCH_GOAL yaw=90 pitch=117.5
+SEARCH_GOAL yaw=90 pitch=117.5
+VISION_GOAL_SAMPLE            
+SEARCH_GOAL yaw=90 pitch=117.5
+SEARCH_GOAL yaw=90 pitch=117.5
+GOAL_SEEN x_mm=-6 y_mm=1901   
+goal_O x=-6 y=1901            
+ball_now x=-27.721331340133 y=434.960594265069                
+goal_now x=-6 y=1901          
+kickPt x=-28.0176255253117 y=414.962789141611 dist=415.907566308022 mode=0                    
+ball_now x=-43.2436473817862 y=440.122680579166               
+goal_now x=-6 y=1901          
+kickPt x=-43.7533623265463 y=420.129176867333 dist=422.40132808752 mode=0                     
+ball_now x=-58.3679553198073 y=445.152405705721               
+goal_now x=-6 y=1901          
+kickPt x=-59.0869056964789 y=425.165332124132 dist=429.251467166983 mode=0                    
+ball_now x=-72.0992348951158 y=449.718866675884               
+goal_now x=-6 y=1901          
+kickPt x=-73.0092003340925 y=429.7395783277 dist=435.89729124496 mode=0                       
+BALL_TRACK yaw=77.5064924365439 pitch=113.482030812181        
+ball_now x=-89.4125874031136 y=455.476578333915               
+goal_now x=-6 y=1901          
+kickPt x=-90.5647522184099 y=435.50979300832 dist=444.826656294934 mode=0                     
+BALL_TRACK yaw=74.7801062863379 pitch=112.773235428779        
+ball_now x=-104.536895341135 y=460.50630346047                
+goal_now x=-6 y=1901          
+kickPt x=-105.901804646332 y=440.55293225186 dist=453.10272383099 mode=0                      
+BALL_TRACK yaw=69.5371976625235 pitch=111.025599220841        
+ball_now x=-120.059211382788 y=465.668389774567               
+goal_now x=-6 y=1901          
+kickPt x=-121.643525132658 y=445.731239779094 dist=462.031909419369 mode=0                    
+BALL_TRACK yaw=67.0060508297351 pitch=110.181883609912        
+ball_now x=-134.785511217177 y=470.565753713582               
+goal_now x=-6 y=1901          
+kickPt x=-136.578906556353 y=450.646322668559 dist=470.88842186958 mode=0                     
+VISION_GOAL_SAMPLE            
+ball_now x=-159.462013642369 y=478.77214734112                
+goal_now x=-6 y=1901          
+kickPt x=-161.607610263915 y=458.887570022564 dist=486.512920297526 mode=0                    
+ball_now x=-173.790305373126 y=483.537150092594               
+goal_now x=-6 y=1901          
+kickPt x=-176.141364529579 y=463.675817789778 dist=496.005084955146 mode=0                    
+ball_now x=-189.113617362963 y=488.63305581292                
+goal_now x=-6 y=1901          
+kickPt x=-191.685098640922 y=468.799057627049 dist=506.47382308762 mode=0                     
+ball_now x=-203.640913145536 y=493.464239158164               
+goal_now x=-6 y=1901          
+kickPt x=-206.421955723851 y=473.658537903788 dist=516.684075943911 mode=0                    
+ball_now x=-219.362233239005 y=498.692506066031               
+goal_now x=-6 y=1901          
+kickPt x=-222.370626880746 y=478.920061409481 dist=528.027575908491 mode=0                    
+ball_now x=-233.690524969762 y=503.457508817505               
+goal_now x=-6 y=1901          
+kickPt x=-236.906563419938 y=483.717774860661 dist=538.616380652867 mode=0                    
+ball_now x=-249.212841011415 y=508.619595131601               
+goal_now x=-6 y=1901          
+kickPt x=-252.654218128374 y=488.917896637845 dist=550.34067957115 mode=0                     
+BALL_TRACK yaw=45.5694324528882 pitch=102.602906615749        
+ball_now x=-264.934161104884 y=513.847862039469               
+goal_now x=-6 y=1901          
+kickPt x=-268.604090976897 y=494.187454751355 dist=562.467241822266 mode=0                    
+BALL_TRACK yaw=45 pitch=101.497254579052                      
+ball_now x=-280.85448525017 y=519.142309541106                
+goal_now x=-6 y=1901          
+kickPt x=-284.756099164853 y=499.526565638293 dist=574.989413632957 mode=0                    
+BALL_TRACK yaw=45 pitch=101.002036032528                      
+ball_now x=-294.784768877294 y=523.774951105039               
+goal_now x=-6 y=1901          
+kickPt x=-298.889226068267 y=504.200645723558 dist=586.133995437682 mode=0                    
+VISION_GOAL_SAMPLE            
+ball_now x=-309.909076815315 y=528.804676231594               
+goal_now x=-6 y=1901          
+kickPt x=-314.233809346236 y=509.277856507533 dist=598.420272104107 mode=0                    
+ball_now x=-322.645336131544 y=533.040234232904               
+goal_now x=-6 y=1901          
+kickPt x=-327.155539123841 y=513.555417863016 dist=608.908789553795 mode=0                    
+ball_now x=-337.968648121381 y=538.13613995323                
+goal_now x=-6 y=1901          
+kickPt x=-342.701888261969 y=518.704299130202 dist=621.690223627872 mode=0                    
+ball_now x=-352.296939852137 y=542.901142704704               
+goal_now x=-6 y=1901          
+kickPt x=-357.238553220509 y=523.521244425365 dist=633.793244892816 mode=0                    
+ball_now x=-368.217263997423 y=548.195590206342               
+goal_now x=-6 y=1901          
+kickPt x=-373.390106050473 y=528.876125796214 dist=647.402600962952 mode=0                    
+ball_now x=-381.749539520915 y=552.695870582734               
+goal_now x=-6 y=1901          
+kickPt x=-387.118606835049 y=533.430016950561 dist=659.096653565913 mode=0                    
+BALL_TRACK yaw=45 pitch=98.8423567828332                      
+ball_now x=-398.266875821649 y=558.188859865682               
+goal_now x=-6 y=1901          
+kickPt x=-403.874960316634 y=538.991219690465 dist=673.518016443642 mode=0                    
+BALL_TRACK yaw=45 pitch=98.3134797930566                      
+ball_now x=-413.590187811486 y=563.284765586009               
+goal_now x=-6 y=1901          
+kickPt x=-419.4194339066 y=544.153119290862 dist=687.033680959316 mode=0                      
+BALL_TRACK yaw=45 pitch=97.2855062436352                      
+ball_now x=-429.311507904955 y=568.513032493876               
+goal_now x=-6 y=1901          
+kickPt x=-435.366986066619 y=549.451784259995 dist=701.029012083825 mode=0                    
+BALL_TRACK yaw=45 pitch=96.7804886882509                      
+ball_now x=-444.037807739344 y=573.41039643289                
+goal_now x=-6 y=1901          
+kickPt x=-450.304495506445 y=554.41753923789 dist=714.249918787473 mode=0                     
+BALL_TRACK yaw=45 pitch=95.7566222868333                      
+ball_now x=-44.4375194046997 y=723.850685313855               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-60.6906889972937 y=712.195880373644 dist=714.777120333433 mode=0                    
+ball_now x=-52.9850021932007 y=735.527206308894               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-69.3579112823628 y=724.041221459608 dist=727.355628444692 mode=0                    
+ball_now x=-62.8951271653759 y=749.065201665461               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-79.4046061539568 y=737.776397321085 dist=742.037131094222 mode=0                    
+BALL_TRACK yaw=45 pitch=92.2953290426235                      
+ball_now x=-72.3097458889423 y=761.926297254199               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-88.9466727393577 y=750.826177210978 dist=756.076357900875 mode=0                    
+BALL_TRACK yaw=46.1565659679589 pitch=90.607196949742         
+ball_now x=-82.9631302340305 y=776.479642262508               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-99.7415231928619 y=765.594536396278 dist=772.064353281943 mode=0                    
+BALL_TRACK yaw=48.6760504086575 pitch=90                      
+ball_now x=-92.1299958332925 y=789.002287967332               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-109.027733956271 y=778.30338866286 dist=785.90280033585 mode=0                      
+BALL_TRACK yaw=52.9031595411081 pitch=90                      
+ball_now x=-102.783380178381 y=803.555632975641               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-119.817000374643 y=793.074422024159 dist=802.074281128457 mode=0                    
+BALL_TRACK yaw=57.902885173932 pitch=90                       
+ball_now x=-113.808394209926 y=818.616652809822               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-130.97939764164 y=808.362061586958 dist=818.90464965079 mode=0                      
+BALL_TRACK yaw=60.3026209188717 pitch=90                      
+ball_now x=-123.09913637134 y=831.308523456603                
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-140.38331752935 y=821.245865671649 dist=833.157996854931 mode=0                     
+BALL_TRACK yaw=65.6126843210126 pitch=90                      
+ball_now x=-133.380891029972 y=845.354193639041               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-150.787521085244 y=835.504867260101 dist=849.002508671413 mode=0                    
+VISION_GOAL_SAMPLE            
+ball_now x=-142.176126942777 y=857.369164517994               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-159.68514310214 y=847.7030198299 dist=862.612169376413 mode=0                       
+ball_now x=-152.086251914952 y=870.907159874561               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-169.708002439571 y=861.448094992231 dist=878.005482020343 mode=0                    
+ball_now x=-161.00536438991 y=883.091355695471                
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-178.726175349038 y=873.819200662747 dist=891.909771894993 mode=0                    
+BALL_TRACK yaw=80.829211695416 pitch=90                       
+ball_now x=-171.658748734998 y=897.64470070378                
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-189.494881908777 y=888.596366414685 dist=908.576806150697 mode=0                    
+BALL_TRACK yaw=83.2814753620821 pitch=90                      
+ball_now x=-182.064379955782 y=911.859595828175               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-200.009983978574 y=903.030366175643 dist=924.91504254522 mode=0                     
+BALL_TRACK yaw=88.3722048155449 pitch=90                      
+ball_now x=-191.726751803653 y=925.059141300828               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-209.771191338991 y=916.433702074011 dist=940.135459927375 mode=0                    
+BALL_TRACK yaw=93.4551668549084 pitch=90                      
+ball_now x=-202.132383024437 y=939.274036425223               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-220.280220069363 y=930.868323451845 dist=956.576819162924 mode=0                    
+BALL_TRACK yaw=96.0389659032176 pitch=90                      
+ball_now x=-211.670878310155 y=952.304356955918               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-229.9107225249 y=944.10020660248 dist=971.691381272246 mode=0                       
+BALL_TRACK yaw=100.937889584184 pitch=90                      
+ball_now x=-222.324262655243 y=966.857701964227               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-240.663731136035 y=958.878736126348 dist=988.61896708468 mode=0                     
+BALL_TRACK yaw=106.018255767088 pitch=90                      
+ball_now x=-232.606017313875 y=980.903372146665               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-251.038499321855 y=973.141696617149 dist=1005.00004469486 mode=0                    
+ball_now x=-241.277376664528 y=992.749118083661               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-259.785915132342 y=985.17059555051 dist=1018.84730162988 mode=0                     
+ball_now x=-251.187501636704 y=1006.28711344023               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-269.780294117949 y=998.917712667481 dist=1034.70672355755 mode=0                    
+ball_now x=-259.611107863053 y=1017.79440949331               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-278.273287929745 y=1010.6025366386 dist=1048.21443886048 mode=0                     
+BALL_TRACK yaw=118.08101363684 pitch=90                       
+ball_now x=-270.388368770293 y=1032.51697944358               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-289.136354216022 y=1025.55184902651 dist=1065.53105368686 mode=0                    
+BALL_TRACK yaw=117.54090252226 pitch=90                       
+ball_now x=-279.802987493859 y=1045.37807503231               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-298.623218001143 y=1038.61058482894 dist=1080.68856441071 mode=0                    
+BALL_TRACK yaw=117.082174869643 pitch=90                      
+ball_now x=-289.836989028187 y=1059.08529533084               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-308.731455300802 y=1052.52792205543 dist=1096.87289062976 mode=0                    
+BALL_TRACK yaw=116.606187225248 pitch=90                      
+ball_now x=-299.375484313905 y=1072.11561586153               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-318.337899637736 y=1065.75740816702 dist=1112.2849776063 mode=0                     
+BALL_TRACK yaw=116.165609103485 pitch=90                      
+ball_now x=-309.657238972537 y=1086.16128604397               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-328.690064490411 y=1080.01705681597 dist=1128.92603898933 mode=0                    
+BALL_TRACK yaw=115.703206002836 pitch=90                      
+ball_now x=-318.824104571799 y=1098.6839317488                
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-337.917251607814 y=1092.72979568543 dist=1143.78602689178 mode=0                    
+BALL_TRACK yaw=115.30148829185 pitch=90                       
+ball_now x=-329.353612354735 y=1113.06805181515               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-348.513225737363 y=1107.33139642823 dist=1160.88082507618 mode=0                    
+ball_now x=-338.148848267541 y=1125.0830226941                
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-357.361695090113 y=1119.52725839273 dist=1175.18026847034 mode=0                    
+ball_now x=-347.811220115411 y=1138.28256816675               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-367.08018121051 y=1132.92466388284 dist=1190.90980072866 mode=0                     
+BALL_TRACK yaw=114.092786161847 pitch=90                      
+ball_now x=-357.225838838978 y=1151.14366375549               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-376.547122342427 y=1145.9776204166 dist=1206.25554582769 mode=0                     
+BALL_TRACK yaw=113.719205564135 pitch=90                      
+ball_now x=-367.259840373305 y=1164.85088405401               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-386.634368854608 y=1159.88825913093 dist=1222.63114177964 mode=0                    
+BALL_TRACK yaw=113.330709013917 pitch=90                      
+ball_now x=-376.674459096872 y=1177.71197964275               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-396.096617482842 y=1172.93916457926 dist=1238.01406057655 mode=0                    
+BALL_TRACK yaw=112.974951796303 pitch=90                      
+ball_now x=-387.203966879808 y=1192.09609970911               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-406.676769343509 y=1187.53430574076 dist=1255.23851201071 mode=0                    
+BALL_TRACK yaw=112.58676043105 pitch=90                       
+ball_now x=-396.618585603374 y=1204.95719529784               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-416.134361629949 y=1200.5828969449 dist=1270.65616882215 mode=0                     
+BALL_TRACK yaw=112.24804735342 pitch=90                       
+ball_now x=-406.900340262006 y=1219.00286548028               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-426.460604044945 y=1214.83200456893 dist=1287.51133825196 mode=0                    
+BALL_TRACK yaw=111.886859649147 pitch=90                      
+ball_now x=-416.19108242342 y=1231.69473612706                
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-435.789391735983 y=1227.70646932441 dist=1302.75691085123 mode=0                    
+VISION_GOAL_SAMPLE            
+BALL_TRACK yaw=111.568061460828 pitch=90                      
+ball_now x=-426.968343330661 y=1246.41730607733               
+goal_now x=1091.70093674228 y=1538.55159740547                
+kickPt x=-446.608274368153 y=1242.63932925864 dist=1320.45880411108 mode=0                    
+ball_now x=-1045.42462240812 y=-809.995130777758              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1036.25372457281 y=-827.768555683901 dist=1326.2814797282 mode=0                    
+ball_now x=-1054.8504236165 y=-822.587022692983               
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1045.84103071338 y=-840.442857580136 dist=1341.68836112604 mode=0                   
+BALL_TRACK yaw=106.235811615363 pitch=90                      
+ball_now x=-1065.78435301821 y=-837.193617314644              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1056.96141300141 y=-855.142314466802 dist=1359.5719203358 mode=0                    
+BALL_TRACK yaw=104.564449887088 pitch=90                      
+ball_now x=-1075.58718627492 y=-850.289184906478              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1066.93054844726 y=-868.318678008635 dist=1375.61554287113 mode=0                   
+BALL_TRACK yaw=101.35349405537 pitch=90                       
+ball_now x=-1086.1440836283 y=-864.39210385153                
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1077.66557932828 y=-882.506047785268 dist=1392.90345151648 mode=0                   
+BALL_TRACK yaw=99.7815753881614 pitch=90                      
+ball_now x=-1095.56988483667 y=-876.983995766755              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1087.24954710946 y=-895.17113353236 dist=1408.34759061793 mode=0                    
+BALL_TRACK yaw=96.4029174823143 pitch=90                      
+ball_now x=-1106.62949158783 y=-891.758482280619              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1098.49362977246 y=-910.028888749035 dist=1426.47847267615 mode=0                   
+BALL_TRACK yaw=93.0639140960948 pitch=90                      
+ball_now x=-1117.68909833899 y=-906.532968794483              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1109.73647020265 y=-924.883873560327 dist=1444.61940069687 mode=0                   
+BALL_TRACK yaw=91.4995586947278 pitch=90                      
+ball_now x=-1127.36625424626 y=-919.460644494114              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1119.57289935085 y=-937.879754664647 dist=1460.5005686992 mode=0                    
+ball_now x=-1137.29476485241 y=-932.724103978152              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1129.66376296218 y=-951.211067226647 dist=1476.80151400394 mode=0                   
+ball_now x=-1146.34353401245 y=-944.812320216768              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1138.85954152248 y=-963.359283752884 dist=1491.66422659714 mode=0                   
+ball_now x=-1156.39772196805 y=-958.243671593008              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1149.07597506417 y=-976.85528147167 dist=1508.1849480116 mode=0                     
+BALL_TRACK yaw=81.5990585920423 pitch=90                      
+ball_now x=-1167.33165136977 y=-972.850266214669              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1160.18500349687 y=-991.529811824263 dist=1526.15877616823 mode=0                   
+BALL_TRACK yaw=78.3273054355636 pitch=90                      
+ball_now x=-1177.38583932536 y=-986.281617590909              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1170.39893979426 y=-1005.02150112689 dist=1542.69306603708 mode=0                   
+BALL_TRACK yaw=75.2647088140316 pitch=90                      
+ball_now x=-1187.56570463041 y=-999.880860859352              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1180.73929348951 y=-1018.67979995004 dist=1559.44022457302 mode=0                   
+BALL_TRACK yaw=73.6958678474451 pitch=90                      
+ball_now x=-1197.36853788712 y=-1012.97642845119              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1190.69545509297 y=-1031.83033961101 dist=1575.57275824407 mode=0                   
+BALL_TRACK yaw=70.5170826318256 pitch=90                      
+ball_now x=-1207.67408054161 y=-1026.74356361183              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1201.16088231403 y=-1045.65330313538 dist=1592.53831839593 mode=0                   
+BALL_TRACK yaw=68.9086027711211 pitch=90                      
+ball_now x=-1217.22555909943 y=-1039.50334741926              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1210.85933390941 y=-1058.46307254464 dist=1608.26751582446 mode=0                   
+BALL_TRACK yaw=65.6691943503886 pitch=90                      
+ball_now x=-1228.15948850114 y=-1054.10994204092              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1221.96005817501 y=-1073.12485891246 dist=1626.27898793257 mode=0                   
+ball_now x=-1238.0879991073 y=-1067.37340152496               
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1232.03866956209 y=-1086.43660199218 dist=1642.63927063876 mode=0                   
+ball_now x=-1246.88541356845 y=-1079.12583397917              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1240.96799519883 y=-1098.23039259325 dist=1657.13957176918 mode=0                   
+BALL_TRACK yaw=57.7888460562615 pitch=90                      
+ball_now x=-1257.81934297016 y=-1093.73242860083              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1252.06443231992 y=-1112.88656662392 dist=1675.16621648497 mode=0                   
+BALL_TRACK yaw=56.1572250199203 pitch=90                      
+ball_now x=-1267.37082152798 y=-1106.49221240826              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1261.75655692286 y=-1125.68804614748 dist=1690.9178531724 mode=0                    
+BALL_TRACK yaw=53.121510114663 pitch=90                       
+ball_now x=-1277.55068683302 y=-1120.0914556767               
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1272.08496273507 y=-1139.33011103733 dist=1707.70994443817 mode=0                   
+BALL_TRACK yaw=51.518256436895 pitch=90                       
+ball_now x=-1287.10216539084 y=-1132.85123948413              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1281.77453114542 y=-1152.12859182689 dist=1723.46924567806 mode=0                   
+BALL_TRACK yaw=48.5193855114344 pitch=90                      
+ball_now x=-1298.03609479256 y=-1147.45783410579              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1292.86500707128 y=-1166.77776815793 dist=1741.51379172748 mode=0                   
+BALL_TRACK yaw=45.6324865665226 pitch=90                      
+ball_now x=-1308.97002419427 y=-1162.06442872745              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1303.95384365372 y=-1181.42516044876 dist=1759.56274003534 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1318.01879335431 y=-1174.15264496607              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1313.129568686 y=-1193.54582629721 dist=1774.5030018653 mode=0                      
+VISION_GOAL_SAMPLE            
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1328.07298130991 y=-1187.58399634231              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1323.32349577075 y=-1207.011872889 dist=1791.10656739177 mode=0                     
+ball_now x=-1336.87039577106 y=-1199.33642879652              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1332.24203843215 y=-1218.79351769346 dist=1805.63741868002 mode=0                   
+ball_now x=-1346.92458372666 y=-1212.76778017276              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1342.43335117719 y=-1232.25697795478 dist=1822.24711882639 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1356.22470758559 y=-1225.19178019578              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1351.85907410501 y=-1244.70949636118 dist=1837.61385676419 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1366.65592758953 y=-1239.12680724863              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1362.42975049932 y=-1258.67519406704 dist=1854.85257344225 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1377.4641796418 y=-1253.56550997809               
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1373.38092012819 y=-1273.1442482353 dist=1872.71765853446 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1386.76430350073 y=-1265.98951000111              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1382.80273566589 y=-1285.59323363439 dist=1888.09252107295 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1396.44145940799 y=-1278.91718570074              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1392.60525921508 y=-1298.5458272248 dist=1904.09313674422 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1405.49022856803 y=-1291.00540193936              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1401.77009845641 y=-1310.6563721941 dist=1919.05693894149 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1415.54441652363 y=-1304.4367533156               
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1411.95194656914 y=-1324.11146194434 dist=1935.68578624548 mode=0                   
+VISION_GOAL_SAMPLE            
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1424.59318568367 y=-1316.52496955421              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1421.11443849347 y=-1336.22010392762 dist=1950.65384254484 mode=0                   
+ball_now x=-1434.39601894038 y=-1329.62053714605              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1431.03922464161 y=-1349.33682310552 dist=1966.87140521473 mode=0                   
+ball_now x=-1443.44478810042 y=-1341.70875338466              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1440.19942019222 y=-1361.44368655254 dist=1981.8434049076 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1453.75033075491 y=-1355.47588854531              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1450.63053277109 y=-1375.2310615524 dist=1998.89704969172 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1465.06129220496 y=-1370.58615884358              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1462.07769132638 y=-1390.36235983865 dist=2017.61707643705 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1474.36141606389 y=-1383.0101588666               
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1471.48853479369 y=-1402.80274720687 dist=2033.01108103237 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1484.41560401949 y=-1396.44151024284              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1481.66114441935 y=-1416.2509259917 dist=2049.65519838201 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1493.46437317953 y=-1408.52972648146              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1490.81536775014 y=-1428.35351951496 dist=2064.63658725471 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1503.51856113512 y=-1421.9610778577               
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1500.98548546825 y=-1441.80001753869 dist=2081.28439146622 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1512.9443623435 y=-1434.55296977292               
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1510.51879246824 y=-1454.40534018001 dist=2096.89339641858 mode=0                   
+VISION_GOAL_SAMPLE            
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1522.62151825076 y=-1447.48064547255              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1520.30514369764 y=-1467.34605281622 dist=2112.92029396966 mode=0                   
+ball_now x=-1531.41893271191 y=-1459.23307792676              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1529.20079942537 y=-1479.10969445783 dist=2127.49161530717 mode=0                   
+ball_now x=-1541.47312066751 y=-1472.664429303                
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1539.36607479745 y=-1492.5531285491 dist=2144.14615961203 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1550.77324452644 y=-1485.08842932603              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1548.76783520123 y=-1504.98763366787 dist=2159.55309840881 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1560.82743248204 y=-1498.51978070227              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1558.93070101665 y=-1518.42963780241 dist=2176.21081137123 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1572.13839393209 y=-1513.63005100054              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1570.36244940216 y=-1533.55104547939 dist=2194.95262627313 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1581.43851779102 y=-1526.05405102356              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1579.76072772533 y=-1545.98355228414 dist=2210.36401997416 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1591.61838309607 y=-1539.653294292                
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1590.04684497798 y=-1559.59145538934 dist=2227.23471527989 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1602.80366719667 y=-1554.59567269807              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1601.34745853686 y=-1574.54258865867 dist=2245.77337379852 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-1611.60108165782 y=-1566.34810515228              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1610.23455008657 y=-1586.30136532361 dist=2260.35557555002 mode=0                   
+VISION_GOAL_SAMPLE            
+ball_now x=-1621.40391491453 y=-1579.44367274411              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1620.1362502986 y=-1599.40345797396 dist=2276.60556331365 mode=0                    
+ball_now x=-1630.45268407457 y=-1591.53188898273              
+goal_now x=-1757.97740372733 y=570.949633613628               
+kickPt x=-1629.27530010325 y=-1611.49720307954 dist=2291.60669379798 mode=0                   
+ball_now x=-2032.53673254938 y=1076.72947909917               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2051.32413210035 y=1069.87137308422 dist=2313.55904395854 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-2047.13492651803 y=1081.99643393257               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2065.95327846356 y=1075.22372176873 dist=2329.00601129506 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-2062.9167578355 y=1087.69043915787                
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2081.76776508148 y=1081.0091574087 dist=2345.70625316424 mode=0                     
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-2077.12040602121 y=1092.81504386063               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2096.00010263992 y=1086.2152669261 dist=2360.73718070646 mode=0                     
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-2093.69132890455 y=1098.7937493472                
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2112.60367769418 y=1092.28813152415 dist=2378.27409296647 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-2111.44588913669 y=1105.19950522565               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2130.39226810817 y=1098.79367008343 dist=2397.06461019107 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-2126.04408310535 y=1110.46646005905               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2145.01772136713 y=1104.14182164164 dist=2412.51532373934 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-2142.81227888015 y=1116.51634061093               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2161.81644561933 y=1110.28403393125 dist=2430.26356195225 mode=0                    
+ball_now x=-2159.97502043789 y=1122.70857129344               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2179.00958867093 y=1116.56974305168 dist=2448.43026827769 mode=0                    
+ball_now x=-2173.78412284067 y=1127.69082586558               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2192.8425464111 y=1121.626463491 dist=2463.04777804939 mode=0                       
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-2190.35504572401 y=1133.66953135214               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2209.44140019326 y=1127.69365710028 dist=2480.58950355599 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-2204.95323969266 y=1138.93648618554               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2224.06358583871 y=1133.03778546604 dist=2496.04356074719 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-2220.73507101012 y=1144.63049141084               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2239.87072259718 y=1138.81440696004 dist=2512.75130234724 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-2235.72781076171 y=1150.03979637487               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2254.88690895844 y=1144.30142062137 dist=2528.62427288599 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-2252.10146075358 y=1155.94732679611               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2271.28552042103 y=1150.2929608126 dist=2545.95989971744 mode=0                     
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-2267.09420050517 y=1161.35663176015               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2286.30054020154 y=1155.77841381285 dist=2561.83408946825 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-2282.28421314823 y=1166.83711178949               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2301.51257767196 y=1161.33529411328 dist=2577.91772765064 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-2296.68513422541 y=1172.03289155758               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2315.93388144062 y=1166.60281507147 dist=2593.16637941673 mode=0                    
+ball_now x=-2311.87514686847 y=1177.51337158693               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2331.14488046089 y=1172.15824625908 dist=2609.2511201439 mode=0                     
+ball_now x=-2326.07879505419 y=1182.63797628969               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2345.36768636351 y=1177.35227179009 dist=2624.29189613644 mode=0                    
+BALL_TRACK yaw=51.3781751777452 pitch=90                      
+ball_now x=-2343.24153661193 y=1188.8302069722                
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2362.5529904532 y=1183.62753933568 dist=2642.46679914303 mode=0                     
+BALL_TRACK yaw=54.5011078299665 pitch=90                      
+ball_now x=-2359.61518660379 y=1194.73773739345               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2378.94758217647 y=1189.61343437535 dist=2659.80670763678 mode=0                    
+BALL_TRACK yaw=56.0638420631163 pitch=90                      
+ball_now x=-2374.21338057245 y=1200.00469222685               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2393.56397857546 y=1194.94956048516 dist=2675.26689727168 mode=0                    
+BALL_TRACK yaw=59.1827949797864 pitch=90                      
+ball_now x=-2390.98157634725 y=1206.05457277873               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2410.35255090791 y=1201.07809364482 dist=2693.02580877008 mode=0                    
+BALL_TRACK yaw=60.6468945330393 pitch=90                      
+ball_now x=-2408.14431790499 y=1212.24680346124               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2427.53557450155 y=1207.34995063452 dist=2711.20321421463 mode=0                    
+BALL_TRACK yaw=63.7100487502426 pitch=90                      
+ball_now x=-2423.92614922245 y=1217.94080868653               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2443.33555659991 y=1213.11640144254 dist=2727.91862884403 mode=0                    
+BALL_TRACK yaw=66.8240834282488 pitch=90                      
+ball_now x=-2440.89161788872 y=1224.06186430373               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2460.32001741601 y=1219.31451853919 dist=2745.88828673316 mode=0                    
+VISION_GOAL_SAMPLE            
+ball_now x=-2458.05435944647 y=1230.25409498624               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2477.501437826 y=1225.58385489601 dist=2764.06750275959 mode=0                      
+ball_now x=-2472.06073474071 y=1235.30752462369               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2491.52266850332 y=1230.69958210885 dist=2778.90386106983 mode=0                    
+ball_now x=-2487.84256605818 y=1241.00152984899               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2507.32083023416 y=1236.463113309 dist=2795.6213578201 mode=0                       
+BALL_TRACK yaw=76.0197530379469 pitch=90                      
+ball_now x=-2503.03257870123 y=1246.48200987833               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2522.52616196496 y=1242.00985027249 dist=2811.71241523232 mode=0                    
+BALL_TRACK yaw=78.9749950493952 pitch=90                      
+ball_now x=-2519.99804736751 y=1252.60306549553               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2539.5082890219 y=1248.20414851665 dist=2829.68477862555 mode=0                     
+BALL_TRACK yaw=80.6049755981144 pitch=90                      
+ball_now x=-2536.96351603378 y=1258.72412111272               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2556.4899518847 y=1254.39765570089 dist=2847.65769584677 mode=0                     
+BALL_TRACK yaw=83.537674111727 pitch=90                       
+ball_now x=-2552.94262024271 y=1264.48930140334               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2572.4838950987 y=1260.23036057224 dist=2864.58617469438 mode=0                     
+BALL_TRACK yaw=86.623480513324 pitch=90                       
+ball_now x=-2569.51354312604 y=1270.4680068899                
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2589.0697934463 y=1266.27836807355 dist=2882.1421375059 mode=0                      
+BALL_TRACK yaw=89.5744948130437 pitch=90                      
+ball_now x=-2587.66264914113 y=1277.01611289899               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2607.23483099398 y=1272.90154153387 dist=2901.3706757992 mode=0                     
+VISION_GOAL_SAMPLE            
+BALL_TRACK yaw=91.0713673940153 pitch=90                      
+ball_now x=-2602.85266178418 y=1282.49659292834               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2622.43780939477 y=1278.44418709089 dist=2917.464584815 mode=0                      
+ball_now x=-2618.04267442724 y=1287.97707295769               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2637.64046053771 y=1283.98623600684 dist=2933.55890571855 mode=0                    
+ball_now x=-2632.24632261296 y=1293.10167766045               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2651.85563719695 y=1289.16787777408 dist=2948.60850870674 mode=0                    
+BALL_TRACK yaw=98.7274945500424 pitch=90                      
+ball_now x=-2649.4090641707 y=1299.29390834296                
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2669.03194474122 y=1295.42834782541 dist=2966.7939137053 mode=0                     
+BALL_TRACK yaw=101.849271554145 pitch=90                      
+ball_now x=-2665.78271416257 y=1305.20143876421               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2685.41817446288 y=1301.40029435827 dist=2984.14367916348 mode=0                    
+BALL_TRACK yaw=103.323313123339 pitch=90                      
+ball_now x=-2680.77545391416 y=1310.61074372824               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2700.42213017639 y=1306.8680025073 dist=3000.03060936448 mode=0                     
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-2696.55728523162 y=1316.30474895354               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2716.21546250111 y=1312.62289256836 dist=3016.75409949579 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-2714.31184546376 y=1322.710504832                 
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2733.98259631822 y=1319.09642668924 dist=3035.56851674859 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-2728.12094786654 y=1327.69275940413               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2747.80121735885 y=1324.13087890221 dist=3050.20230715622 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-2744.49459785841 y=1333.60028982538               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2764.18586518168 y=1330.09971969989 dist=3067.55419864359 mode=0                    
+VISION_GOAL_SAMPLE            
+ball_now x=-2758.50097315266 y=1338.65371946283               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2778.20140536234 y=1335.20510078985 dist=3082.39772091995 mode=0                    
+ball_now x=-2774.28280447012 y=1344.34772468813               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2793.99330121319 y=1340.95710260044 dist=3099.12318539273 mode=0                    
+ball_now x=-2788.48645265584 y=1349.47232939089               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2808.20577529958 y=1346.13342021692 dist=3114.17643389883 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-2805.45192132211 y=1355.59338500809               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2825.18150455937 y=1352.3156502287 dist=3132.1571083772 mode=0                      
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-2821.62829842251 y=1361.42974036402               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2841.36738646446 y=1358.20973985591 dist=3149.30187856028 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-2836.22649239116 y=1366.69669519742               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2855.97393012173 y=1363.52830395309 dist=3164.77432453187 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-2852.00832370862 y=1372.39070042271               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2871.76455068241 y=1369.27758369499 dist=3181.50164792755 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-2869.76288394077 y=1378.79645630117               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2889.52871104618 y=1375.74488640373 dist=3200.32032215936 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-2884.95289658383 y=1384.27693633052               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2904.72670118158 y=1381.27749442746 dist=3216.42110507455 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-2900.93200079276 y=1390.04211662113               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2920.71396821183 y=1387.09699098192 dist=3233.35864798491 mode=0                    
+VISION_GOAL_SAMPLE            
+ball_now x=-2918.29201524197 y=1396.30552236896               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2938.08259115357 y=1393.41881055672 dist=3251.76033773293 mode=0                    
+ball_now x=-2932.10111764475 y=1401.2877769411                
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2951.89835259293 y=1398.44709244496 dist=3266.3983459475 mode=0                     
+ball_now x=-2948.47476763661 y=1407.19530736234               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2968.27968685374 y=1404.40870103868 dist=3283.7551825527 mode=0                     
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-2962.48114293086 y=1412.24873699979               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2982.2924573912 y=1409.50796715293 dist=3298.6028877208 mode=0                      
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-2978.85479292273 y=1418.15626742104               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-2998.67338021571 y=1415.46859227132 dist=3315.96040038491 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-2993.25571399991 y=1423.35204718912               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-3013.08052078914 y=1420.71063927482 dist=3331.22694293073 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-3009.62936399178 y=1429.25957761037               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-3029.46104562594 y=1426.67029130688 dist=3348.58512614845 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-3026.79210554952 y=1435.45180829288               
+goal_now x=15.0315406734773 y=1824.1687536257                 
+kickPt x=-3046.63077407242 y=1432.9166098315 dist=3366.78022511956 mode=0                     
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-327.156618962065 y=-3370.4697171621               
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-318.281514620353 y=-3388.39267793659 dist=3403.30839954937 mode=0                   
+BALL_TRACK yaw=100.580439043116 pitch=90                      
+ball_now x=-327.348464155127 y=-3387.66568806685              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-318.518551741162 y=-3405.61095615517 dist=3420.47365908399 mode=0                   
+ball_now x=-327.516913592937 y=-3402.76458934907              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-318.726359830832 y=-3420.72917018347 dist=3435.54574241052 mode=0                   
+ball_now x=-327.704079634948 y=-3419.54114632931              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-318.956908045101 y=-3437.52689038336 dist=3452.29266304269 mode=0                   
+ball_now x=-327.872529072759 y=-3434.64004761153              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-319.164089766185 y=-3452.64457717616 dist=3467.36503594591 mode=0                   
+BALL_TRACK yaw=91.1570561372952 pitch=90                      
+ball_now x=-328.073732567921 y=-3452.67484636529              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-319.411173809856 y=-3470.70149540949 dist=3485.36832604422 mode=0                   
+BALL_TRACK yaw=89.6723734026973 pitch=90                      
+ball_now x=-328.249200732306 y=-3468.40286853426              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-319.626317129856 y=-3486.44852946365 dist=3501.06902691182 mode=0                   
+BALL_TRACK yaw=86.474681912862 pitch=90                       
+ball_now x=-328.445725076418 y=-3486.01825336351              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-319.866908887022 y=-3504.08490531645 dist=3518.65398456108 mode=0                   
+BALL_TRACK yaw=84.876903855572 pitch=90                       
+ball_now x=-328.649268147106 y=-3504.26275907953              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-320.115686811105 y=-3522.35082115322 dist=3536.86716745502 mode=0                   
+BALL_TRACK yaw=81.4905048618574 pitch=90                      
+ball_now x=-328.841113340167 y=-3521.45872998427              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-320.349792731776 y=-3539.56666952265 dist=3554.03379242502 mode=0                   
+BALL_TRACK yaw=78.4006269418273 pitch=90                      
+ball_now x=-329.037637684279 y=-3539.07411481353              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-320.589235930971 y=-3557.20211822854 dist=3571.61929215929 mode=0                   
+VISION_GOAL_SAMPLE            
+ball_now x=-329.243520330491 y=-3557.52832749179              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-320.839681160034 y=-3575.67703232704 dist=3590.04238700854 mode=0                   
+ball_now x=-329.407290617251 y=-3572.2078148495               
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-321.038609719577 y=-3590.37275856075 dist=3604.69725973567 mode=0                   
+ball_now x=-329.594456659263 y=-3588.98437182974              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-321.265646066748 y=-3607.16763100168 dist=3621.44583467556 mode=0                   
+BALL_TRACK yaw=68.7389360588484 pitch=90                      
+ball_now x=-329.774603974699 y=-3605.13180792322              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-321.483858753375 y=-3623.33245471599 dist=3637.56648720503 mode=0                   
+BALL_TRACK yaw=65.5355055326537 pitch=90                      
+ball_now x=-329.975807469861 y=-3623.16660667698              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-321.727221379249 y=-3641.3863988686 dist=3655.57154366341 mode=0                    
+BALL_TRACK yaw=63.9718102503976 pitch=90                      
+ball_now x=-330.167652662922 y=-3640.36257758173              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-321.958919227966 y=-3658.60035966711 dist=3672.73932336979 mode=0                   
+BALL_TRACK yaw=60.6610537427704 pitch=90                      
+ball_now x=-330.357158280459 y=-3657.34884152422              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-322.187463866891 y=-3675.6041446767 dist=3689.69789958982 mode=0                    
+BALL_TRACK yaw=57.4048520027807 pitch=90                      
+ball_now x=-330.551343049046 y=-3674.75451939122              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-322.421317420616 y=-3693.02752361278 dist=3707.07536962614 mode=0                   
+BALL_TRACK yaw=55.7616668644262 pitch=90                      
+ball_now x=-330.729150788956 y=-3690.69224852245              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-322.635154830497 y=-3708.98124055111 dist=3722.98741414641 mode=0                   
+BALL_TRACK yaw=52.5515364604357 pitch=90                      
+ball_now x=-330.930354284119 y=-3708.72704727621              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-322.876793899723 y=-3727.03388111319 dist=3740.99331394813 mode=0                   
+ball_now x=-331.115180750605 y=-3725.2938972942               
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-323.098454673128 y=-3743.61689112705 dist=3757.53377083213 mode=0                   
+ball_now x=-331.278951037365 y=-3739.97338465191              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-323.294617442314 y=-3758.31051684435 dist=3772.18999398095 mode=0                   
+ball_now x=-331.473135805951 y=-3757.37906251891              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-323.526914535577 y=-3775.73274246388 dist=3789.56823489731 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-331.639245668237 y=-3772.26825683887              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-323.725374211749 y=-3790.63590880014 dist=3804.43408551043 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-331.831090861298 y=-3789.46422774362              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-323.954294640828 y=-3807.84780958452 dist=3821.60324026107 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-332.001879874633 y=-3804.77283598809              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-324.157833787812 y=-3823.17041574706 dist=3836.88810483829 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-332.182027190069 y=-3820.92027208157              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-324.372267214367 y=-3839.33243244156 dist=3853.01062735822 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-332.350476627879 y=-3836.01917336379              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-324.572538558675 y=-3854.44479898116 dist=3868.08635389379 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-332.537642669891 y=-3852.79573034403              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-324.794795374043 y=-3871.23612935688 dist=3884.83729753771 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-332.706092107701 y=-3867.89463162625              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-324.994588632263 y=-3886.34816012755 dist=3899.91326882625 mode=0                   
+ball_now x=-332.888578998662 y=-3884.25177468198              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-325.210779557209 y=-3902.71935155976 dist=3916.24570069081 mode=0                   
+ball_now x=-333.057028436472 y=-3899.3506759642               
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-325.410110242778 y=-3917.83106129944 dist=3931.32191059584 mode=0                   
+ball_now x=-333.253552780584 y=-3916.96606079345              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-325.642386268015 y=-3935.46119919028 dist=3948.91096557855 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-333.445397973645 y=-3934.1620316982               
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-325.868847710225 y=-3952.67137761063 dist=3966.08138157682 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-333.625545289081 y=-3950.30946779168              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-326.08124759456 y=-3968.83198307164 dist=3982.20495327466 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-333.826748784243 y=-3968.34426654544              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-326.318186899488 y=-3986.88129700943 dist=4000.21324875874 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-333.997537797579 y=-3983.65287478991              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-326.519074957219 y=-4002.20206866849 dist=4015.49948384573 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-334.18470383959 y=-4000.42943177015               
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-326.738981157167 y=-4018.99179190394 dist=4032.25165201762 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-334.360172003976 y=-4016.15745393913              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-326.944912724542 y=-4034.73200453446 dist=4047.95693212899 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-334.542658894937 y=-4032.51459699486              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-327.158847305215 y=-4051.10167117041 dist=4064.29054836509 mode=0                   
+ball_now x=-334.704089606171 y=-4046.98437739032              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-327.347899932739 y=-4065.58240076616 dist=4078.73962211489 mode=0                   
+ball_now x=-334.895934799233 y=-4064.18034829506              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-327.572332815335 y=-4082.79122828451 dist=4095.9111131692 mode=0                    
+ball_now x=-335.059705085993 y=-4078.85983565277              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-327.763718981437 y=-4097.48155917027 dist=4110.56981247381 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-335.251550279055 y=-4096.05580655752              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-327.987678927756 y=-4114.69008070469 dist=4127.74155898573 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-335.462112076318 y=-4114.92943316029              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-328.233199441247 y=-4133.5772969016 dist=4146.58875494976 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-335.625882363077 y=-4129.608920518                
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-328.423952775944 y=-4148.26722189358 dist=4161.24779807616 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-335.820067131664 y=-4147.014598385                
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-328.649899386555 y=-4165.68512849282 dist=4178.62936213695 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-335.990856145 y=-4162.32320662947                 
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-328.848417164288 y=-4181.00436198472 dist=4193.91687523807 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-336.178022187011 y=-4179.09976360971              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-329.06575133357 y=-4197.79242535991 dist=4210.67043534753 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-336.353490351397 y=-4194.82778577869              
+goal_now x=-1694.42357245781 y=-609.322238525827              
+kickPt x=-329.269295610703 y=-4213.53110593517 dist=4226.37701225473 mode=0                   
+ball_now x=-<DAPLink:Overflow>
+76.17841237936               
+kickPt x=-4289.54213039605 y=-1160.22132698636 dist=4443.67924315388 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-4288.69578315192 y=-1152.59403503576              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4304.27102286648 y=-1165.14042526697 dist=4459.18167928594 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-4304.60071980662 y=-1157.93452988628              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4320.19398259196 y=-1170.45851310678 dist=4475.94114998488 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-4319.11397450403 y=-1162.80773143739              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4334.72353358424 y=-1175.31139751264 dist=4491.23423946382 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-4335.61534628329 y=-1168.3484948448               
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4351.24326265329 y=-1180.82920916459 dist=4508.62235633036 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-4353.50840001983 y=-1174.35655155164              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4369.1560185639 y=-1186.81255548144 dist=4527.47704095797 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-4368.22046642542 y=-1179.29650928838              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4383.88412817971 y=-1191.73233256018 dist=4542.97985927467 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-4384.32421478831 y=-1184.70376032453              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4400.00527774285 y=-1197.1176342008 dist=4559.9492403183 mode=0                     
+VISION_GOAL_SAMPLE            
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-4399.23509290209 y=-1189.7104742469               
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4414.93212118196 y=-1202.10415421619 dist=4575.66170430333 mode=0                   
+ball_now x=-4414.74240614043 y=-1194.91745672616              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4430.45589040787 y=-1207.29026611518 dist=4592.0027421057 mode=0                    
+ball_now x=-4429.05684912966 y=-1199.72390209163              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4444.78539126202 y=-1212.0775639937 dist=4607.08684479826 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-4445.35940920073 y=-1205.19790931342              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4461.1049478184 y=-1217.52990078436 dist=4624.26604065486 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-4459.67385218996 y=-1210.00435467889              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4475.43418204396 y=-1222.3174372699 dist=4639.35028158702 mode=0                    
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-4475.57878884466 y=-1215.34484952942              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4491.35540989378 y=-1227.63705145879 dist=4656.11062455528 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-4489.89323183389 y=-1220.15129489489              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4505.68438733019 y=-1232.42481957575 dist=4671.19500065426 mode=0                   
+BALL_TRACK yaw=45 pitch=90    
+ball_now x=-4505.79816848859 y=-1225.49178974541              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4521.60533329821 y=-1237.74468902198 dist=4687.95549310283 mode=0                   
+BALL_TRACK yaw=45 pitch=90.6118302195219                      
+ball_now x=-4524.0888456415 y=-1231.63335882352               
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4539.91424122234 y=-1243.86270282514 dist=4707.23015595508 mode=0                   
+BALL_TRACK yaw=45 pitch=90.2560185190011                      
+ball_now x=-4538.8009120471 y=-1236.57331656025               
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4554.64083362673 y=-1248.78384006873 dist=4722.73376367511 mode=0                   
+ball_now x=-4554.7058487018 y=-1241.91381141078               
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4570.56133755628 y=-1254.10411383465 dist=4739.4944950597 mode=0                    
+ball_now x=-4569.02029169103 y=-1246.72025677625              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4584.88967126072 y=-1258.89247071099 dist=4754.57921907355 mode=0                   
+ball_now x=-4584.92522834574 y=-1252.06075162677              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4600.80991050249 y=-1264.21298898369 dist=4771.34009625105 mode=0                   
+BALL_TRACK yaw=53.4645017540536 pitch=90                      
+ball_now x=-4602.02303524954 y=-1257.80178359109              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4617.92401516083 y=-1269.93268783853 dist=4789.35812415818 mode=0                   
+BALL_TRACK yaw=56.6093577936898 pitch=90                      
+ball_now x=-4617.53034848788 y=-1263.00876607035              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4633.44597513479 y=-1275.12044755708 dist=4805.70013216294 mode=0                   
+BALL_TRACK yaw=59.726175188371 pitch=90                       
+ball_now x=-4634.4293436835 y=-1268.68304184903               
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4650.36078722758 y=-1280.77391057719 dist=4823.50881220291 mode=0                   
+BALL_TRACK yaw=61.2827531901531 pitch=90                      
+ball_now x=-4649.53903350546 y=-1273.75651195703              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4665.48449335147 y=-1285.82888994561 dist=4839.43193896988 mode=0                   
+BALL_TRACK yaw=64.417619309699 pitch=90                       
+ball_now x=-4666.2392169929 y=-1279.36403155008               
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4682.20003202438 y=-1291.41610122839 dist=4857.03126265428 mode=0                   
+BALL_TRACK yaw=65.8828572800161 pitch=90                      
+ball_now x=-4682.93940048034 y=-1284.97155114313              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4698.91542913865 y=-1297.00344660098 dist=4874.6306681319 mode=0                    
+BALL_TRACK yaw=68.8947032133099 pitch=90                      
+ball_now x=-4698.64552542685 y=-1290.24528980802              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4714.63573459111 y=-1302.25833317277 dist=4891.18256418643 mode=0                   
+ball_now x=-4714.55046208155 y=-1295.58578465854              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4730.55490681116 y=-1307.57985606475 dist=4907.94405085688 mode=0                   
+ball_now x=-4728.86490507079 y=-1300.39223002402              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4744.88205599373 y=-1312.36932801609 dist=4923.02945130421 mode=0                   
+BALL_TRACK yaw=76.6984556899302 pitch=90                      
+ball_now x=-4745.96271197459 y=-1306.13326198833              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4761.99490993536 y=-1318.09021095312 dist=4941.04820118776 mode=0                   
+BALL_TRACK yaw=79.70072385438 pitch=90                        
+ball_now x=-4763.45814229476 y=-1312.00780632391              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4779.50559275811 y=-1323.9442770597 dist=4959.48607821064 mode=0                    
+BALL_TRACK yaw=81.2887494506568 pitch=90                      
+ball_now x=-4778.76664382491 y=-1317.14803261754              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4794.8273218648 y=-1329.06669952702 dist=4975.61929193671 mode=0                    
+BALL_TRACK yaw=84.1944226637507 pitch=90                      
+ball_now x=-4795.26801560417 y=-1322.68879602495              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4811.34282975225 y=-1334.58839056025 dist=4993.00971335192 mode=0                   
+BALL_TRACK yaw=85.8060603868877 pitch=90                      
+ball_now x=-4811.9681990916 y=-1328.296315618                 
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4828.05719215846 y=-1340.17673236552 dist=5010.60973582327 mode=0                   
+BALL_TRACK yaw=88.9184772201412 pitch=90                      
+ball_now x=-4827.47551232994 y=-1333.50329809727              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4843.5775580798 y=-1345.36601796538 dist=5026.95268362756 mode=0                    
+BALL_TRACK yaw=92.0197796862173 pitch=90                      
+ball_now x=-4844.37450752556 y=-1339.17757387595              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4860.49065447142 y=-1351.0211294071 dist=5044.76238234354 mode=0                    
+VISION_GOAL_SAMPLE            
+BALL_TRACK yaw=93.5067176986272 pitch=90                      
+ball_now x=-4861.47231442936 y=-1344.91860584026              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4877.60259963898 y=-1356.74289859105 dist=5062.78168726267 mode=0                   
+ball_now x=-4875.98556912678 y=-1349.79180739136              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4892.12775495967 y=-1361.59984857254 dist=5078.07720682538 mode=0                   
+ball_now x=-4892.28812919785 y=-1355.26581461315              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4908.44357414542 y=-1367.05570852895 dist=5095.25854405751 mode=0                   
+BALL_TRACK yaw=101.047592613308 pitch=90                      
+ball_now x=-4907.596630728 y=-1360.40604090678                
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4923.76442278016 y=-1372.17899721172 dist=5111.39230459027 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-4923.30275567451 y=-1365.67977957167              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4939.48311253106 y=-1377.4354612616 dist=5127.94518973443 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-4938.2136337883 y=-1370.68649349404               
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4954.40582380472 y=-1382.42587092524 dist=5143.66001554861 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-4953.52213531845 y=-1375.82671978767              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4969.72637840335 y=-1387.5494543682 dist=5159.7939653164 mode=0                     
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-4968.43301343223 y=-1380.83343371004              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4984.64890438221 y=-1392.54005067218 dist=5175.50891146802 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-4983.74151496238 y=-1385.97366000367              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-4999.96927083677 y=-1397.66382421471 dist=5191.64298414582 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-4998.65239307616 y=-1390.98037392603              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-5014.89161556799 y=-1402.6546042159 dist=5207.35804939724 mode=0                    
+VISION_GOAL_SAMPLE            
+ball_now x=-5013.56327118995 y=-1395.9870878484               
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-5029.8138723249 y=-1407.64547378954 dist=5223.0731729617 mode=0                     
+ball_now x=-5027.87771417918 y=-1400.79353321387              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-5044.13915692295 y=-1412.43679220314 dist=5238.15974616777 mode=0                   
+ball_now x=-5043.78265083388 y=-1406.13402806439              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-5060.05604674454 y=-1417.76057465119 dist=5254.92266767374 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5058.49471723948 y=-1411.07398580113              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-5074.77908354767 y=-1422.68516205252 dist=5270.42842823402 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5074.39965389418 y=-1416.41448065165              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-5090.69578784736 y=-1428.00913537615 dist=5287.19147517134 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5089.31053200797 y=-1421.42119457402              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-5105.61761202892 y=-1433.00044935099 dist=5302.9068903857 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5105.41428037085 y=-1426.82844561018              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-5121.73308959744 y=-1438.39116438329 dist=5319.87960228926 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5123.30733410739 y=-1432.83650231702              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-5139.63906436731 y=-1444.38096361745 dist=5338.73824794126 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5138.01940051299 y=-1437.77646005375              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-5154.36166788103 y=-1449.30600025583 dist=5354.24430575398 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5153.92433716769 y=-1443.11695490428              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-5170.27790883815 y=-1454.63045539801 dist=5371.00767234522 mode=0                   
+ball_now x=-5168.63640357329 y=-1448.05691264101              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-5185.00035195036 y=-1459.55566011682 dist=5386.51384243134 mode=0                   
+ball_now x=-5184.54134022799 y=-1453.39740749153              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-5200.91642136118 y=-1464.88029553772 dist=5403.27732975452 mode=0                   
+ball_now x=-5198.85578321722 y=-1458.20385285701              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-5215.24080884576 y=-1469.67254655559 dist=5418.36452154609 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5215.75477841284 y=-1463.87812863569              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-5232.15145363391 y=-1475.33016084376 dist=5436.1758541514 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5233.05139702483 y=-1469.68591678563              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-5249.45989567557 y=-1481.12100191993 dist=5454.40634887377 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5248.35989855498 y=-1474.82614307926              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-5264.77877796855 y=-1486.24631815685 dist=5470.54144479162 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5263.66840008513 y=-1479.96636937289              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-5280.09758257575 y=-1491.37171735925 dist=5486.67659707234 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5278.57927819892 y=-1484.97308329526              
+goal_now x=-1149.44725618454 y=1376.17841237936               
+kickPt x=-5295.01842224869 y=-1496.36406845506 dist=5502.39270838754 mode=0                   
+BALL_TRACK yaw=102.295529658642 pitch=90                      
+ball_now x=3182.58841658716 y=-4534.47556050376               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3198.74034405731 y=-4546.27027283595 dist=5558.82300333189 mode=0                    
+BALL_TRACK yaw=100.625465245189 pitch=90                      
+ball_now x=3192.34875489727 y=-4547.0762994315                
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3208.49036483488 y=-4558.88512785018 dist=5574.75058008624 mode=0                    
+ball_now x=3203.2649227441 y=-4561.16923112699                
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3219.39505267002 y=-4572.99373570744 dist=5592.56436815668 mode=0                    
+ball_now x=3213.92423958278 y=-4574.93056442965               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3230.04321965942 y=-4586.77026380459 dist=5609.95905990318 mode=0                    
+BALL_TRACK yaw=92.8233778126235 pitch=90                      
+ball_now x=3223.68457789289 y=-4587.53130335739               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3239.79340014915 y=-4599.38481952416 dist=5625.88677398678 mode=0                    
+BALL_TRACK yaw=89.6380649036575 pitch=90                      
+ball_now x=3234.34389473156 y=-4601.29263666005               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3250.44167963713 y=-4613.16113787688 dist=5643.28156277354 mode=0                    
+BALL_TRACK yaw=86.3033670942067 pitch=90                      
+ball_now x=3246.28746661103 y=-4616.71196192689               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3262.37295340326 y=-4628.597125563 dist=5662.77216898819 mode=0                      
+BALL_TRACK yaw=84.7698605316043 pitch=90                      
+ball_now x=3255.91937941706 y=-4629.14690165821               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3271.99500114877 y=-4641.045405175 dist=5678.49044557077 mode=0                      
+BALL_TRACK yaw=81.6142661869735 pitch=90                      
+ball_now x=3266.57869625574 y=-4642.90823496087               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3282.64345519425 y=-4654.82140079735 dist=5695.88538571929 mode=0                    
+BALL_TRACK yaw=78.4282509147234 pitch=90                      
+ball_now x=3278.52226813521 y=-4658.32756022771               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3294.57492310679 y=-4670.25703080957 dist=5715.3761606556 mode=0                     
+BALL_TRACK yaw=76.7893189221542 pitch=90                      
+ball_now x=3288.4110319494 y=-4671.09409835186                
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3304.45371903409 y=-4683.0369703307 dist=5731.51373083257 mode=0                     
+ball_now x=3298.29979576359 y=-4683.86063647602               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3314.33256325124 y=-4695.81682176594 dist=5747.65134323643 mode=0                    
+ball_now x=3307.54643205738 y=-4695.79817861808               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3323.56996749014 y=-4707.76673376208 dist=5762.74109676284 mode=0                    
+ball_now x=3317.82047238381 y=-4709.06211433149               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3333.83379887065 y=-4721.04432509686 dist=5779.50753248247 mode=0                    
+BALL_TRACK yaw=67.1644998385784 pitch=90                      
+ball_now x=3327.96608720616 y=-4722.16025084848               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3343.96938253867 y=-4734.15585581449 dist=5796.0644318795 mode=0                     
+BALL_TRACK yaw=63.861654296456 pitch=90                       
+ball_now x=3338.49697854076 y=-4735.75578495472               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3354.48991417515 y=-4747.76519833733 dist=5813.25012044431 mode=0                    
+BALL_TRACK yaw=62.2142565876833 pitch=90                      
+ball_now x=3348.12889134678 y=-4748.19072468604               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3364.11239806395 y=-4760.21268430261 dist=5828.96877900397 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3358.65978268138 y=-4761.78625879229               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3374.6330308598 y=-4773.8218453019 dist=5846.15455694182 mode=0                      
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3370.21807804861 y=-4776.70818646987               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3386.18012705359 y=-4788.75862179656 dist=5865.01704947936 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3379.72156535056 y=-4788.97732700477               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3395.67445301745 y=-4801.03988788908 dist=5880.52625161876 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3390.38088218923 y=-4802.73866030743               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3406.32354428336 y=-4814.81473273817 dist=5897.92175252705 mode=0                    
+ball_now x=3399.49909297894 y=-4814.51040325308               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3415.43304956933 y=-4826.59795996962 dist=5912.80227838487 mode=0                    
+ball_now x=3409.77313330537 y=-4827.77433896649               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3425.69732661889 y=-4839.87475496403 dist=5929.56910891019 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3419.27662060732 y=-4840.04347950139               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3435.19182577154 y=-4852.15571482691 dist=5945.07846548513 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3429.55066093375 y=-4853.3074152148                
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3445.4561952375 y=-4865.4323473182 dist=5961.84537870874 mode=0                      
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3441.10895630099 y=-4868.22934289238               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3457.00366769804 y=-4880.36845940078 dist=5980.70820705973 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3450.61244360294 y=-4880.49848342728               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3466.49830092381 y=-4892.64918452561 dist=5996.217683936 mode=0                      
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3461.27176044161 y=-4894.25981672995               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3477.14773456954 y=-4906.42342826145 dist=6013.61349152196 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3470.64682223948 y=-4906.36315806843               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3486.51414536739 y=-4918.53805259587 dist=6028.91345606159 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3481.30613907815 y=-4920.12449137109               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3497.16367295057 y=-4932.31213345169 dist=6046.30934845381 mode=0                    
+VISION_GOAL_SAMPLE            
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3490.68120087602 y=-4932.22783270957               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3506.53016583366 y=-4944.42661583624 dist=6061.60938722475 mode=0                    
+ball_now x=3500.69839019429 y=-4945.16017003015               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3516.5382413652 y=-4957.37078487475 dist=6077.95741196938 mode=0                     
+ball_now x=3509.94502648808 y=-4957.09771217221               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3525.77650324475 y=-4969.31918277533 dist=6093.0479311369 mode=0                     
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3520.47591782267 y=-4970.69324627846               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3536.2979015621 y=-4982.92700410462 dist=6110.23439622635 mode=0                     
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3532.0342131899 y=-4985.61517395604                
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3547.84583196 y=-4997.86232512965 dist=6129.09763899273 mode=0                       
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3541.02399847553 y=-4997.22111770527               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3556.82759455315 y=-5009.47861953131 dist=6143.76908557899 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3551.6833153142 y=-5010.98245100793                
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3567.47744263909 y=-5023.25215116911 dist=6161.16526948952 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3561.05837711207 y=-5023.08579234642               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3576.84421559303 y=-5035.36615485952 dist=6176.46556342104 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3571.71769395074 y=-5036.84712564908               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3587.49415228879 y=-5049.1395364097 dist=6193.86182852361 mode=0                     
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3582.89071280574 y=-5051.27165573741               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3598.65738905093 y=-5063.57661084416 dist=6212.09651387186 mode=0                    
+VISION_GOAL_SAMPLE            
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3592.39420010769 y=-5063.54079627231               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3608.15259604413 y=-5075.85635381188 dist=6227.60651300902 mode=0                    
+ball_now x=3602.41138942596 y=-5076.47313359288               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3618.16109710524 y=-5088.79980013406 dist=6243.95492700341 mode=0                    
+ball_now x=3611.14432370342 y=-5087.74747894928               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3626.88648999525 y=-5100.08377500767 dist=6258.20742093186 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3621.67521503802 y=-5101.34301305552               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3637.40832792185 y=-5113.69085331139 dist=6275.39428938739 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3633.23351040525 y=-5116.26494073311               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3648.95673740624 y=-5128.62536680487 dist=6294.25797250929 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3642.7369977072 y=-5128.53408126801                
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3658.45213586251 y=-5140.90478992838 dist=6309.76814863315 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3653.01103803363 y=-5141.79801698142               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3668.71747137053 y=-5154.17977581583 dist=6326.53594363996 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3662.3860998315 y=-5153.9013583199                 
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3678.08462595207 y=-5166.29314098592 dist=6341.83659000002 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3672.53171465385 y=-5166.99949483689               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3688.22172203574 y=-5179.40206184361 dist=6358.39485948507 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3681.77835094764 y=-5178.93703697896               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3697.46062895871 y=-5191.34937585539 dist=6373.48597275415 mode=0                    
+VISION_GOAL_SAMPLE            
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3692.05239127407 y=-5192.20097269237               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3707.72611948837 y=-5204.62410610806 dist=6390.2539122493 mode=0                     
+ball_now x=3702.9685591209 y=-5206.29390438786                
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3718.63324717313 y=-5218.72843486659 dist=6408.06988912157 mode=0                    
+ball_now x=3712.34362091877 y=-5218.39724572635               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3728.00058101655 y=-5230.84150546715 dist=6423.3707029392 mode=0                     
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=3722.87451225336 y=-5231.99277983259               
+goal_now x=-888.393842969257 y=-1561.69941662415              
+kickPt x=3738.52283099288 y=-5244.44790410441 dist=6440.55795538866 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=-5269.59351876033 y=-3757.63485056347              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5282.05865242865 y=-3773.27519719105 dist=6491.35958959551 mode=0                   
+BALL_TRACK yaw=64.9618047381011 pitch=90                      
+ball_now x=-5283.52065125941 y=-3768.42259290623              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5295.99678119531 y=-3784.05416934056 dist=6508.96672774833 mode=0                   
+BALL_TRACK yaw=68.1854596382893 pitch=90                      
+ball_now x=-5298.77417732982 y=-3780.23773928162              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5311.26227111665 y=-3795.85975943177 dist=6528.25077841381 mode=0                   
+BALL_TRACK yaw=69.8879838119765 pitch=90                      
+ball_now x=-5311.20911706114 y=-3789.86965208765              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5323.70690291363 y=-3805.4839195628 dist=6543.97150438335 mode=0                    
+BALL_TRACK yaw=73.229801199113 pitch=90                       
+ball_now x=-5325.30204875664 y=-3800.78581993449              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5337.81075323949 y=-3816.39134178288 dist=6561.78836225571 mode=0                   
+BALL_TRACK yaw=76.2747125612505 pitch=90                      
+ball_now x=-5340.72137402348 y=-3812.72939181396              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5353.2419455192 y=-3828.32539416779 dist=6581.2821433894 mode=0                     
+ball_now x=-5352.16151857629 y=-3821.59075159551              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5364.69084159052 y=-3837.17972413398 dist=6595.74529989978 mode=0                   
+ball_now x=-5365.4254542897 y=-3831.86479192194               
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5377.96486792343 y=-3847.44564894978 dist=6612.51420733758 mode=0                   
+ball_now x=-5377.36299643177 y=-3841.11142821573              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5389.91144055297 y=-3856.68501322808 dist=6627.60625175198 mode=0                   
+BALL_TRACK yaw=85.7538503845188 pitch=90                      
+ball_now x=-5391.62172732368 y=-3852.15602156664              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5404.18089499148 y=-3867.72095996973 dist=6645.63289461434 mode=0                   
+BALL_TRACK yaw=88.9073441636388 pitch=90                      
+ball_now x=-5406.8752533941 y=-3863.97116794204               
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5419.44581766933 y=-3879.52690366241 dist=6664.91725131634 mode=0                   
+BALL_TRACK yaw=90.4901665651389 pitch=90                      
+ball_now x=-5419.64179151825 y=-3873.85993175623              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5432.22183512704 y=-3889.40800246616 dist=6681.05745190675 mode=0                   
+BALL_TRACK yaw=93.6262699932142 pitch=90                      
+ball_now x=-5433.2373256245 y=-3884.39082309082               
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5445.82740539025 y=-3899.93076811942 dist=6698.24574985302 mode=0                   
+BALL_TRACK yaw=95.1483952924363 pitch=90                      
+ball_now x=-5445.67226535582 y=-3894.02273589685              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5458.27147194266 y=-3909.55528215888 dist=6713.96678318261 mode=0                   
+BALL_TRACK yaw=98.3625932034633 pitch=90                      
+ball_now x=-5459.10200026564 y=-3904.42520172736              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5471.71100785694 y=-3919.94979278679 dist=6730.94553027077 mode=0                   
+BALL_TRACK yaw=99.9870725781036 pitch=90                      
+ball_now x=-5473.36073115755 y=-3915.46979507828              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5485.98008168878 y=-3930.98597992411 dist=6748.97238333703 mode=0                   
+ball_now x=-5485.46407249604 y=-3924.84485687614              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5498.09215196163 y=-3940.35393837734 dist=6764.27427527506 mode=0                   
+ball_now x=-5499.05960660228 y=-3935.37574821074              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5511.69743629884 y=-3950.87688560645 dist=6781.46273266487 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5510.99714874435 y=-3944.62238450452              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5523.64349212835 y=-3960.1165769331 dist=6796.55506348858 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5524.59268285059 y=-3955.15327583912              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5537.24866873658 y=-3970.63959306606 dist=6813.74358172135 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5536.69602418908 y=-3964.52833763699              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5549.36054656849 y=-3980.00767460281 dist=6829.04558234225 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5550.1257590989 y=-3974.9308034675                
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5562.79970133862 y=-3990.40242872486 dist=6846.02454424364 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5562.22910043739 y=-3984.30586526537              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5574.91148556033 y=-3999.77057048704 dist=6861.32659828744 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5575.32723695438 y=-3994.45148008772              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5588.01870949964 y=-4009.90872837558 dist=6877.88638373889 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5587.26477909645 y=-4003.6981163815               
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5599.96448947111 y=-4019.14859716366 dist=6892.97887196965 mode=0                   
+VISION_GOAL_SAMPLE            
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5600.52871480985 y=-4013.97215670794              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5613.23752908656 y=-4029.41514993076 dist=6909.74833177282 mode=0                   
+ball_now x=-5614.62164650535 y=-4024.88832455477              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5627.34007734532 y=-4040.32339880042 dist=6927.56591545624 mode=0                   
+ball_now x=-5626.72498784383 y=-4034.26338635264              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5639.45163166436 y=-4049.69168946949 dist=6942.86810227877 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5640.32052195008 y=-4044.79427768723              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5653.05634108967 y=-4060.21500759355 dist=6960.05688938115 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5652.92126087781 y=-4054.55461599734              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5665.66553689777 y=-4069.96835755243 dist=6975.98798791033 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5666.68259418047 y=-4065.21393283601              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5679.43605469226 y=-4080.62007592811 dist=6993.38645460166 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5680.94132507239 y=-4076.25852618693              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5693.70424600423 y=-4091.65683288889 dist=7011.41381456642 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5693.21046560729 y=-4085.76201348887              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5705.98148162177 y=-4101.15360697226 dist=7026.9257557336 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5705.97700373145 y=-4095.65077730306              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5718.75639889857 y=-4111.03541441813 dist=7043.06658555373 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5717.91454587351 y=-4104.89741359685              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5730.70173569923 y=-4120.27557266617 dist=7058.15933358377 mode=0                   
+VISION_GOAL_SAMPLE            
+ball_now x=-5730.84688319408 y=-4114.91460291512              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5743.64247351581 y=-4130.28577295252 dist=7074.50983671864 mode=0                   
+ball_now x=-5742.78442533615 y=-4124.16123920891              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5755.58772990728 y=-4139.52598431122 dist=7089.6026328312 mode=0                    
+ball_now x=-5756.04836104956 y=-4134.43527953534              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5768.86019225688 y=-4149.79291545742 dist=7106.3724331748 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5768.31750158446 y=-4143.93876683729              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5781.13717830588 y=-4159.28985438047 dist=7121.8845235754 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5782.07883488712 y=-4154.59808367596              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5794.90726408553 y=-4169.94185779778 dist=7139.28324811149 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5794.18217622561 y=-4163.97314547383              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5807.01826243317 y=-4179.3105145726 dist=7154.58576560862 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5807.94350952827 y=-4174.6324623125               
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5820.78825545616 y=-4189.96257979568 dist=7171.98454647975 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5820.544248456 y=-4184.39280062261                
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5833.39688098488 y=-4199.71630665347 dist=7187.91598639378 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5833.47658577658 y=-4194.40998994089              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5846.33727025402 y=-4209.72673877253 dist=7204.26670055306 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5845.24832872223 y=-4203.52820073059              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5858.11630565147 y=-4218.83882350527 dist=7219.15006557247 mode=0                   
+VISION_GOAL_SAMPLE            
+ball_now x=-5858.1806660428 y=-4213.54539004886               
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5871.05661417703 y=-4228.84930979658 dist=7235.50082937172 mode=0                   
+ball_now x=-5870.11820818487 y=-4222.79202634265              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5883.00147724861 y=-4238.08978363682 dist=7250.59386502072 mode=0                   
+ball_now x=-5883.38214389827 y=-4233.06606666908              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5896.27350586344 y=-4248.35700472674 dist=7267.36393030911 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5895.65128443318 y=-4242.56955397103              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5908.55009375878 y=-4257.85421026359 dist=7282.87626465782 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5909.41261773584 y=-4253.2288708097               
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5922.31973641411 y=-4268.50651092279 dist=7300.27526153023 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5922.01335666357 y=-4262.98920911981              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5934.92804362531 y=-4278.26045205155 dist=7316.20689829085 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5934.94569398415 y=-4273.00639843808              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5947.86810866133 y=-4288.27110278867 dist=7332.5578135493 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5947.21483451905 y=-4282.50988574003              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5960.14454368623 y=-4297.7684119091 dist=7348.07024354261 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5959.9813726432 y=-4292.39864955422               
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5972.91863412781 y=-4307.65077285817 dist=7364.21157971557 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5972.41631237452 y=-4302.03056236025              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5985.36089312706 y=-4317.27647424315 dist=7379.93368371479 mode=0                   
+VISION_GOAL_SAMPLE            
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-5985.18285049868 y=-4311.91932617444              
+goal_now x=-1586.69941662415 y=863.393842969256               
+kickPt x=-5998.13490810874 y=-4327.15888665582 dist=7396.07506764481 mode=0                   
+ball_now x=4345.90911146007 y=-6021.78879424791               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4361.14292037187 y=-6034.7476161866 dist=7445.65285001789 mode=0                     
+ball_now x=4356.1831517865 y=-6035.05272996132                
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4371.41041348642 y=-6048.01924457096 dist=7462.42358659961 mode=0                    
+BALL_TRACK yaw=99.0024751127337 pitch=90                      
+ball_now x=4366.20034110477 y=-6047.98506728189               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4381.42124583325 y=-6060.95904351305 dist=7478.7750775499 mode=0                     
+BALL_TRACK yaw=95.7832109103785 pitch=90                      
+ball_now x=4376.98808344752 y=-6061.91219978097               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4392.20217135652 y=-6074.89416916537 dist=7496.38440053792 mode=0                    
+BALL_TRACK yaw=94.1442490500019 pitch=90                      
+ball_now x=4386.49157074947 y=-6074.18134031587               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4401.69967826289 y=-6087.17031509683 dist=7511.89739697073 mode=0                    
+BALL_TRACK yaw=90.9213574061459 pitch=90                      
+ball_now x=4397.66458960447 y=-6088.6058704042                
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4412.86569575745 y=-6101.60303823899 dist=7530.1356750752 mode=0                     
+BALL_TRACK yaw=87.6802328657453 pitch=90                      
+ball_now x=4408.45233194722 y=-6102.53300290328               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4423.64670838121 y=-6115.53803749693 dist=7547.74507310917 mode=0                    
+BALL_TRACK yaw=86.0159220370424 pitch=90                      
+ball_now x=4418.08424475325 y=-6114.9679426346                
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4433.27263744074 y=-6127.9799650589 dist=7563.46777146859 mode=0                     
+BALL_TRACK yaw=82.6644875544074 pitch=90                      
+ball_now x=4428.74356159192 y=-6128.72927593726               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4443.92535951878 y=-6141.74899220559 dist=7580.86758123584 mode=0                    
+VISION_GOAL_SAMPLE            
+ball_now x=4440.04500595099 y=-6143.31960522201               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4455.21984292293 y=-6156.34743400793 dist=7599.31559924907 mode=0                    
+ball_now x=4449.1632167407 y=-6155.09134816766                
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4464.3324606644 y=-6168.12568891751 dist=7614.19981571445 mode=0                     
+ball_now x=4459.82253357937 y=-6168.85268147032               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4474.98526523583 y=-6181.89459730789 dist=7631.59969706891 mode=0                    
+BALL_TRACK yaw=72.9454365405053 pitch=90                      
+ball_now x=4469.4544463854 y=-6181.28762120164                
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4484.61131750919 y=-6194.33634748955 dist=7647.32250235086 mode=0                    
+BALL_TRACK yaw=69.5830735536466 pitch=90                      
+ball_now x=4480.24218872816 y=-6195.21475370072               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4495.3925229958 y=-6208.27106909131 dist=7664.9320677435 mode=0                      
+BALL_TRACK yaw=67.9835002413583 pitch=90                      
+ball_now x=4490.90150556683 y=-6208.97608700338               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4506.04540859056 y=-6222.03986138935 dist=7682.33201970588 mode=0                    
+BALL_TRACK yaw=64.6243238453671 pitch=90                      
+ball_now x=4501.30397139734 y=-6222.4058219132                
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4516.4416246201 y=-6235.47683774624 dist=7699.31271885166 mode=0                     
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4511.57801172377 y=-6235.66975762661               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4526.70951781795 y=-6248.74788911861 dist=7716.08380206357 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4523.13630709101 y=-6250.5916853042                
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4538.26092778732 y=-6263.67777902206 dist=7734.95129707329 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4532.12609237663 y=-6262.19762905343               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4547.24537968393 y=-6275.28988444811 dist=7749.62603464926 mode=0                    
+ball_now x=4542.1432816949 y=-6275.129966374                  
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4557.25664854529 y=-6288.22905574867 dist=7765.9779048277 mode=0                     
+ball_now x=4551.38991798869 y=-6287.06750851607               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4566.49784070373 y=-6300.1728765474 dist=7781.07195722641 mode=0                     
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4561.92080932328 y=-6300.66304262231               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4577.02255607449 y=-6313.77552694308 dist=7798.26242719749 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4571.6811476334 y=-6313.26378155005                
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4586.77719329954 y=-6326.38282897148 dist=7814.19507816883 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4581.95518795983 y=-6326.52771726345               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4597.04525622791 y=-6339.65363969446 dist=7830.96631068597 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4593.51348332706 y=-6341.44964494104               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4608.59685595801 y=-6354.58326097304 dist=7849.83397285476 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4603.01697062901 y=-6353.71878547594               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4618.09486077452 y=-6366.8586952458 dist=7865.34740417351 mode=0                     
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4613.67628746768 y=-6367.4801187786                
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4628.74805269149 y=-6380.62705351787 dist=7882.74762575711 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4624.84930632268 y=-6381.90464886693               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4639.91467892474 y=-6395.05890857096 dist=7900.98643662891 mode=0                    
+VISION_GOAL_SAMPLE            
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4634.73807013687 y=-6394.67118699109               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4649.79780822193 y=-6407.83189703308 dist=7917.12885318788 mode=0                    
+ball_now x=4644.3699829429 y=-6407.10612672241                
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4659.42425379373 y=-6420.27309027326 dist=7932.85200482956 mode=0                    
+ball_now x=4653.74504474076 y=-6419.20946806089               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4668.79401388034 y=-6432.38249079055 dist=7948.15589000831 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4664.53278708352 y=-6433.13660055997               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4679.57567957335 y=-6446.31656207506 dist=7965.76586144343 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4675.70580593851 y=-6447.5611306483                
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4690.74243161419 y=-6460.74824133599 dist=7984.00478442191 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4685.08086773638 y=-6459.66447198678               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4700.11225601456 y=-6472.8575522348 dist=7999.30872705019 mode=0                     
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4694.96963155057 y=-6472.43101011094               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4709.99551606363 y=-6485.63035837516 dist=8015.45126033569 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4704.6015443566 y=-6484.86594984226                
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4719.62208829558 y=-6498.07137523401 dist=8031.17452518392 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4714.49030817079 y=-6497.63248796641               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4729.50538978273 y=-6510.84412390549 dist=8047.31709563992 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4724.12222097682 y=-6510.06742769773               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4739.1320021573 y=-6523.2850851647 dist=8063.040396538 mode=0                        
+VISION_GOAL_SAMPLE            
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4734.01098479101 y=-6522.83396582189               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4749.0153446341 y=-6536.05777713705 dist=8079.18300384661 mode=0                     
+ball_now x=4743.00077007663 y=-6534.43990957112               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4758.00021930612 y=-6547.6692906153 dist=8093.85811749772 mode=0                     
+ball_now x=4753.27481040306 y=-6547.70384528453               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4768.268668236 y=-6560.93956314514 dist=8110.62969464913 mode=0                      
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4762.77829770501 y=-6559.97298581943               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4777.76700308148 y=-6573.21453826382 dist=8126.14342119169 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4773.05233803144 y=-6573.23692153284               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4788.03549424098 y=-6586.48475267612 dist=8142.91503648088 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4782.68425083747 y=-6585.67186126416               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4797.6622244641 y=-6598.92555154423 dist=8158.63844369103 mode=0                     
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4792.70144015574 y=-6598.60419858473               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4807.67404407116 y=-6611.86395469078 dist=8174.99080546118 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4801.81965094545 y=-6610.37594153038               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4816.78738483687 y=-6623.6411947189 dist=8189.87566371437 mode=0                     
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4812.22211677596 y=-6623.80567644021               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4827.18431531699 y=-6637.07717276952 dist=8206.85699956692 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4823.65198663912 y=-6638.56180492137               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4838.60812829119 y=-6651.84012661062 dist=8225.51552725741 mode=0                    
+VISION_GOAL_SAMPLE            
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4833.54075045331 y=-6651.32834304553               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4848.4916730104 y=-6664.61254097735 dist=8241.65831763267 mode=0                     
+ball_now x=4843.68636527566 y=-6664.42647956252               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4858.63195343763 y=-6677.71667875188 dist=8258.22041971793 mode=0                    
+ball_now x=4852.54772505721 y=-6675.86662411533               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4867.48867076434 y=-6689.16204217481 dist=8272.68606841161 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4862.95019088772 y=-6689.29635902516               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4877.88570652024 y=-6702.59787671266 dist=8289.66750013458 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4872.58210369375 y=-6701.73129875648               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4887.51261041136 y=-6715.03843853763 dist=8305.39106532426 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=4882.47086750794 y=-6714.49783688063               
+goal_now x=-838.393842969257 y=-1611.69941662415              
+kickPt x=4897.39625057544 y=-6727.81072312999 dist=8321.53394281447 mode=0                    
+BALL_TRACK yaw=61.8 pitch=90  
+ball_now x=-6751.4353790227 y=-4916.71750380173               
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-6764.75361532479 y=-4931.63811309899 dist=8371.55576667924 mode=0                   
+BALL_TRACK yaw=65.0513754741655 pitch=90                      
+ball_now x=-6766.19150750387 y=-4928.14737366488              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-6779.51632619717 y=-4943.06210486563 dist=8390.21481189443 mode=0                   
+BALL_TRACK yaw=68.1897687107954 pitch=90                      
+ball_now x=-6781.27923437787 y=-4939.8340945362               
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-6794.61074834641 y=-4954.74284147572 dist=8409.29318353804 mode=0                   
+BALL_TRACK yaw=69.8597691256463 pitch=90                      
+ball_now x=-6793.8799733056 y=-4949.59443284631               
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-6807.21705198238 y=-4964.4982019122 dist=8425.22678564733 mode=0                    
+VISION_GOAL_SAMPLE            
+ball_now x=-6806.81231062618 y=-4959.61162216458              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-6820.15507512092 y=-4974.51030115426 dist=8441.579709094 mode=0                     
+ball_now x=-6818.74985276824 y=-4968.85825845837              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-6832.09784308113 y=-4983.75225572597 dist=8456.6747296965 mode=0                    
+ball_now x=-6832.01378848165 y=-4979.1322987848               
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-6845.367559945 y=-4994.02111296541 dist=8473.44699089406 mode=0                     
+BALL_TRACK yaw=79.6536219093712 pitch=90                      
+ball_now x=-6846.27251937356 y=-4990.17689213571              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-6859.63247605289 y=-5005.06015647948 dist=8491.47719048329 mode=0                   
+BALL_TRACK yaw=82.79800025 pitch=90                           
+ball_now x=-6859.37065589055 y=-5000.32250695806              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-6872.73626756831 y=-5015.20069315395 dist=8508.03983277938 mode=0                   
+BALL_TRACK yaw=85.9382299683805 pitch=90                      
+ball_now x=-6873.46358758605 y=-5011.2386748049               
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-6886.8352553273 y=-5026.11141839233 dist=8525.86041547203 mode=0                    
+BALL_TRACK yaw=88.9486897324261 pitch=90                      
+ball_now x=-6888.71711365647 y=-5023.05382118029              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-6902.09530322399 y=-5037.92069858934 dist=8545.14859672209 mode=0                   
+BALL_TRACK yaw=90.5476825302286 pitch=90                      
+ball_now x=-6901.31785258421 y=-5032.8141594904               
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-6914.70140407652 y=-5047.67621013803 dist=8561.08232818323 mode=0                   
+BALL_TRACK yaw=93.6858592194233 pitch=90                      
+ball_now x=-6915.07918588687 y=-5043.47347632907              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-6928.46856681688 y=-5058.33027538914 dist=8578.48365716738 mode=0                   
+BALL_TRACK yaw=95.1964546623824 pitch=90                      
+ball_now x=-6927.67992481461 y=-5053.23381463918              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-6941.07461957358 y=-5068.0858229988 dist=8594.41741968412 mode=0                    
+ball_now x=-6940.7780613316 y=-5063.37942946154               
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-6954.1782555469 y=-5078.2264761373 dist=8610.98016214549 mode=0                     
+ball_now x=-6952.71560347366 y=-5072.62606575532              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-6966.12078856233 y=-5087.4686063983 dist=8626.07533365717 mode=0                    
+BALL_TRACK yaw=102.984064473434 pitch=90                      
+ball_now x=-6967.14013356199 y=-5083.79908461032              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-6980.5513223792 y=-5098.63620072192 dist=8644.31535008309 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-6980.56986847182 y=-5094.20155044083              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-6993.98662066939 y=-5109.03363594722 dist=8661.29745149897 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-6993.00480820314 y=-5103.83346324686              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-7006.42668921879 y=-5118.6609077334 dist=8677.02163416432 mode=0                    
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-7006.10294472013 y=-5113.97907806921              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-7019.53020488638 y=-5128.80165154441 dist=8693.58445511384 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-7018.70368364787 y=-5123.73941637932              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-7032.13609636606 y=-5138.55732070376 dist=8709.51832284499 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-7032.46501695053 y=-5134.39873321799              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-7045.90303194719 y=-5149.21155715367 dist=8726.91980001693 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-7045.06575587827 y=-5144.1590715281               
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-7058.50887806272 y=-5158.96726067917 dist=8742.85369764643 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-7057.99809319884 y=-5154.17626084637              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-7071.44643464069 y=-5168.9797101898 dist=8759.20692313787 mode=0                    
+ball_now x=-7069.76983614449 y=-5163.29447163608              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-7083.22290890256 y=-5178.09362138754 dist=8774.09256442262 mode=0                   
+ball_now x=-7082.70217346506 y=-5173.31166095435              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-7096.16042266558 y=-5188.10610343985 dist=8790.44581831634 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-7094.97131399996 y=-5182.8151482563               
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-7108.43445365387 y=-5197.60514050306 dist=8805.96045746728 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-7108.23524971337 y=-5193.08918858273              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-7121.70365399729 y=-5207.87438679056 dist=8822.73305523564 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-7120.67018944469 y=-5202.72110138876              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-7134.14350836307 y=-5217.50182117244 dist=8838.45737964814 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-7133.43672756884 y=-5212.60986520295              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-7146.91507121135 y=-5227.38600315082 dist=8854.60103342014 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-7145.87166730016 y=-5222.24177800898              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-7159.354884856 y=-5237.01346864824 dist=8870.32538513185 mode=0                     
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-7158.63820542432 y=-5232.13054182317              
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-7172.12640615231 y=-5246.89768241035 dist=8886.46906681784 mode=0                   
+BALL_TRACK yaw=103.8 pitch=90 
+ball_now x=-7171.07314515564 y=-5241.7624546292               
+goal_now x=-1636.69941662415 y=813.393842969257               
+kickPt x=-7184.56617957071 y=-5256.52517870959 dist=8902.19344560874 mode=0                   
