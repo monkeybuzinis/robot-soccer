@@ -502,11 +502,10 @@ const SCORE_DIST_MM = 120
 // vision. If the ball slipped away or was missed, the planner falls back to
 // re-approach/re-align instead of kicking forever.
 const KICK_ACTION_MS = 1200
-// Hardware convention check from the 2026-06-28 log: with a positive approach
-// speed and a kick point in front of the robot, both ball_now and goal_now
-// moved farther away until the objects were behind the robot. Keep planner
-// coordinates camera-forward-positive, but invert the body gait command here.
-const BODY_WALK_SIGN = -1
+// Hardware convention: positive speed is physical forward. The earlier
+// "walking away" symptom was caused by approach steering/geometry, not by
+// the gait API's forward sign.
+const BODY_WALK_SIGN = 1
 
 function computeKickPoint(ball_now: number[], goal_now: number[]): number[] {
     const dx = ball_now[0] - goal_now[0]
