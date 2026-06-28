@@ -469,6 +469,11 @@ const SCORE_DIST_MM = 120
 // vision. If the ball slipped away or was missed, the planner falls back to
 // re-approach/re-align instead of kicking forever.
 const KICK_ACTION_MS = 1200
+// Hardware convention check from the 2026-06-28 log: with a positive approach
+// speed and a kick point in front of the robot, both ball_now and goal_now
+// moved farther away until the objects were behind the robot. Keep planner
+// coordinates camera-forward-positive, but invert the body gait command here.
+const BODY_WALK_SIGN = -1
 
 function computeKickPoint(ball_now: number[], goal_now: number[]): number[] {
     const dx = ball_now[0] - goal_now[0]
@@ -502,7 +507,7 @@ function signNonZero(x: number): number {
 function updateControl(current: Pose2D, target: Pose2D, offsetStartDist_mm: number, stopDist_mm: number): number[] {
     const vMax = 2.5
     const turnMax = 0.8
-    const kTurn = -2.0 // if robot turns the wrong direction, flip the subtraction order below
+    const kTurn = 2.0 // hardware turn sign: positive eHeading should turn toward +x target
 
     const leadMin_mm = 50
     const leadMax_mm = 180
@@ -965,9 +970,9 @@ basic.forever(function () {
     if (remoteWalkSpeed != 0) {
         robotPuPro.walk(remoteWalkSpeed, remoteWalkTurn)
     } else if (walkMode == 0) {
-        robotPuPro.walk(walkSpeed, walkTurn)
+        robotPuPro.walk(BODY_WALK_SIGN * walkSpeed, walkTurn)
     } else if (walkMode == 1) {
-        robotPuPro.walk(-walkSpeed, walkTurn) // back up and turn to align with the goal
+        robotPuPro.walk(-BODY_WALK_SIGN * walkSpeed, walkTurn) // back up and turn to align with the goal
     } else {
         // walkMode == 2: aligned at the kick point. The extension's kick
         // action must be called repeatedly while the motion completes.
