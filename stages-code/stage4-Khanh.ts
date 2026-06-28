@@ -213,6 +213,26 @@ let scanStepIndex = 0
 let scanFrameCounter = 0
 let search_gain = 1
 
+// Bug #17 (microbit-console-2026-06-28T01-32-08-449Z.txt and
+// -01-29-20-096Z.txt, explicit user request): long stretches in both logs
+// show BALL_TRACK reporting perfectly normal fresh readings while
+// GOAL_REJECTED fires continuously at the exact same time, every single
+// cycle -- the head is pointed down tracking the ball, so the SAME camera
+// frame used for goal detection physically can't see the goal from down
+// there. Worse, searchBall() below ONLY ever sweeps pitch in the level-to-
+// down band (HEAD_PITCH_SEARCH_MIN..MAX = 90..135, see the comment on those
+// constants) -- it never once points the head up toward level for the
+// goal's sake, and nothing else in this file actively searches for the goal
+// at all (the goal branch in trackPacket() never moves the head -- see its
+// comment). So once the goal is lost, it can only ever be reacquired by
+// accident, whenever ball-tracking happens to drift the head up on its own.
+// User's explicit fix: ball search stays below level (the ball is on the
+// ground, close), but add a second, separate search that sweeps the SAME
+// yaw pattern at a fixed LEVEL pitch (HEAD_PITCH_CENTER) for the goal,
+// which sits roughly at camera level rather than down at the robot's feet.
+// Shares the yaw sweep state (scanStepIndex/scanFrameCounter/search_gain)
+// with searchBall() below since the two are only ever called one at a time
+// (see the planner loop) -- only the pitch target and log label differ.
 function searchBall() {
     if (scanFrameCounter > 0) {
         scanFrameCounter += -1
@@ -238,10 +258,31 @@ function searchBall() {
         // fresh-track speed so the sweep is actually brisk.
         robotPuPro.servoStep(robotPuPro.ServoJoint.HeadYaw, nextYaw, 8)
         robotPuPro.servoStep(robotPuPro.ServoJoint.HeadPitch, nextPitch, 8)
-        if (DEBUG_FLAG) serial.writeLine(`SEARCHING yaw=${nextYaw} pitch=${nextPitch}`)
+        if (DEBUG_FLAG) serial.writeLine(`SEARCHING_BALL yaw=${nextYaw} pitch=${nextPitch}`)
         return
     }
+    advanceSearchStep()
+}
 
+// Bug #17 above -- level-pitch yaw sweep for the goal, used only once the
+// ball is already valid (so head pitch is free for the goal's sake) and the
+// goal itself is missing. See the planner loop for the priority between
+// this and searchBall().
+function searchGoal() {
+    if (scanFrameCounter > 0) {
+        scanFrameCounter += -1
+        const targetOffset = SEARCH_PATTERN[scanStepIndex]
+        robotPuPro.setModeVar(robotPuPro.Mode.API)
+        const nextYaw = clampL(HEAD_YAW_CENTER + targetOffset.y * search_gain, HEAD_YAW_MIN, HEAD_YAW_MAX)
+        robotPuPro.servoStep(robotPuPro.ServoJoint.HeadYaw, nextYaw, 8)
+        robotPuPro.servoStep(robotPuPro.ServoJoint.HeadPitch, HEAD_PITCH_CENTER, 8)
+        if (DEBUG_FLAG) serial.writeLine(`SEARCHING_GOAL yaw=${nextYaw} pitch=${HEAD_PITCH_CENTER}`)
+        return
+    }
+    advanceSearchStep()
+}
+
+function advanceSearchStep() {
     scanFrameCounter = SCAN_WAIT_FRAMES
     scanStepIndex += 1
     if (scanStepIndex >= SEARCH_PATTERN.length) {
@@ -694,6 +735,48 @@ let pitchPinnedUpCycles = 0
 // the camera mistaking ceiling lights/walls for the goal while pitched up.
 const MAX_DETECT_DIST_MM = 2500
 
+// Bug #12 (microbit-console-2026-06-27T22-25-40-464Z.txt): user reports the
+// robot still walks off to one side even starting squarely on the kick line.
+// That log shows BALL_TRACK reporting the literal SAME x_mm/y_mm (e.g.
+// x_mm=-90 y_mm=485, later x_mm=-132 y_mm=493) across 30-100+ CONSECUTIVE
+// fresh (VALID, non-STALE) packets, while the head yaw sweeps its entire
+// physical range (46 to 135 degrees) during that same stretch. A real camera
+// feed always has some frame-to-frame jitter even on a perfectly stationary
+// ball -- an exact-repeat streak this long means the ESP32/I2C side is
+// re-serving the same cached detection result without actually producing a
+// fresh one, while still marking it VALID/non-STALE. Worse, lastYawByte (the
+// head-tracking nudge) is read from this SAME stale packet and re-applied
+// every cycle, so a frozen nonzero nudge keeps dragging the head (and thus
+// the steering target) toward one side even though nothing in the scene
+// actually moved -- explaining the persistent one-sided drift independent of
+// the robot's actual starting alignment. Track how many consecutive fresh
+// ball packets report the exact same raw (x_mm, y_mm); past this many,
+// treat it as a non-advancing/stale detection and force the ball lost so
+// search() recenters the head, instead of continuing to drive off it.
+const FROZEN_BALL_CYCLE_LIMIT = 15
+let frozenBallCycles = 0
+let lastBallRawXY = [99999, 99999] // sentinel outside i16 range -- never matches a real first reading
+
+// Bug #13 (microbit-console-2026-06-28T00-08-39-870Z.txt): after the first
+// BALL_FROZEN forced the ball lost, search() swept the head through its
+// ENTIRE physical range (yaw 45 to 135, every SEARCH_PATTERN step) for the
+// rest of the log -- and every single packet still reported the exact same
+// x_mm=-60 y_mm=355, never once different, regardless of where the camera
+// was actually pointed. A cached-but-eventually-refreshing detector would
+// produce a different (or no) reading once the head points somewhere a real
+// ball isn't visible; identical output independent of camera orientation
+// means the ESP32's own detection pipeline is stuck, not just slow to
+// refresh -- ball_valid/searchBall() can never reach far enough to fix that,
+// since neither one touches the ESP32 again once a reading already came
+// back VALID/non-STALE. frozenBallCycles already keeps climbing for as long
+// as the same stuck value keeps coming back (it only resets on a genuinely
+// different reading) -- reuse it on a much longer fuse to retry the one
+// lever available here: toggling the ball detection service off/on, the same
+// call already used once at boot, to force the ESP32 to reinitialize.
+// Checked with modulo (not a one-shot flag) so it keeps retrying
+// periodically if a single toggle doesn't unstick it.
+const BALL_FROZEN_RESET_CYCLE_LIMIT = 150 // ~3s -- well past one full SEARCH_PATTERN sweep
+
 function trackPacket(p: Buffer) {
     const type = p[0]
     const flags = p[3]
@@ -703,11 +786,69 @@ function trackPacket(p: Buffer) {
     const nowMs = input.runningTime()
 
     if (type == SOCCER_BALL) {
+        // Bug #14 (microbit-console-2026-06-28T00-27-55-542Z.txt): user
+        // observed the robot walk the right path and reach the kick point
+        // correctly, but kickPt kept drifting hundreds of mm during/after
+        // the kick itself (e.g. dist=345 at AT_KICK_POSE, climbing straight
+        // to dist=754 by KICK_DONE, all while the body wasn't walking
+        // anywhere -- kickActive already overrides walkMode in the actuator
+        // loop). Once the robot is this close, the ball is in the head
+        // camera's blind spot -- it physically can't see it -- so every
+        // BALL_TRACK packet read during the kick is a bad close-range
+        // reading, not a real update, and feeding it into ballKF just
+        // corrupts the estimate for no benefit (the body isn't moving
+        // toward anything while kicking). Freeze the ball entirely for the
+        // duration of the kick: skip this packet outright, no Kalman
+        // update, no head nudge, no staleness countdown. The planner loop's
+        // kickJustFinished handling already drops ball_valid the instant
+        // the kick completes, so normal tracking/searching resumes there --
+        // nothing useful to track mid-kick anyway.
+        if (kickActive) return
         const x_mm = i16(p, 6)
         const y_mm = i16(p, 8)
         const plausible = norm2L(x_mm, y_mm) <= MAX_DETECT_DIST_MM
 
         if (isValid && !isStale && plausible) {
+            if (x_mm == lastBallRawXY[0] && y_mm == lastBallRawXY[1]) {
+                frozenBallCycles += 1
+            } else {
+                frozenBallCycles = 0
+                lastBallRawXY = [x_mm, y_mm]
+            }
+            if (frozenBallCycles >= BALL_FROZEN_RESET_CYCLE_LIMIT && frozenBallCycles % BALL_FROZEN_RESET_CYCLE_LIMIT == 0) {
+                // Bug #13 above -- still stuck on this same reading long
+                // after multiple force-lost/re-search cycles already had a
+                // chance to find a fresh one. Try reinitializing the ESP32's
+                // own detection pipeline instead of just waiting it out again.
+                //
+                // Escalated (microbit-console-2026-06-28T02-06-49-667Z.txt):
+                // toggling SERVICE_SOCCER_BALL_DETECTION alone fired here but
+                // the exact same frozen x_mm/y_mm kept coming back for the
+                // rest of that run -- the hang is in image capture itself,
+                // not just the ball-detection feature flag layered on top of
+                // it, so cycling that one flag did nothing. Also bounce
+                // SERVICE_IMAGE_CAPTURE to restart the underlying capture
+                // pipeline, not just the sub-feature reading its output.
+                setService(SERVICE_SOCCER_BALL_DETECTION, false)
+                basic.pause(10)
+                setService(SERVICE_IMAGE_CAPTURE, false)
+                basic.pause(10)
+                setService(SERVICE_IMAGE_CAPTURE, true)
+                basic.pause(10)
+                setService(SERVICE_SOCCER_BALL_DETECTION, true)
+                if (DEBUG_FLAG) serial.writeLine("BALL_DETECTION_RESET -- toggling image capture + ball service, stuck on one reading too long")
+            }
+            if (frozenBallCycles >= FROZEN_BALL_CYCLE_LIMIT) {
+                // Stale/non-advancing detection (bug #12 above) -- don't
+                // drive the head or the body off a reading that hasn't
+                // actually changed in this many cycles. Force lost; the
+                // planner loop's `if (!ball_valid) searchBall()` recenters
+                // the head on the next cycle.
+                ball_valid = false
+                if (DEBUG_FLAG) serial.writeLine(`BALL_FROZEN x_mm=${x_mm} y_mm=${y_mm} -- repeated identical reading, forcing lost`)
+                return
+            }
+
             // Head-tracking ported from robotpu-followball.ts (confirmed
             // working on real hardware). The earlier version here (0.08
             // gain, staleScale, a "corrected" sign flip) still lost the ball
@@ -901,6 +1042,21 @@ let pitchNearCycles = 0
 // reason this existed), not from across the whole field.
 const NEAR_BALL_PITCH_DIST_GATE_MM = 200
 
+// Bug #18 (microbit-console-2026-06-28T01-29-20-096Z.txt): kickPt was logged
+// growing into the tens of thousands of mm (dist=60000+) and never recovered
+// for the rest of that run -- the robot just kept backing up/re-approaching
+// (walkMode 3 <-> 0) chasing a point many dozens of meters away on a field
+// that's ~1-2m across. Traced to poseNow itself reading an unchanging,
+// clearly-wrong value (e.g. theta=11.33) for dozens of consecutive cycles --
+// Stage 3 bug #19's pose freeze, still unresolved at the extension level --
+// which corrupts odomToNow()'s re-projection of BOTH ball_now and goal_now
+// (goal_now exploded the same way even off fresh GOAL_SEEN updates, so this
+// isn't ball-coasting-specific). Since nothing here can fix locationArray()
+// itself, treat an exploded kickPt as a sign the current ball/goal lock is
+// built on a corrupted pose sample and force a full reset rather than
+// wandering after a target that can never realistically be reached.
+const PLAUSIBLE_KICKPT_DIST_MM = 3000 // generous vs. the ~1-2m real field, but catches a multi-meter blowup
+
 // Bug #6 recovery (requested after microbit-console-2026-06-27T20-24-58-288Z.txt
 // showed the robot overshoot the kick point, turn away, and just keep walking
 // forward into a wall instead of stopping or correcting): once distKick grows
@@ -930,25 +1086,53 @@ basic.forever(function () {
     if (kickJustFinished) {
         kickJustFinished = false
         ball_valid = false
+        // Bug #16 above: the walk gate below no longer depends on
+        // ball_valid alone (it also accepts a coasting ballKF.inited
+        // estimate through blind-spot dropouts) -- so ball_valid=false by
+        // itself is no longer enough to stop the body from immediately
+        // resuming on the stale pre-kick ball position. Force ballKF back to
+        // uninited so the next real detection does a hard reset() (fresh
+        // position, fresh covariance) instead of blending with a position
+        // that's now wrong (the ball just got struck and moved).
+        ballKF.inited = false
         if (DEBUG_FLAG) serial.writeLine("KICK_DONE -- dropping ball lock to re-approach")
     }
 
     const nowMs = input.runningTime()
     const poseNow = robotPuPro.locationArray() // [x_mm, y_mm, theta_deg]
 
-    if (ball_valid && nowMs - lastBallSeenMs >= BALL_LOST_TIMEOUT_MS) ball_valid = false
+    // Bug #14 above -- don't let the ball time out or trigger a search while
+    // the kick itself is in progress. trackPacket() already skips all ball-
+    // packet processing during kickActive, so lastBallSeenMs stops advancing
+    // too -- without this gate, the kick's own duration would eventually
+    // trip the staleness timeout and start dragging the head into search
+    // mid-kick for no reason.
+    if (ball_valid && !kickActive && nowMs - lastBallSeenMs >= BALL_LOST_TIMEOUT_MS) ball_valid = false
     if (goal_valid && nowMs - lastGoalSeenMs >= GOAL_LOST_TIMEOUT_MS) goal_valid = false
 
-    // Centralized here instead of inside trackPacket()'s SOCCER_BALL branch:
-    // both ball and goal detection services are enabled and the camera
-    // interleaves packet types, so on any cycle where the I2C read happens
-    // to return a SOCCER_GOAL packet, trackPacket() never touches ball
-    // state at all -- a searchBall() call nested inside the SOCCER_BALL
-    // branch simply doesn't run that cycle, even though the ball may already
-    // be lost. Calling it unconditionally here, once per planner cycle
-    // whenever ball_valid is false, makes search progress independent of
+    // Centralized here instead of inside trackPacket()'s branches: both ball
+    // and goal detection services are enabled and the camera interleaves
+    // packet types, so a search call nested inside one branch simply
+    // doesn't run on a cycle where the other packet type happens to arrive.
+    // Calling it unconditionally here makes search progress independent of
     // which packet type happened to arrive.
-    if (!ball_valid) searchBall()
+    //
+    // Bug #17 (see searchGoal() above): ball-finding still takes priority
+    // when both are missing (matches the previous behavior, and nothing
+    // useful can be computed without the ball ever being seen at least
+    // once) -- but once the ball is valid and the goal specifically is the
+    // one missing, actively sweep level for the goal instead of leaving the
+    // head wherever ball-tracking put it (often pointed down, where the
+    // goal physically can't be seen -- this was silently true the entire
+    // time before, explaining the long GOAL_REJECTED streaks alongside
+    // perfectly normal BALL_TRACK in the user's logs).
+    if (!kickActive) {
+        if (!ball_valid) {
+            searchBall()
+        } else if (!goal_valid) {
+            searchGoal()
+        }
+    }
 
     const haveBallMeas = ball_valid
     const haveGoalMeas = goal_valid
@@ -998,12 +1182,55 @@ basic.forever(function () {
         grid.set(idxG[0], idxG[1], 3)
     }
 
-    if (ball_valid && goal_valid) {
+    // Bug #16 (microbit-console-2026-06-28T01-00-55-670Z.txt was a different,
+    // worse experiment -- locking the kick point entirely from the first
+    // detection and walking on odometry alone. That fully exposed Stage 3's
+    // pose freeze-then-jump bug #19 with zero vision correction for the
+    // whole approach, AND lost the continuous head-down tracking that used
+    // to counteract gait vibration, so the head visibly drifted up while
+    // walking. Reverted.
+    //
+    // The actual, narrower problem this user keeps reporting (this session,
+    // repeatedly): the closer the robot gets, the more often the ball is in
+    // the head camera's blind spot, so `ball_valid` goes false (after
+    // BALL_LOST_TIMEOUT_MS) even though the ball hasn't moved -- and once
+    // that happens, this gate used to require BOTH ball_valid && goal_valid,
+    // stopping the body outright. But ball_now/ballKF.pos() are already
+    // computed unconditionally above via Kalman PREDICT every cycle
+    // regardless of ball_valid (see the comment above ball_now) -- a
+    // stationary ball has ~0 velocity in this filter, so the predicted
+    // position barely moves even through a long blind-spot stretch with no
+    // fresh measurement. Only require goal_valid (the goal isn't subject to
+    // this blind-spot problem) plus ballKF.inited (we've gotten at least one
+    // real ball fix this approach) to keep walking -- ball_valid itself is
+    // no longer a hard requirement to walk, only to feed fresh measurements
+    // into the filter when available.
+    if (goal_valid && ballKF.inited) {
         const kickPt = computeKickPoint(ball_now, goal_now)
         const idxK = grid.index(kickPt[0], kickPt[1])
         grid.set(idxK[0], idxK[1], 4)
 
         const distKick = norm2L(kickPt[0], kickPt[1])
+
+        // Bug #18 above: a kickPt this far away can only come from a
+        // corrupted pose sample, not a real approach -- drop everything and
+        // force a fresh re-acquisition rather than chasing it.
+        if (distKick > PLAUSIBLE_KICKPT_DIST_MM) {
+            ball_valid = false
+            goal_valid = false
+            ballKF.inited = false
+            goalKF.inited = false
+            walkSpeed = 0
+            walkTurn = 0
+            walkMode = 0
+            arrivedCycles = 0
+            pitchNearCycles = 0
+            missCycles = 0
+            backupCycles = 0
+            prevDistKick = -1
+            contactCycles = 0
+            if (DEBUG_FLAG) serial.writeLine(`KICKPT_IMPLAUSIBLE dist=${distKick} -- pose/Kalman projection blew up, forcing full reset`)
+        } else {
         const thetaKick = desiredHeadingTo(goal_now[0] - kickPt[0], goal_now[1] - kickPt[1])
 
         // Ground-plane distance from a single pitched camera is only reliable
@@ -1018,8 +1245,16 @@ basic.forever(function () {
         // single pinned reading fires as soon as the ball gets low enough in
         // frame, well before the robot is actually close, so require it to
         // hold for many consecutive cycles before it counts (pitchNearCycles).
+        // Bug #16 above: this used to also require ball_valid, but that's
+        // exactly the flag that goes false during a blind-spot dropout --
+        // blocking this signal right when it would matter most. The head
+        // still holds its last commanded pitch when ball_valid drops (no
+        // head movement happens in trackPacket()'s lost branch), so a
+        // pinned-down reading from right before the dropout remains a valid
+        // "ball is right here" signal; ballKF.inited (guaranteed true to
+        // even reach this block now) is enough context to trust it.
         const headPitchNow = robotPuPro.servoTargets()[5]
-        const nearBallByPitch = ball_valid && headPitchNow >= NEAR_BALL_PITCH_DEG
+        const nearBallByPitch = headPitchNow >= NEAR_BALL_PITCH_DEG
         pitchNearCycles = nearBallByPitch ? pitchNearCycles + 1 : 0
         const pitchConfirmed = pitchNearCycles >= NEAR_BALL_PITCH_CYCLE_LIMIT
 
@@ -1039,8 +1274,28 @@ basic.forever(function () {
         contactCheckPose_mm = [poseNow[0], poseNow[1]]
         const contactDetected = contactCycles >= CONTACT_CYCLE_LIMIT
 
-        const arrived = distKick <= KICK_DIST_MM || (pitchConfirmed && distKick <= NEAR_BALL_PITCH_DIST_GATE_MM) || contactDetected
-        arrivedCycles = arrived ? arrivedCycles + 1 : 0
+        // Bug #11 (microbit-console-2026-06-27T22-14-49-072Z.txt): walkMode
+        // never left 0 despite distKick visibly dipping to 143mm (well inside
+        // both NEAR_BALL_PITCH_DIST_GATE_MM and CONTACT_GATE_DIST_MM) -- the
+        // pose was frozen for ~16 straight cycles (Stage 3 bug #19, still
+        // unresolved at the extension level), so contactCycles correctly hit
+        // CONTACT_CYCLE_LIMIT and contactDetected fired right at dist=368 --
+        // but distKick crossed back above its gates the very next cycle,
+        // which zeroed arrivedCycles before it ever reached ARRIVED_CYCLE_LIMIT.
+        // The bug is requiring pitchArrived/contactDetected to ALSO survive a
+        // separate 5-cycle arrivedCycles streak on top of their OWN internal
+        // sustained-confirmation debounce (pitchNearCycles>=25,
+        // contactCycles>=6) -- redundant, and fatal right at the target where
+        // distKick is naturally volatile (the entire reason these two signals
+        // exist instead of trusting distance alone). Only the raw-distance
+        // path still needs arrivedCycles (that's the one actually vulnerable
+        // to a single glitched pose sample, per the debounce's original
+        // motivation); pitchArrived/contactDetected now count as arrived the
+        // instant they fire.
+        const distCloseEnough = distKick <= KICK_DIST_MM
+        const pitchArrived = pitchConfirmed && distKick <= NEAR_BALL_PITCH_DIST_GATE_MM
+        arrivedCycles = distCloseEnough ? arrivedCycles + 1 : 0
+        const arrived = arrivedCycles >= ARRIVED_CYCLE_LIMIT || pitchArrived || contactDetected
 
         if (walkMode == 3) {
             // Missed last attempt -- keep backing away from the (re-detected,
@@ -1059,7 +1314,7 @@ basic.forever(function () {
                 arrivedCycles = 0
                 walkMode = 0
             }
-        } else if (arrivedCycles < ARRIVED_CYCLE_LIMIT) {
+        } else if (!arrived) {
             const ctrl = updateControl(
                 { x: 0, y: 0, theta: 0 },
                 { x: kickPt[0], y: kickPt[1], theta: thetaKick },
@@ -1121,11 +1376,12 @@ basic.forever(function () {
             serial.writeLine(`kickPt x=${kickPt[0]} y=${kickPt[1]} dist=${distKick} mode=${walkMode}`)
             if (walkMode == 2) serial.writeLine("AT_KICK_POSE")
         }
+        }
     } else {
-        // Ball-only (goal not visible yet) or neither: don't walk. The body
-        // only ever moves once both ball+goal are valid and a real kick
-        // point can be computed -- head tracking/searching above still runs
-        // independently, so the ball stays centered while the body holds.
+        // Goal not visible yet, or the ball has never been seen at all this
+        // approach (bug #16 above): don't walk. Once ballKF has a real fix
+        // and the goal is valid, losing ball_valid alone (e.g. a blind-spot
+        // dropout) no longer falls into this branch -- see the gate above.
         walkSpeed = 0
         walkTurn = 0
         walkMode = 0
