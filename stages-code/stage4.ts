@@ -129,6 +129,7 @@ const VISION_GOAL_MODE = 1
 const VISION_SLOT_MS = 140
 let visionSlot = 0
 let visionPreferGoal = false
+let visionAcquireGoal = false
 
 function setService(serviceId: number, enabled: boolean) {
     pins.i2cWriteBuffer(ESP32_ADDR, Buffer.fromArray([CMD_SERVICE_ENABLE, serviceId, enabled ? 1 : 0]), false)
@@ -219,6 +220,15 @@ const SEARCH_PATTERN: { y: number, p: number }[] = [
 let scanStepIndex = 0
 let scanFrameCounter = 0
 let search_gain = 1
+let searchMode = 0
+
+function setSearchMode(mode: number) {
+    if (searchMode == mode) return
+    searchMode = mode
+    scanStepIndex = 0
+    scanFrameCounter = 0
+    search_gain = 1
+}
 
 function searchBall() {
     if (scanFrameCounter > 0) {
@@ -246,6 +256,29 @@ function searchBall() {
         robotPuPro.servoStep(robotPuPro.ServoJoint.HeadYaw, nextYaw, 8)
         robotPuPro.servoStep(robotPuPro.ServoJoint.HeadPitch, nextPitch, 8)
         if (DEBUG_FLAG) serial.writeLine(`SEARCHING yaw=${nextYaw} pitch=${nextPitch}`)
+        return
+    }
+
+    scanFrameCounter = SCAN_WAIT_FRAMES
+    scanStepIndex += 1
+    if (scanStepIndex >= SEARCH_PATTERN.length) {
+        scanStepIndex = 0
+        search_gain = Math.min(4, search_gain * 1.1)
+    }
+}
+
+function searchGoal() {
+    if (scanFrameCounter > 0) {
+        scanFrameCounter += -1
+        const targetOffset = SEARCH_PATTERN[scanStepIndex]
+        robotPuPro.setModeVar(robotPuPro.Mode.API)
+        const nextYaw = clampL(HEAD_YAW_CENTER + targetOffset.y * search_gain, HEAD_YAW_MIN, HEAD_YAW_MAX)
+        // Goal is farther and taller than the ball, so scan near level and
+        // slightly downward instead of pinning the head at the floor.
+        const nextPitch = clampL(HEAD_PITCH_CENTER + targetOffset.p, HEAD_PITCH_CENTER, HEAD_PITCH_CENTER + 25)
+        robotPuPro.servoStep(robotPuPro.ServoJoint.HeadYaw, nextYaw, 8)
+        robotPuPro.servoStep(robotPuPro.ServoJoint.HeadPitch, nextPitch, 8)
+        if (DEBUG_FLAG) serial.writeLine(`SEARCH_GOAL yaw=${nextYaw} pitch=${nextPitch}`)
         return
     }
 
@@ -604,10 +637,10 @@ basic.forever(function () {
     basic.pause(10)
 
     const goalEvery = visionPreferGoal ? 2 : 4
-    const target = (visionSlot % goalEvery == goalEvery - 1) ? VISION_GOAL_MODE : VISION_BALL_MODE
+    const target = visionAcquireGoal ? VISION_GOAL_MODE : ((visionSlot % goalEvery == goalEvery - 1) ? VISION_GOAL_MODE : VISION_BALL_MODE)
     selectVisionTarget(target)
 
-    if (target == VISION_GOAL_MODE && visionPreferGoal) {
+    if (target == VISION_GOAL_MODE && visionPreferGoal && !visionAcquireGoal) {
         robotPuPro.setModeVar(robotPuPro.Mode.API)
         robotPuPro.servoStep(robotPuPro.ServoJoint.HeadYaw, HEAD_YAW_CENTER, 8)
         robotPuPro.servoStep(robotPuPro.ServoJoint.HeadPitch, HEAD_PITCH_CENTER, 8)
@@ -815,7 +848,7 @@ basic.forever(function () {
     const nowMs = input.runningTime()
     const poseNow = robotPuPro.locationArray() // [x_mm, y_mm, theta_deg]
 
-    if (!kickPlanReady && ball_valid && nowMs - lastBallSeenMs >= BALL_LOST_TIMEOUT_MS) ball_valid = false
+    if (!kickPlanReady && !visionAcquireGoal && ball_valid && nowMs - lastBallSeenMs >= BALL_LOST_TIMEOUT_MS) ball_valid = false
     if (!kickPlanReady && goal_valid && nowMs - lastGoalSeenMs >= GOAL_LOST_TIMEOUT_MS) goal_valid = false
 
     // Centralized here instead of inside trackPacket()'s SOCCER_BALL branch:
@@ -823,7 +856,22 @@ basic.forever(function () {
     // alternates ball/goal service windows. Search is only for acquisition;
     // once ball+goal have initialized an odometry-frame plan, missing vision
     // packets should not stop the approach.
-    if (!ball_valid && !kickPlanReady) searchBall()
+    if (!kickPlanReady) {
+        if (!ball_valid) {
+            visionAcquireGoal = false
+            visionPreferGoal = false
+            setSearchMode(VISION_BALL_MODE)
+            searchBall()
+        } else if (!goal_valid) {
+            visionAcquireGoal = true
+            visionPreferGoal = true
+            setSearchMode(VISION_GOAL_MODE)
+            searchGoal()
+        } else {
+            visionAcquireGoal = false
+            visionPreferGoal = false
+        }
+    }
 
     // Stage 4 treats the ball/goal as fixed once both have initialized the
     // odometry-frame plan. Later packets are diagnostics; they should not
@@ -897,11 +945,13 @@ basic.forever(function () {
         const atKickPoint = closeByDistance || closeByPitchAssist
         const scoredNow = scored || (kickStarted && isScoredByVision(ball_now, goal_now))
         if (kickActive && nowMs - kickStartMs >= KICK_ACTION_MS) kickActive = false
+        visionAcquireGoal = false
         visionPreferGoal = atKickPoint || kickActive
 
         if (scoredNow) {
             scored = true
             kickActive = false
+            visionAcquireGoal = false
             visionPreferGoal = false
             walkSpeed = 0
             walkTurn = 0
@@ -956,6 +1006,7 @@ basic.forever(function () {
         walkTurn = 0
         walkMode = 0
         kickActive = false
+        visionAcquireGoal = false
         visionPreferGoal = false
     }
 
